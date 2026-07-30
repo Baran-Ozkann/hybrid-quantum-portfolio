@@ -1,0 +1,35 @@
+# Hybrid Quantum-Classical Portfolio Optimization
+# Direct dependencies, pinned to the exact versions validated in Phase 1.
+#
+# These are the versions this project was built and tested against on
+# Python 3.11.9 / Windows 11 (AMD64). For the full transitive closure of the
+# working environment see requirements-lock.txt.
+#
+# Install:
+#   python -m pip install -r requirements.txt
+
+# --- Quantum runtime ------------------------------------------------------
+# `qdk` is the supported package; `qsharp` 1.30.0 is a compatibility shim that
+# depends on it and emits a DeprecationWarning on import. Both are pinned
+# because they are mutually dependent and must stay in lockstep.
+qdk==1.30.0
+qsharp==1.30.0
+
+# --- Machine learning -----------------------------------------------------
+torch==2.13.0
+
+# --- Numerics & data ------------------------------------------------------
+numpy==2.4.6
+scipy==1.17.1
+pandas==3.0.5
+yfinance==1.5.2
+
+# --- Interface & plotting -------------------------------------------------
+# HARD REQUIREMENT, do not relax: ui/app.py uses the `width="stretch"` argument
+# and `st.column_config.NumberColumn`. `width` REPLACED `use_container_width`,
+# which Streamlit deprecated (removal after 2025-12-31). On an older Streamlit
+# the app raises TypeError on the first chart it renders, so this pin is what
+# makes the demo reproducible on a clean machine.
+streamlit==1.60.0
+matplotlib==3.11.1
+plotly==6.9.0

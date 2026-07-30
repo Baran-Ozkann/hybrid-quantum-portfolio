@@ -1,0 +1,78 @@
+# ---------------------------------------------------------------------------
+# Python
+# ---------------------------------------------------------------------------
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+*.egg-info/
+dist/
+build/
+*.egg
+
+# ---------------------------------------------------------------------------
+# Interpreters and installers
+# ---------------------------------------------------------------------------
+# This checkout carries a self-contained Python at .python/ (~200 MB with
+# site-packages). It is an environment, not source, and is rebuildable from
+# requirements.txt -- never commit it.
+.python/
+.venv/
+venv/
+env/
+python-embed.zip
+python-installer.exe
+get-pip.py
+
+# Playwright browser downloads
+ms-playwright/
+
+# ---------------------------------------------------------------------------
+# Generated artifacts -- reproducible, so not tracked
+# ---------------------------------------------------------------------------
+# Ignore log CONTENTS rather than the directory: git will not descend into an
+# ignored directory, so a negation below would have no effect otherwise.
+logs/*
+data/statistics.json
+data/hamiltonian.json
+data/markowitz_baseline.json
+data/daily_returns.csv
+data/daily_log_returns.csv
+training/training_summary.json
+training/convergence.png
+training/final_distribution.png
+
+# ---------------------------------------------------------------------------
+# DELIBERATELY TRACKED -- these are inputs or deliverables, not by-products
+# ---------------------------------------------------------------------------
+# data/prices.csv is the FROZEN price snapshot. Reproducibility depends on it:
+# refetching the same historical window does NOT return byte-identical data
+# (see README "Reproducibility"), so this file is an INPUT to the pipeline and
+# must be committed. Everything else in data/ is derived from it.
+!data/prices.csv
+
+# Trained circuit parameters and their loss histories are a project
+# deliverable, and the UI loads seed 42 as its pre-trained model.
+!training/trained_seed*.json
+
+# Generated but committed, because the documentation embeds them.
+!docs/figures/
+!docs/figures/*.png
+
+# The sweep aggregate the UI reads for its Section 4 headline. Small, derived,
+# and regenerable via tools/stability_report.py, but committed so a fresh clone
+# shows the reliability result without a 12-minute retrain first.
+!logs/stability_summary.json
+
+# ---------------------------------------------------------------------------
+# Editors and OS
+# ---------------------------------------------------------------------------
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+desktop.ini
+.ipynb_checkpoints/

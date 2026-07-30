@@ -1,0 +1,7 @@
+{
+  "permissions": {
+    "allow": [
+      "PowerShell(Get-ChildItem -Force | Select-Object Mode, Length, Name; Write-Output \"---PYTHON---\"; python --version; Write-Output \"---WHERE---\"; \\(Get-Command python\\).Source)"
+    ]
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "streamlit-ui",
+      "runtimeExecutable": ".python/python.exe",
+      "runtimeArgs": [
+        "-m", "streamlit", "run", "ui/app.py",
+        "--server.port", "8501",
+        "--server.headless", "true",
+        "--browser.gatherUsageStats", "false"
+      ],
+      "port": 8501
+    }
+  ]
+}
