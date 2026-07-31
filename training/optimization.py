@@ -97,6 +97,30 @@ class TrainingConfig:
     l2_coefficient: float = 0.0      # see module docstring
     log_every: int = 5
     readout_shots: int = 4096
+    #: "constant" (the Phase 5 baseline), "cosine", or "step".
+    lr_schedule: str = "constant"
+
+
+def build_scheduler(optimiser, config: TrainingConfig):
+    """Learning-rate schedule for one run, or None for a constant rate.
+
+    The Phase 7 sweep left 7 of 30 runs finishing far above the ground energy --
+    ordinary optimiser failure rather than the near-degeneracy the project is
+    about. A decaying rate is the standard first thing to try: a large early
+    rate still escapes the initial plateau, while the decay stops late-stage
+    steps from bouncing out of a basin already found.
+    """
+    if config.lr_schedule == "constant":
+        return None
+    if config.lr_schedule == "cosine":
+        return torch.optim.lr_scheduler.CosineAnnealingLR(
+            optimiser, T_max=max(config.epochs, 1), eta_min=config.learning_rate * 0.02
+        )
+    if config.lr_schedule == "step":
+        return torch.optim.lr_scheduler.StepLR(
+            optimiser, step_size=max(config.epochs // 4, 1), gamma=0.5
+        )
+    raise ValueError(f"unknown lr_schedule {config.lr_schedule!r}")
 
 
 @dataclass
@@ -160,6 +184,7 @@ def train(
         evaluator, seed=config.seed, init_scale=config.init_scale
     )
     optimiser = torch.optim.Adam([layer.theta], lr=config.learning_rate)
+    scheduler = build_scheduler(optimiser, config)
 
     # Exact reference values from the Phase 2 enumeration.
     spectrum = H.enumerate_states(ham)
@@ -219,6 +244,8 @@ def train(
         # parameters are exactly those the metrics describe.
         if epoch < config.epochs:
             optimiser.step()
+            if scheduler is not None:
+                scheduler.step()
 
     # ------------------------------------------------------------- readout
     final_params = layer.theta.detach().cpu().numpy().copy()
@@ -304,23 +331,41 @@ def train(
 # Persistence and plotting
 # --------------------------------------------------------------------------
 
-def save_result(result: TrainingResult) -> Path:
-    """Write one run's parameters and history to ``training/``."""
-    seed = result.config["seed"]
-    path = TRAINING_DIR / f"trained_seed{seed}.json"
-    path.write_text(json.dumps(asdict(result), indent=2), encoding="utf-8")
-    logger.info("  saved -> %s", path.name)
+def arm_dir(tag: str | None) -> Path:
+    """Output directory for an experiment arm.
+
+    ``None`` is the Phase 5/7 baseline and writes to ``training/`` exactly as
+    before, so committed results and everything that reads them (the UI, the
+    stability report) are untouched. Any other tag is isolated under
+    ``training/arms/<tag>/``.
+    """
+    if tag is None:
+        return TRAINING_DIR
+    path = TRAINING_DIR / "arms" / tag
+    path.mkdir(parents=True, exist_ok=True)
     return path
 
 
-def load_result(seed: int) -> TrainingResult:
-    """Load a saved run by seed."""
-    path = TRAINING_DIR / f"trained_seed{seed}.json"
+def save_result(result: TrainingResult, tag: str | None = None) -> Path:
+    """Write one run's parameters and history to its arm directory."""
+    seed = result.config["seed"]
+    path = arm_dir(tag) / f"trained_seed{seed}.json"
+    path.write_text(json.dumps(asdict(result), indent=2), encoding="utf-8")
+    logger.info("  saved -> %s", path.relative_to(PROJECT_ROOT))
+    return path
+
+
+def load_result(seed: int, tag: str | None = None) -> TrainingResult:
+    """Load a saved run by seed, from the baseline or a named arm."""
+    path = arm_dir(tag) / f"trained_seed{seed}.json"
     if not path.exists():
         raise FileNotFoundError(
             f"{path} not found. Run: python training/optimization.py --seeds {seed}"
         )
-    return TrainingResult(**json.loads(path.read_text(encoding="utf-8")))
+    data = json.loads(path.read_text(encoding="utf-8"))
+    # Tolerate results written before a field was added.
+    known = {f for f in TrainingResult.__dataclass_fields__}
+    return TrainingResult(**{k: v for k, v in data.items() if k in known})
 
 
 def plot_convergence(results: Sequence[TrainingResult], ham: H.PortfolioHamiltonian) -> Path:
@@ -433,26 +478,32 @@ def plot_final_distribution(results: Sequence[TrainingResult],
 
 # --------------------------------------------------------------------------
 
-def run_all(seeds: Sequence[int], config: TrainingConfig) -> list[TrainingResult]:
+def run_all(seeds: Sequence[int], config: TrainingConfig,
+            tag: str | None = None) -> list[TrainingResult]:
     """Train once per seed, saving and summarising every run."""
     ham = H.load_hamiltonian()
 
     logger.info("=" * 78)
-    logger.info("PHASE 5 -- VARIATIONAL OPTIMISATION")
+    logger.info("VARIATIONAL OPTIMISATION -- arm: %s", tag or "baseline")
     logger.info("=" * 78)
-    logger.info("Assets : %s", ", ".join(ham.tickers))
-    logger.info("Budget : hold exactly %d of %d", ham.budget, ham.n_assets)
-    logger.info("Seeds  : %s", list(seeds))
+    logger.info("Assets   : %s", ", ".join(ham.tickers))
+    logger.info("Budget   : hold exactly %d of %d", ham.budget, ham.n_assets)
+    logger.info("Epochs   : %d, lr %.4f, schedule %s",
+                config.epochs, config.learning_rate, config.lr_schedule)
+    logger.info("Seeds    : %s", list(seeds))
+    logger.info("Output   : %s", arm_dir(tag).relative_to(PROJECT_ROOT))
 
     results = []
     for seed in seeds:
         cfg = TrainingConfig(**{**asdict(config), "seed": seed})
         res = train(ham, cfg)
-        save_result(res)
+        save_result(res, tag)
         results.append(res)
 
-    plot_convergence(results, ham)
-    plot_final_distribution(results, ham)
+    # Figures are the baseline's; arms get their own from the comparison study.
+    if tag is None:
+        plot_convergence(results, ham)
+        plot_final_distribution(results, ham)
 
     # ------------------------------------------------------------- summary
     logger.info("")
@@ -478,7 +529,7 @@ def run_all(seeds: Sequence[int], config: TrainingConfig) -> list[TrainingResult
     n_found = sum(r.found_ground_state for r in results)
     logger.info("  seeds reaching the true ground state: %d/%d", n_found, len(results))
 
-    summary_path = TRAINING_DIR / "training_summary.json"
+    summary_path = arm_dir(tag) / "training_summary.json"
     summary_path.write_text(json.dumps({
         "seeds": list(seeds),
         "ground_bitstring": results[0].ground_bitstring,
@@ -517,14 +568,22 @@ def main() -> int:
     parser.add_argument("--lr", type=float, default=0.05)
     parser.add_argument("--layers", type=int, default=qb.DEFAULT_LAYERS)
     parser.add_argument("--l2", type=float, default=0.0)
+    parser.add_argument("--schedule", choices=("constant", "cosine", "step"),
+                        default="constant",
+                        help="learning-rate schedule (default: constant)")
+    parser.add_argument("--tag", default=None,
+                        help="experiment arm name; results go to "
+                             "training/arms/<tag>/ instead of overwriting the "
+                             "committed baseline in training/")
     args = parser.parse_args()
 
     qb.configure_logging("optimization.log")
     config = TrainingConfig(
         epochs=args.epochs, learning_rate=args.lr,
         num_layers=args.layers, l2_coefficient=args.l2,
+        lr_schedule=args.schedule,
     )
-    run_all(args.seeds, config)
+    run_all(args.seeds, config, tag=args.tag)
     return 0
 
 

@@ -1,0 +1,777 @@
+{
+  "baseline_tag": null,
+  "arm_tag": "lr_cosine_200",
+  "baseline": {
+    "seeds": [
+      42,
+      123,
+      456,
+      1000,
+      1001,
+      1002,
+      1003,
+      1004,
+      1005,
+      1006,
+      1007,
+      1008,
+      1009,
+      1010,
+      1011,
+      1012,
+      1013,
+      1014,
+      1015,
+      1016,
+      1017,
+      1018,
+      1019,
+      1020,
+      1021,
+      1022,
+      1023,
+      1024,
+      1025,
+      1026
+    ],
+    "n": 30,
+    "n_correct": 18,
+    "rate": 0.6,
+    "wilson_95": [
+      0.42320360121215705,
+      0.7540937198355525
+    ],
+    "attractors": {
+      "1010": 18,
+      "0110": 12
+    },
+    "energy_mean": -4.824162624689604,
+    "energy_std": 0.14785652792042986,
+    "energy_spread": 0.5767626679188824,
+    "energy_spread_over_gap": 14.71002415938935,
+    "converged": {
+      "cut": -4.838314650724747,
+      "n": 23,
+      "n_correct": 15,
+      "rate": 0.6521739130434783,
+      "wilson_95": [
+        0.4489033522338618,
+        0.8118872415619854
+      ],
+      "spread": 0.07005234741677402,
+      "worst_energy": -4.848732033516102
+    },
+    "failed": {
+      "n": 7,
+      "n_correct": 3,
+      "best_energy": -4.7913930540075595
+    },
+    "empty_band": 0.05733897950854239,
+    "empty_band_over_gap": 1.4624000837100224,
+    "p_ground_mean": 0.5693872124647755,
+    "p_ground_median": 0.6244942120472324,
+    "n_p_ground_ge_half": 18,
+    "argmax_guarantee_holds": true,
+    "mode_prob_mean": 0.8351744100569332,
+    "multi_start": {
+      "energy_with_replacement": [
+        {
+          "k": 1,
+          "selected": 0.6,
+          "oracle": 0.6
+        },
+        {
+          "k": 2,
+          "selected": 0.7711111111111112,
+          "oracle": 0.84
+        },
+        {
+          "k": 3,
+          "selected": 0.8633333333333334,
+          "oracle": 0.9359999999999999
+        },
+        {
+          "k": 5,
+          "selected": 0.9526846913580248,
+          "oracle": 0.98976
+        },
+        {
+          "k": 10,
+          "selected": 0.9969036963013327,
+          "oracle": 0.9998951424
+        },
+        {
+          "k": 20,
+          "selected": 0.9999885384165877,
+          "oracle": 0.9999999890048837
+        }
+      ],
+      "energy_without_replacement": [
+        {
+          "k": 1,
+          "selected": 0.6,
+          "oracle": 0.6
+        },
+        {
+          "k": 2,
+          "selected": 0.7770114942528735,
+          "oracle": 0.8482758620689655
+        },
+        {
+          "k": 3,
+          "selected": 0.8729064039408867,
+          "oracle": 0.9458128078817734
+        },
+        {
+          "k": 5,
+          "selected": 0.9640576537128261,
+          "oracle": 0.9944423392699254
+        },
+        {
+          "k": 10,
+          "selected": 0.9993783328116161,
+          "oracle": 0.9999978032961542
+        },
+        {
+          "k": 20,
+          "selected": 1.0,
+          "oracle": 1.0
+        }
+      ]
+    },
+    "per_seed": {
+      "42": {
+        "final_energy": -4.8983591704332055,
+        "ground_state_prob": 0.6011473589233121,
+        "mode_probability": 0.6011473589233121,
+        "mode_bitstring": "1010",
+        "correct": true,
+        "converged": true
+      },
+      "123": {
+        "final_energy": -4.848732033516102,
+        "ground_state_prob": 3.251858460833279e-06,
+        "mode_probability": 0.9831016698044767,
+        "mode_bitstring": "0110",
+        "correct": false,
+        "converged": true
+      },
+      "456": {
+        "final_energy": -4.889409106449028,
+        "ground_state_prob": 0.30302447362711654,
+        "mode_probability": 0.6943126259816383,
+        "mode_bitstring": "0110",
+        "correct": false,
+        "converged": true
+      },
+      "1000": {
+        "final_energy": -4.8974205708615255,
+        "ground_state_prob": 0.9621940272223443,
+        "mode_probability": 0.9621940272223443,
+        "mode_bitstring": "1010",
+        "correct": true,
+        "converged": true
+      },
+      "1001": {
+        "final_energy": -4.781960171895745,
+        "ground_state_prob": 0.8804923595639977,
+        "mode_probability": 0.8804923595639977,
+        "mode_bitstring": "1010",
+        "correct": true,
+        "converged": false
+      },
+      "1002": {
+        "final_energy": -4.89960925264155,
+        "ground_state_prob": 0.6478410651711528,
+        "mode_probability": 0.6478410651711528,
+        "mode_bitstring": "1010",
+        "correct": true,
+        "converged": true
+      },
+      "1003": {
+        "final_energy": -4.9169044455446205,
+        "ground_state_prob": 0.9982508173618919,
+        "mode_probability": 0.9982508173618919,
+        "mode_bitstring": "1010",
+        "correct": true,
+        "converged": true
+      },
+      "1004": {
+        "final_energy": -4.88680952009293,
+        "ground_state_prob": 0.24998340435070457,
+        "mode_probability": 0.7480459195644742,
+        "mode_bitstring": "0110",
+        "correct": false,
+        "converged": true
+      },
+      "1005": {
+        "final_energy": -4.900860416962057,
+        "ground_state_prob": 0.5400116939083228,
+        "mode_probability": 0.5400116939083228,
+        "mode_bitstring": "1010",
+        "correct": true,
+        "converged": true
+      },
+      "1006": {
+        "final_energy": -4.8605770141696185,
+        "ground_state_prob": 0.4181302928922716,
+        "mode_probability": 0.571081039318397,
+        "mode_bitstring": "0110",
+        "correct": false,
+        "converged": true
+      },
+      "1007": {
+        "final_energy": -4.909731808932781,
+        "ground_state_prob": 0.8968557306049532,
+        "mode_probability": 0.8968557306049532,
+        "mode_bitstring": "1010",
+        "correct": true,
+        "converged": true
+      },
+      "1008": {
+        "final_energy": -4.3420217130139935,
+        "ground_state_prob": 0.00033474844675616375,
+        "mode_probability": 0.6536482667828272,
+        "mode_bitstring": "0110",
+        "correct": false,
+        "converged": false
+      },
+      "1009": {
+        "final_energy": -4.786553073420898,
+        "ground_state_prob": 0.9576485071493043,
+        "mode_probability": 0.9576485071493043,
+        "mode_bitstring": "1010",
+        "correct": true,
+        "converged": false
+      },
+      "1010": {
+        "final_energy": -4.909813014465244,
+        "ground_state_prob": 0.9905219154401836,
+        "mode_probability": 0.9905219154401836,
+        "mode_bitstring": "1010",
+        "correct": true,
+        "converged": true
+      },
+      "1011": {
+        "final_energy": -4.438457285333623,
+        "ground_state_prob": 0.019025261279606995,
+        "mode_probability": 0.7702901759412482,
+        "mode_bitstring": "0110",
+        "correct": false,
+        "converged": false
+      },
+      "1012": {
+        "final_energy": -4.913430535162791,
+        "ground_state_prob": 0.8344568271674461,
+        "mode_probability": 0.8344568271674461,
+        "mode_bitstring": "1010",
+        "correct": true,
+        "converged": true
+      },
+      "1013": {
+        "final_energy": -4.918784380932876,
+        "ground_state_prob": 0.9988193894372697,
+        "mode_probability": 0.9988193894372697,
+        "mode_bitstring": "1010",
+        "correct": true,
+        "converged": true
+      },
+      "1014": {
+        "final_energy": -4.851686635684407,
+        "ground_state_prob": 0.00010943802321207085,
+        "mode_probability": 0.9808836173455023,
+        "mode_bitstring": "0110",
+        "correct": false,
+        "converged": true
+      },
+      "1015": {
+        "final_energy": -4.86738372933036,
+        "ground_state_prob": 0.9592744963645128,
+        "mode_probability": 0.9592744963645128,
+        "mode_bitstring": "1010",
+        "correct": true,
+        "converged": true
+      },
+      "1016": {
+        "final_energy": -4.914190467321999,
+        "ground_state_prob": 0.9794672739987835,
+        "mode_probability": 0.9794672739987835,
+        "mode_bitstring": "1010",
+        "correct": true,
+        "converged": true
+      },
+      "1017": {
+        "final_energy": -4.452512221868538,
+        "ground_state_prob": 3.7780125470095455e-05,
+        "mode_probability": 0.7154098370040373,
+        "mode_bitstring": "0110",
+        "correct": false,
+        "converged": false
+      },
+      "1018": {
+        "final_energy": -4.876868190976802,
+        "ground_state_prob": 0.9713905065699816,
+        "mode_probability": 0.9713905065699816,
+        "mode_bitstring": "1010",
+        "correct": true,
+        "converged": true
+      },
+      "1019": {
+        "final_energy": -4.7913930540075595,
+        "ground_state_prob": 0.8840536039016037,
+        "mode_probability": 0.8840536039016037,
+        "mode_bitstring": "1010",
+        "correct": true,
+        "converged": false
+      },
+      "1020": {
+        "final_energy": -4.893736707643379,
+        "ground_state_prob": 0.5046776989904783,
+        "mode_probability": 0.5046776989904783,
+        "mode_bitstring": "1010",
+        "correct": true,
+        "converged": true
+      },
+      "1021": {
+        "final_energy": -4.879978171302641,
+        "ground_state_prob": 4.3009493178701415e-06,
+        "mode_probability": 0.9993370826054004,
+        "mode_bitstring": "0110",
+        "correct": false,
+        "converged": true
+      },
+      "1022": {
+        "final_energy": -4.875434299780159,
+        "ground_state_prob": 0.46649871989738134,
+        "mode_probability": 0.5244202649267538,
+        "mode_bitstring": "0110",
+        "correct": false,
+        "converged": true
+      },
+      "1023": {
+        "final_energy": -4.8647699065101655,
+        "ground_state_prob": 0.004407552686002593,
+        "mode_probability": 0.9864488763399103,
+        "mode_bitstring": "0110",
+        "correct": false,
+        "converged": true
+      },
+      "1024": {
+        "final_energy": -4.890537305476003,
+        "ground_state_prob": 0.9804664543128939,
+        "mode_probability": 0.9804664543128939,
+        "mode_bitstring": "1010",
+        "correct": true,
+        "converged": true
+      },
+      "1025": {
+        "final_energy": -4.669400130872223,
+        "ground_state_prob": 0.0511976528079385,
+        "mode_probability": 0.8593934290943046,
+        "mode_bitstring": "0110",
+        "correct": false,
+        "converged": false
+      },
+      "1026": {
+        "final_energy": -4.897554406085305,
+        "ground_state_prob": 0.9812897709105959,
+        "mode_probability": 0.9812897709105959,
+        "mode_bitstring": "1010",
+        "correct": true,
+        "converged": true
+      }
+    }
+  },
+  "arm": {
+    "seeds": [
+      42,
+      123,
+      456,
+      1000,
+      1001,
+      1002,
+      1003,
+      1004,
+      1005,
+      1006,
+      1007,
+      1008,
+      1009,
+      1010,
+      1011,
+      1012,
+      1013,
+      1014,
+      1015,
+      1016,
+      1017,
+      1018,
+      1019,
+      1020,
+      1021,
+      1022,
+      1023,
+      1024,
+      1025,
+      1026
+    ],
+    "n": 30,
+    "n_correct": 18,
+    "rate": 0.6,
+    "wilson_95": [
+      0.42320360121215705,
+      0.7540937198355525
+    ],
+    "attractors": {
+      "1010": 18,
+      "0110": 12
+    },
+    "energy_mean": -4.869117147592849,
+    "energy_std": 0.06738713704241503,
+    "energy_spread": 0.29497167316397466,
+    "energy_spread_over_gap": 7.523095165354603,
+    "converged": {
+      "cut": -4.838314650724747,
+      "n": 24,
+      "n_correct": 16,
+      "rate": 0.6666666666666666,
+      "wilson_95": [
+        0.46706316684738447,
+        0.8202780976355061
+      ],
+      "spread": 0.05907345608186443,
+      "worst_energy": -4.860472581392437
+    },
+    "failed": {
+      "n": 6,
+      "n_correct": 2,
+      "best_energy": -4.838304827661444
+    },
+    "empty_band": 0.02216775373099278,
+    "empty_band_over_gap": 0.5653767330658079,
+    "p_ground_mean": 0.5774334094689418,
+    "p_ground_median": 0.6306727095120813,
+    "n_p_ground_ge_half": 18,
+    "argmax_guarantee_holds": true,
+    "mode_prob_mean": 0.8619068407553268,
+    "multi_start": {
+      "energy_with_replacement": [
+        {
+          "k": 1,
+          "selected": 0.6,
+          "oracle": 0.6
+        },
+        {
+          "k": 2,
+          "selected": 0.7999999999999999,
+          "oracle": 0.84
+        },
+        {
+          "k": 3,
+          "selected": 0.8975555555555557,
+          "oracle": 0.9359999999999999
+        },
+        {
+          "k": 5,
+          "selected": 0.9730970370370371,
+          "oracle": 0.98976
+        },
+        {
+          "k": 10,
+          "selected": 0.9988811659614896,
+          "oracle": 0.9998951424
+        },
+        {
+          "k": 20,
+          "selected": 0.9999974320032333,
+          "oracle": 0.9999999890048837
+        }
+      ],
+      "energy_without_replacement": [
+        {
+          "k": 1,
+          "selected": 0.6,
+          "oracle": 0.6
+        },
+        {
+          "k": 2,
+          "selected": 0.8068965517241379,
+          "oracle": 0.8482758620689655
+        },
+        {
+          "k": 3,
+          "selected": 0.9076354679802956,
+          "oracle": 0.9458128078817734
+        },
+        {
+          "k": 5,
+          "selected": 0.9814323607427056,
+          "oracle": 0.9944423392699254
+        },
+        {
+          "k": 10,
+          "selected": 0.999823897575022,
+          "oracle": 0.9999978032961542
+        },
+        {
+          "k": 20,
+          "selected": 1.0,
+          "oracle": 1.0
+        }
+      ]
+    },
+    "per_seed": {
+      "42": {
+        "final_energy": -4.900791450928469,
+        "ground_state_prob": 0.5992753308357283,
+        "mode_probability": 0.5992753308357283,
+        "mode_bitstring": "1010",
+        "correct": true,
+        "converged": true
+      },
+      "123": {
+        "final_energy": -4.86473897154634,
+        "ground_state_prob": 9.422906602729619e-07,
+        "mode_probability": 0.9913170142659093,
+        "mode_bitstring": "0110",
+        "correct": false,
+        "converged": true
+      },
+      "456": {
+        "final_energy": -4.8916246269384835,
+        "ground_state_prob": 0.3459734441689389,
+        "mode_probability": 0.6517566890974354,
+        "mode_bitstring": "0110",
+        "correct": false,
+        "converged": true
+      },
+      "1000": {
+        "final_energy": -4.903091939344624,
+        "ground_state_prob": 0.9766879193261525,
+        "mode_probability": 0.9766879193261525,
+        "mode_bitstring": "1010",
+        "correct": true,
+        "converged": true
+      },
+      "1001": {
+        "final_energy": -4.828428431337076,
+        "ground_state_prob": 0.9192272797428237,
+        "mode_probability": 0.9192272797428237,
+        "mode_bitstring": "1010",
+        "correct": true,
+        "converged": false
+      },
+      "1002": {
+        "final_energy": -4.901752759863057,
+        "ground_state_prob": 0.6620700881884344,
+        "mode_probability": 0.6620700881884344,
+        "mode_bitstring": "1010",
+        "correct": true,
+        "converged": true
+      },
+      "1003": {
+        "final_energy": -4.918326319544703,
+        "ground_state_prob": 0.9988560252379356,
+        "mode_probability": 0.9988560252379356,
+        "mode_bitstring": "1010",
+        "correct": true,
+        "converged": true
+      },
+      "1004": {
+        "final_energy": -4.887599318473544,
+        "ground_state_prob": 0.2394170397323685,
+        "mode_probability": 0.758834485242294,
+        "mode_bitstring": "0110",
+        "correct": false,
+        "converged": true
+      },
+      "1005": {
+        "final_energy": -4.902635540669437,
+        "ground_state_prob": 0.5478134272573424,
+        "mode_probability": 0.5478134272573424,
+        "mode_bitstring": "1010",
+        "correct": true,
+        "converged": true
+      },
+      "1006": {
+        "final_energy": -4.87897755888694,
+        "ground_state_prob": 0.4475399979887819,
+        "mode_probability": 0.5466972332125721,
+        "mode_bitstring": "0110",
+        "correct": false,
+        "converged": true
+      },
+      "1007": {
+        "final_energy": -4.912326319014696,
+        "ground_state_prob": 0.9179290041277548,
+        "mode_probability": 0.9179290041277548,
+        "mode_bitstring": "1010",
+        "correct": true,
+        "converged": true
+      },
+      "1008": {
+        "final_energy": -4.624574364310327,
+        "ground_state_prob": 7.653983789621688e-06,
+        "mode_probability": 0.8380471956414259,
+        "mode_bitstring": "0110",
+        "correct": false,
+        "converged": false
+      },
+      "1009": {
+        "final_energy": -4.916596271965628,
+        "ground_state_prob": 0.99871801886012,
+        "mode_probability": 0.99871801886012,
+        "mode_bitstring": "1010",
+        "correct": true,
+        "converged": true
+      },
+      "1010": {
+        "final_energy": -4.912364478572841,
+        "ground_state_prob": 0.9923695500242592,
+        "mode_probability": 0.9923695500242592,
+        "mode_bitstring": "1010",
+        "correct": true,
+        "converged": true
+      },
+      "1011": {
+        "final_energy": -4.803808494313697,
+        "ground_state_prob": 0.00037648254593088587,
+        "mode_probability": 0.9615065763627003,
+        "mode_bitstring": "0110",
+        "correct": false,
+        "converged": false
+      },
+      "1012": {
+        "final_energy": -4.9146472193645385,
+        "ground_state_prob": 0.8376405371999869,
+        "mode_probability": 0.8376405371999869,
+        "mode_bitstring": "1010",
+        "correct": true,
+        "converged": true
+      },
+      "1013": {
+        "final_energy": -4.919546037474301,
+        "ground_state_prob": 0.9990192055522209,
+        "mode_probability": 0.9990192055522209,
+        "mode_bitstring": "1010",
+        "correct": true,
+        "converged": true
+      },
+      "1014": {
+        "final_energy": -4.860472581392437,
+        "ground_state_prob": 3.6246687508425276e-08,
+        "mode_probability": 0.9854218030500346,
+        "mode_bitstring": "0110",
+        "correct": false,
+        "converged": true
+      },
+      "1015": {
+        "final_energy": -4.891603273893339,
+        "ground_state_prob": 0.9798734736301492,
+        "mode_probability": 0.9798734736301492,
+        "mode_bitstring": "1010",
+        "correct": true,
+        "converged": true
+      },
+      "1016": {
+        "final_energy": -4.914860305605483,
+        "ground_state_prob": 0.9826588067841528,
+        "mode_probability": 0.9826588067841528,
+        "mode_bitstring": "1010",
+        "correct": true,
+        "converged": true
+      },
+      "1017": {
+        "final_energy": -4.7160899124838895,
+        "ground_state_prob": 6.091198532778409e-05,
+        "mode_probability": 0.8834040419541871,
+        "mode_bitstring": "0110",
+        "correct": false,
+        "converged": false
+      },
+      "1018": {
+        "final_energy": -4.890221003562993,
+        "ground_state_prob": 0.9802494288911825,
+        "mode_probability": 0.9802494288911825,
+        "mode_bitstring": "1010",
+        "correct": true,
+        "converged": true
+      },
+      "1019": {
+        "final_energy": -4.838304827661444,
+        "ground_state_prob": 0.9255911820573989,
+        "mode_probability": 0.9255911820573989,
+        "mode_bitstring": "1010",
+        "correct": true,
+        "converged": false
+      },
+      "1020": {
+        "final_energy": -4.895658009153487,
+        "ground_state_prob": 0.5054721679620013,
+        "mode_probability": 0.5054721679620013,
+        "mode_bitstring": "1010",
+        "correct": true,
+        "converged": true
+      },
+      "1021": {
+        "final_energy": -4.88044185168577,
+        "ground_state_prob": 1.9245597761714483e-06,
+        "mode_probability": 0.9994598325249888,
+        "mode_bitstring": "0110",
+        "correct": false,
+        "converged": true
+      },
+      "1022": {
+        "final_energy": -4.8865554244515454,
+        "ground_state_prob": 0.44187839695913295,
+        "mode_probability": 0.5535516951107261,
+        "mode_bitstring": "0110",
+        "correct": false,
+        "converged": true
+      },
+      "1023": {
+        "final_energy": -4.872355867373087,
+        "ground_state_prob": 0.0031289511605312997,
+        "mode_probability": 0.9918633547347098,
+        "mode_bitstring": "0110",
+        "correct": false,
+        "converged": true
+      },
+      "1024": {
+        "final_energy": -4.9114050548868695,
+        "ground_state_prob": 0.9916985793613642,
+        "mode_probability": 0.9916985793613642,
+        "mode_bitstring": "1010",
+        "correct": true,
+        "converged": true
+      },
+      "1025": {
+        "final_energy": -4.726618224562129,
+        "ground_state_prob": 0.04194474183138009,
+        "mode_probability": 0.8926735408478679,
+        "mode_bitstring": "0110",
+        "correct": false,
+        "converged": false
+      },
+      "1026": {
+        "final_energy": -4.907097988524326,
+        "ground_state_prob": 0.9875217355759432,
+        "mode_probability": 0.9875217355759432,
+        "mode_bitstring": "1010",
+        "correct": true,
+        "converged": true
+      }
+    }
+  },
+  "paired": {
+    "n_shared": 30,
+    "both_correct": 18,
+    "baseline_only": 0,
+    "arm_only": 0,
+    "neither": 12,
+    "discordant": 0,
+    "p_value_exact_binomial": 1.0,
+    "recovered_seeds": [],
+    "lost_seeds": []
+  }
+}
