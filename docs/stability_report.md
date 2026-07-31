@@ -4,9 +4,15 @@ Phase 7 reproducibility analysis over **30 random initialisations**. Generated b
 
 ## Headline
 
-The optimiser returned the true ground state in **18 of 30 runs = 60.0%** (Wilson 95% interval **[42.3%, 75.4%]**).
+Every run was identical except for its random seed. Three numbers, not one, because the runs are **two distinct populations** and a single average hides that:
 
-Every run was identical except for its random seed. The pipeline is bit-for-bit reproducible; the *optimiser* is not reliably correct. Those are separate findings and both hold.
+- **60.0% overall** — the true ground state was returned in 18 of 30 runs (Wilson 95% **[42.3%, 75.4%]**).
+- **65.2% among the 23 runs that converged** to within 0.5% of the ground energy (Wilson 95% [44.9%, 81.2%]). These optimised successfully and then lost a 0.24% discrimination between the two lowest states. **This is the near-degeneracy finding.**
+- **7 runs never optimised at all**, finishing far above the ground energy for reasons unrelated to the degeneracy. They are ordinary optimiser failure — a separate open question about initialisation and step size — and they account for almost all of the headline energy spread.
+
+The two groups are separated by an empty band in the data, so the split is not an artifact of where the threshold was drawn (see below).
+
+The pipeline is bit-for-bit reproducible; the *optimiser* is not reliably correct. Those are separate findings and both hold.
 
 ## Scope: these are in-sample results
 
@@ -63,6 +69,8 @@ The incorrect runs are **not one population**. Splitting them at 0.5% of the spe
 | **Converged** (within 0.5% of ground) | 23 | 15 | **65.2%** | [-4.918784, -4.848732] | 1.79× |
 | **Failed to optimise** | 7 | 3 | 42.9% | [-4.791393, -4.342022] | 11.46× |
 
+**The split does not depend on where the cut was placed.** The worst converged run finishes at -4.848732 and the best failed run at -4.791393, so the threshold (-4.838315) falls inside an **empty band 0.057339 wide** — 1.46× the degeneracy gap itself, with no run anywhere in it. Any cut in that interval produces exactly the same partition. The two groups are genuinely disjoint populations rather than two ends of one continuum, which is what justifies analysing them separately; the 0.5% figure merely names a point inside the gap.
+
 This is the most important structural fact in the sweep, and merging the two groups obscured it:
 
 - **The 14.71× overall energy spread is almost entirely the second group.** Within the converged subset the spread is only **1.79× the degeneracy gap** — the same order as the gap itself, which is the regime the near-degeneracy finding actually lives in.
@@ -104,7 +112,12 @@ This is the model behind any "just run k seeds" recommendation — k new indepen
 
 ### Descriptive: pick k of the 30 runs already in hand (without replacement)
 
-A statement about **this pool**, not about the method. It is bounded above by pool composition: the lowest-ranked correct run sits at energy rank 26 of 30, so for k > 4 every possible subset is *forced* to contain a correct run and the oracle column reaches exactly 100% by arithmetic rather than by merit. The earlier bootstrap table reported 100.0% at k = 20 for precisely this reason and it should not have been read as a property of the optimiser.
+A statement about **this pool**, not about the method: both columns are forced to 100% once the pool can no longer supply a failing subset. The two thresholds are different and neither is a property of the optimiser.
+
+- **Oracle** fails only if *every* drawn run is incorrect. There are 12 incorrect runs, so an all-incorrect subset exists for k ≤ 12; the oracle is forced to exactly 100% only at **k ≥ 13**.
+- **Keep lowest energy** fails only if the subset avoids the entire leading block of correct runs — energy ranks 1–13, which are all correct. Avoiding them means drawing from the remaining 17 runs, possible for k ≤ 17; it is forced at **k ≥ 18**.
+
+So the 100% entries at k = 20 are arithmetic, not merit. Below those thresholds the values are genuine: at k = 10 the oracle is 99.9998% and keep-lowest is 99.9378% — both short of 100%, which is exactly what the earlier bootstrap table obscured by reporting a flat 100.0%.
 
 | k | keep lowest energy | keep most concentrated | oracle | energy-rule shortfall |
 |---|---|---|---|---|
@@ -123,7 +136,22 @@ Concentration is informative before any multi-start at all. Of the 14 runs that 
 
 **But concentration is a poor multi-start rule, and the tables above show why that is not a contradiction.** Look along the keep-most-concentrated column: it *degrades* as k grows, from 60% at k = 1 to 46% at k = 20, while keep-lowest-energy climbs to 100%.
 
-The cause is visible in the raw data: the single most concentrated run in the whole sweep is **seed 1021**, which put 99.93% of its amplitude on `0110` — and is **wrong**. Averaged over confident runs, concentration is positive evidence (10/14); but a selection rule does not sample the average, it takes the *extreme*, and at the extreme of this pool sits a confidently wrong run. As k rises, the rule converges on that run deterministically.
+The cause is the *top of the concentration ordering*, not a single anecdote. Ranked by how concentrated their final distribution is:
+
+| Rank | Seed | P(readout) | Readout | Correct? |
+|---|---|---|---|---|
+| 1 | 1021 | 0.9993 | `0110` | **no** |
+| 2 | 1013 | 0.9988 | `1010` | yes |
+| 3 | 1003 | 0.9983 | `1010` | yes |
+| 4 | 1010 | 0.9905 | `1010` | yes |
+| 5 | 1023 | 0.9864 | `0110` | **no** |
+
+3 of the top 5 are correct — barely better than the 60% base rate, and **the single most concentrated run is wrong**. Averaged over confident runs concentration is positive evidence (10/14); but a selection rule does not sample the average, it takes the *extreme*, and this pool's extreme is a confidently wrong run.
+
+Two consequences worth stating precisely:
+
+- **The asymptote is zero.** With replacement, as k grows the rule selects the globally most concentrated run with probability → 1. That run is incorrect, so P(correct) → **0%**, not to some plateau. The measured 45.9% at k = 20 is on the way down.
+- **The rule fails at the very top, not throughout.** The without-replacement value at k = 20 is 32.60% ≈ 1/3, which is just P(the subset misses rank 1) = 0.333. That it lands so close to 1/3 says rank 2 is correct: when the rule escapes the bad top pick it usually succeeds. The defect is concentrated in the leading element of the ordering, which is precisely the element a selection rule always uses.
 
 So the honest summary of the two signals is asymmetric:
 
@@ -150,7 +178,7 @@ The first three seeds run, kept because they display the failure modes unusually
 
 Three things this trio shows:
 
-1. **Energy ranking is decided inside the noise.** Seeds 42 and 456 differ by only **0.00895** in final energy — **23% of the degeneracy gap** they need to resolve — yet they read out *different portfolios* (`1010` vs `0110`). Energy ranking happens to pick the right run here, but by a margin well inside run-to-run variation (spread 0.57676 across 30 seeds).
+1. **Energy ranking is decided inside the noise.** Seeds 42 and 456 differ by only **0.00895** in final energy — **23% of the degeneracy gap** they need to resolve — yet they read out *different portfolios* (`1010` vs `0110`). Energy ranking happens to pick the right run here, but by a margin well inside run-to-run variation. Both seeds are in the **converged** group, so the relevant yardstick is that group's spread of 0.07005 — their separation is 13% of it. (Comparing against the overall 0.57676 spread would be wrong here: that figure is dominated by the 7 runs that never optimised, a population neither of these seeds belongs to.)
 
 2. **Confident convergence can be confidently wrong.** Seed 123 placed **98.3%** of its amplitude on a single state — the most decisive-looking run of the three — and that state was wrong, with P(ground state) below 1e-4. Its energy, -4.848732, would read as clean convergence in an energy-only report.
 
@@ -195,7 +223,7 @@ Multi-start selection has moved out of this list: it is measured above.
 
 ![Stability summary](figures/stability_summary.png)
 
-**Left:** final energy against P(ground state), coloured by readout. The two clusters overlap in energy, which is the whole finding — energy does not determine which portfolio comes out. **Centre:** measured multi-start curve against the oracle bound; the persistent gap is the cost of ranking by energy. **Right:** how many seeds fell into each attractor.
+**Left:** final energy against P(ground state), coloured by readout. The clusters overlap in energy, so energy does not *determine* the readout — though it ranks it well (see the leading correct block above). The runs far to the right, beyond -4.84, are the 7 that never optimised. **Centre:** exact multi-start curves under the predictive (with-replacement) model — keep-lowest-energy rising to 99.7% at k = 10 and effectively meeting the oracle, and keep-most-concentrated bending *downward* as k grows, because the most concentrated run in the pool is wrong. **Right:** how many seeds fell into each attractor.
 
 ![Convergence](../training/convergence.png)
 

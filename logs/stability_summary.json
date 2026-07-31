@@ -234,6 +234,53 @@
     "p_exactly_1_of_3": 0.28800000000000003,
     "p_at_most_1_of_3": 0.35200000000000004
   },
+  "pool_exhaustion": {
+    "k_oracle_forced": 13,
+    "k_keeplowest_forced": 18
+  },
+  "split_robustness": {
+    "converged_worst_energy": -4.848732033516102,
+    "failed_best_energy": -4.7913930540075595,
+    "empty_band": 0.05733897950854239,
+    "empty_band_over_gap": 1.4624000837100224
+  },
+  "concentration_top5": [
+    {
+      "rank": 1,
+      "seed": 1021,
+      "mode_probability": 0.9993370826054004,
+      "readout": "0110",
+      "correct": false
+    },
+    {
+      "rank": 2,
+      "seed": 1013,
+      "mode_probability": 0.9988193894372697,
+      "readout": "1010",
+      "correct": true
+    },
+    {
+      "rank": 3,
+      "seed": 1003,
+      "mode_probability": 0.9982508173618919,
+      "readout": "1010",
+      "correct": true
+    },
+    {
+      "rank": 4,
+      "seed": 1010,
+      "mode_probability": 0.9905219154401836,
+      "readout": "1010",
+      "correct": true
+    },
+    {
+      "rank": 5,
+      "seed": 1023,
+      "mode_probability": 0.9864488763399103,
+      "readout": "0110",
+      "correct": false
+    }
+  ],
   "closest_disagreeing_pair": {
     "seeds": [
       1024,

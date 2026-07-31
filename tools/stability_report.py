@@ -237,6 +237,47 @@ def main() -> int:
     p_exactly_1_of_3 = 3 * p_true * (1 - p_true) ** 2
     p_at_most_1_of_3 = (1 - p_true) ** 3 + p_exactly_1_of_3
 
+    # ---- pool-exhaustion thresholds, without replacement --------------------
+    # These are DIFFERENT for the two columns and must be stated separately.
+    #   oracle: fails only if every drawn run is incorrect, which is possible
+    #           while k <= n_wrong. Forced to 100% at k = n_wrong + 1.
+    #   keep-lowest: fails only if the subset avoids the entire leading block of
+    #           correct runs (ranks 1..n_leading_correct), which is possible
+    #           while k <= n - n_leading_correct. Forced at k = that + 1.
+    # How far down the energy ranking can you go before hitting a wrong run?
+    # Also what determines whether "keep the lowest energy" is a good rule.
+    n_leading_correct = 0
+    for i in by_energy:
+        if not correct[i]:
+            break
+        n_leading_correct += 1
+
+    n_wrong_total = n_runs - n_correct
+    k_oracle_forced = n_wrong_total + 1
+    k_keeplowest_forced = n_runs - n_leading_correct + 1
+
+    # ---- is the converged/failed split robust to where the cut is placed? ----
+    # If the two groups are separated by an empty band, the partition does not
+    # depend on the threshold, which is a far stronger defence than the choice
+    # of 0.5%.
+    conv_worst = float(energies[conv].max()) if n_conv else float("nan")
+    fail_best = float(energies[~conv].min()) if n_failed else float("nan")
+    empty_band = fail_best - conv_worst if (n_conv and n_failed) else 0.0
+
+    # ---- concentration ranking: is the tail one run, or the ordering? -------
+    conc_order = np.argsort(-mode_probs)
+    conc_top = [
+        {
+            "rank": r + 1,
+            "seed": seeds[i],
+            "mode_probability": float(mode_probs[i]),
+            "readout": modes[i],
+            "correct": bool(correct[i]),
+        }
+        for r, i in enumerate(conc_order[:5])
+    ]
+    conc_top5_correct = sum(1 for row in conc_top if row["correct"])
+
     # Energy ranking: does the global lowest-energy run happen to be correct?
     best_idx = int(np.argmin(energies))
     best_is_correct = bool(correct[best_idx])
@@ -250,14 +291,6 @@ def main() -> int:
         if modes[a] != modes[b]:
             closest_disagreeing = (seeds[a], seeds[b], abs(energies[a] - energies[b]))
             break
-
-    # How far down the energy ranking can you go before hitting a wrong run?
-    # This is what determines whether "keep the lowest energy" is a good rule.
-    n_leading_correct = 0
-    for i in order:
-        if not correct[i]:
-            break
-        n_leading_correct += 1
 
     # Do the correct and incorrect runs overlap in energy at all?
     e_correct = energies[correct]
@@ -340,13 +373,28 @@ def main() -> int:
 
     a("## Headline")
     a("")
-    a(f"The optimiser returned the true ground state in **{n_correct} of "
-      f"{n_runs} runs = {rate:.1%}** (Wilson 95% interval "
-      f"**[{lo:.1%}, {hi:.1%}]**).")
+    a(f"Every run was identical except for its random seed. Three numbers, not "
+      f"one, because the runs are **two distinct populations** and a single "
+      f"average hides that:")
     a("")
-    a(f"Every run was identical except for its random seed. The pipeline is "
-      f"bit-for-bit reproducible; the *optimiser* is not reliably correct. Those "
-      f"are separate findings and both hold.")
+    a(f"- **{rate:.1%} overall** — the true ground state was returned in "
+      f"{n_correct} of {n_runs} runs (Wilson 95% **[{lo:.1%}, {hi:.1%}]**).")
+    a(f"- **{conv_rate:.1%} among the {n_conv} runs that converged** to within "
+      f"0.5% of the ground energy (Wilson 95% [{conv_lo:.1%}, {conv_hi:.1%}]). "
+      f"These optimised successfully and then lost a "
+      f"{100 * gap / spectral_width:.2f}% discrimination between the two lowest "
+      f"states. **This is the near-degeneracy finding.**")
+    a(f"- **{n_failed} runs never optimised at all**, finishing far above the "
+      f"ground energy for reasons unrelated to the degeneracy. They are ordinary "
+      f"optimiser failure — a separate open question about initialisation and "
+      f"step size — and they account for almost all of the headline energy "
+      f"spread.")
+    a("")
+    a("The two groups are separated by an empty band in the data, so the split "
+      "is not an artifact of where the threshold was drawn (see below).")
+    a("")
+    a("The pipeline is bit-for-bit reproducible; the *optimiser* is not reliably "
+      "correct. Those are separate findings and both hold.")
     a("")
 
     a("## Scope: these are in-sample results")
@@ -459,6 +507,17 @@ def main() -> int:
           f"[{energies[~conv].min():.6f}, {energies[~conv].max():.6f}] | "
           f"{np.ptp(energies[~conv]) / gap:.2f}× |")
     a("")
+    if n_conv and n_failed and empty_band > 0:
+        a(f"**The split does not depend on where the cut was placed.** The worst "
+          f"converged run finishes at {conv_worst:.6f} and the best failed run at "
+          f"{fail_best:.6f}, so the threshold ({converged_cut:.6f}) falls inside "
+          f"an **empty band {empty_band:.6f} wide** — "
+          f"{empty_band / gap:.2f}× the degeneracy gap itself, with no run "
+          f"anywhere in it. Any cut in that interval produces exactly the same "
+          f"partition. The two groups are genuinely disjoint populations rather "
+          f"than two ends of one continuum, which is what justifies analysing "
+          f"them separately; the 0.5% figure merely names a point inside the gap.")
+        a("")
     a("This is the most important structural fact in the sweep, and merging the "
       "two groups obscured it:")
     a("")
@@ -536,20 +595,31 @@ def main() -> int:
 
     a("### Descriptive: pick k of the 30 runs already in hand (without replacement)")
     a("")
-    lowest_correct_rank = int(np.max(np.arange(1, n_runs + 1)[correct[by_energy]]))
-    a(f"A statement about **this pool**, not about the method. It is bounded above "
-      f"by pool composition: the lowest-ranked correct run sits at energy rank "
-      f"{lowest_correct_rank} of {n_runs}, so for "
-      f"k > {n_runs - lowest_correct_rank} every possible subset is *forced* to "
-      f"contain a correct run and the oracle column reaches exactly 100% by "
-      f"arithmetic rather than by merit. The earlier bootstrap table reported "
-      f"100.0% at k = 20 for precisely this reason and it should not have been "
-      f"read as a property of the optimiser.")
+    ce_n = {r["k"]: r for r in curves[("energy", False)]}
+    cc_n = {r["k"]: r for r in curves[("concentration", False)]}
+    a("A statement about **this pool**, not about the method: both columns are "
+      "forced to 100% once the pool can no longer supply a failing subset. The "
+      "two thresholds are different and neither is a property of the optimiser.")
+    a("")
+    a(f"- **Oracle** fails only if *every* drawn run is incorrect. There are "
+      f"{n_wrong_total} incorrect runs, so an all-incorrect subset exists for "
+      f"k ≤ {n_wrong_total}; the oracle is forced to exactly 100% only at "
+      f"**k ≥ {k_oracle_forced}**.")
+    a(f"- **Keep lowest energy** fails only if the subset avoids the entire "
+      f"leading block of correct runs — energy ranks 1–{n_leading_correct}, which "
+      f"are all correct. Avoiding them means drawing from the remaining "
+      f"{n_runs - n_leading_correct} runs, possible for "
+      f"k ≤ {n_runs - n_leading_correct}; it is forced at "
+      f"**k ≥ {k_keeplowest_forced}**.")
+    a("")
+    a(f"So the 100% entries at k = 20 are arithmetic, not merit. Below those "
+      f"thresholds the values are genuine: at k = 10 the oracle is "
+      f"{ce_n[10]['oracle']:.4%} and keep-lowest is {ce_n[10]['selected']:.4%} — "
+      f"both short of 100%, which is exactly what the earlier bootstrap table "
+      f"obscured by reporting a flat 100.0%.")
     a("")
     a("| k | keep lowest energy | keep most concentrated | oracle | energy-rule shortfall |")
     a("|---|---|---|---|---|")
-    ce_n = {r["k"]: r for r in curves[("energy", False)]}
-    cc_n = {r["k"]: r for r in curves[("concentration", False)]}
     for k in sorted(ce_n):
         a(f"| {k} | {ce_n[k]['selected']:.4%} | {cc_n[k]['selected']:.4%} | "
           f"{ce_n[k]['oracle']:.4%} | {ce_n[k]['oracle'] - ce_n[k]['selected']:+.4%} |")
@@ -580,15 +650,35 @@ def main() -> int:
       f"k = 20, while keep-lowest-energy climbs to "
       f"{ce_r[20]['selected']:.0%}.")
     a("")
-    top_conc = int(np.argmax(mode_probs))
-    a(f"The cause is visible in the raw data: the single most concentrated run in "
-      f"the whole sweep is **seed {seeds[top_conc]}**, which put "
-      f"{mode_probs[top_conc]:.2%} of its amplitude on `{modes[top_conc]}` — "
-      f"and is **wrong**. Averaged over confident runs, concentration is "
-      f"positive evidence ({n_conf_correct}/{n_conf_total}); but a selection rule "
-      f"does not sample the average, it takes the *extreme*, and at the extreme "
-      f"of this pool sits a confidently wrong run. As k rises, the rule converges "
-      f"on that run deterministically.")
+    a("The cause is the *top of the concentration ordering*, not a single "
+      "anecdote. Ranked by how concentrated their final distribution is:")
+    a("")
+    a("| Rank | Seed | P(readout) | Readout | Correct? |")
+    a("|---|---|---|---|---|")
+    for row in conc_top:
+        a(f"| {row['rank']} | {row['seed']} | {row['mode_probability']:.4f} | "
+          f"`{row['readout']}` | {'yes' if row['correct'] else '**no**'} |")
+    a("")
+    a(f"{conc_top5_correct} of the top 5 are correct — barely better than the "
+      f"{rate:.0%} base rate, and **the single most concentrated run is wrong**. "
+      f"Averaged over confident runs concentration is positive evidence "
+      f"({n_conf_correct}/{n_conf_total}); but a selection rule does not sample "
+      f"the average, it takes the *extreme*, and this pool's extreme is a "
+      f"confidently wrong run.")
+    a("")
+    a(f"Two consequences worth stating precisely:")
+    a("")
+    a(f"- **The asymptote is zero.** With replacement, as k grows the rule "
+      f"selects the globally most concentrated run with probability → 1. That "
+      f"run is incorrect, so P(correct) → **0%**, not to some plateau. The "
+      f"measured {cc_r[20]['selected']:.1%} at k = 20 is on the way down.")
+    a(f"- **The rule fails at the very top, not throughout.** The "
+      f"without-replacement value at k = 20 is "
+      f"{cc_n[20]['selected']:.2%} ≈ 1/3, which is just P(the subset misses "
+      f"rank 1) = {1 - 20 / n_runs:.3f}. That it lands so close to 1/3 says "
+      f"rank 2 is correct: when the rule escapes the bad top pick it usually "
+      f"succeeds. The defect is concentrated in the leading element of the "
+      f"ordering, which is precisely the element a selection rule always uses.")
     a("")
     a("So the honest summary of the two signals is asymmetric:")
     a("")
@@ -668,8 +758,13 @@ def main() -> int:
           f"— yet they read out *different portfolios* "
           f"(`{runs[42].mode_bitstring}` vs `{runs[456].mode_bitstring}`). "
           f"Energy ranking happens to pick the right run here, but by a margin "
-          f"well inside run-to-run variation "
-          f"(spread {np.ptp(energies):.5f} across {n_runs} seeds).")
+          f"well inside run-to-run variation. Both seeds are in the **converged** "
+          f"group, so the relevant yardstick is that group's spread of "
+          f"{spread_conv:.5f} — their separation is "
+          f"{100 * d / spread_conv:.0f}% of it. (Comparing against the overall "
+          f"{np.ptp(energies):.5f} spread would be wrong here: that figure is "
+          f"dominated by the {n_failed} runs that never optimised, a population "
+          f"neither of these seeds belongs to.)")
         a("")
     if 123 in runs:
         a(f"2. **Confident convergence can be confidently wrong.** Seed 123 "
@@ -777,10 +872,16 @@ def main() -> int:
     a("![Stability summary](figures/stability_summary.png)")
     a("")
     a("**Left:** final energy against P(ground state), coloured by readout. The "
-      "two clusters overlap in energy, which is the whole finding — energy does "
-      "not determine which portfolio comes out. **Centre:** measured multi-start "
-      "curve against the oracle bound; the persistent gap is the cost of ranking "
-      "by energy. **Right:** how many seeds fell into each attractor.")
+      "clusters overlap in energy, so energy does not *determine* the readout — "
+      "though it ranks it well (see the leading correct block above). The runs "
+      f"far to the right, beyond {converged_cut:.2f}, are the "
+      f"{n_failed} that never optimised. "
+      "**Centre:** exact multi-start curves under the predictive "
+      "(with-replacement) model — keep-lowest-energy rising to "
+      f"{ce_r[10]['selected']:.1%} at k = 10 and effectively meeting the oracle, "
+      "and keep-most-concentrated bending *downward* as k grows, because the most "
+      "concentrated run in the pool is wrong. "
+      "**Right:** how many seeds fell into each attractor.")
     a("")
     a(f"![Convergence](../training/convergence.png)")
     a("")
@@ -826,6 +927,17 @@ def main() -> int:
             "p_exactly_1_of_3": p_exactly_1_of_3,
             "p_at_most_1_of_3": p_at_most_1_of_3,
         },
+        "pool_exhaustion": {
+            "k_oracle_forced": k_oracle_forced,
+            "k_keeplowest_forced": k_keeplowest_forced,
+        },
+        "split_robustness": {
+            "converged_worst_energy": conv_worst,
+            "failed_best_energy": fail_best,
+            "empty_band": empty_band,
+            "empty_band_over_gap": empty_band / gap if gap else None,
+        },
+        "concentration_top5": conc_top,
         "closest_disagreeing_pair": (
             {"seeds": [closest_disagreeing[0], closest_disagreeing[1]],
              "energy_difference": float(closest_disagreeing[2])}

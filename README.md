@@ -208,7 +208,14 @@ Selected measured results:
 | Parameter-shift vs finite difference, 28 params | **3.0e-10** | 1e-2 |
 | Pure-sinusoid fit (the rule's premise) | 2.6e-15 | 1e-9 |
 | Exact vs sampling backend, 20 000 shots | 0.0012 | 5σ = 0.0164 |
-| UI cold start, headless Chromium | **2.6 s** | 5 s |
+| UI page load, headless Chromium (median of 5) | **~0.9–1.2 s** | 5 s |
+| UI page load, first request to a fresh server | 2.6–3.7 s | 5 s |
+
+The first request to a newly started server carries one-time warmup (module
+import, cache fill) and is where essentially all of the 5 s budget risk sits;
+under heavy disk contention it has been observed at 3.7 s. Every subsequent load
+is around a second. `tools/capture_ui.py` measures five fresh browser contexts
+and gates on the **worst**, not the median.
 
 ---
 

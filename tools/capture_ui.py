@@ -107,6 +107,44 @@ def read_server_log() -> str:
     return SERVER_LOG.read_text(encoding="utf-8", errors="replace") if SERVER_LOG.exists() else ""
 
 
+#: Directories whose appearance in a traceback means OUR code failed.
+PROJECT_MARKERS = ("ui\\app.py", "ui/app.py", "quantum", "classical", "training", "tools")
+
+
+def classify_tracebacks(log: str) -> tuple[list[str], list[str]]:
+    """Split server-log tracebacks into application failures and transport noise.
+
+    Not every traceback in the log is a defect. This harness opens and closes
+    several browser contexts (five for the cold-start samples, plus a second
+    session), and each close tears down a websocket. On Windows, asyncio's
+    proactor event loop logs the resulting
+
+        ConnectionResetError: [WinError 10054]
+
+    from ``_call_connection_lost`` -- caused by the harness, not the app.
+
+    Rather than pattern-match that specific message (which would quietly
+    suppress genuine errors that happen to resemble it), a traceback counts as
+    an APPLICATION failure if and only if its frames reference project source.
+    Transport teardown never does: its frames are entirely inside asyncio.
+
+    Returns:
+        ``(application_tracebacks, transport_tracebacks)``.
+    """
+    blocks = log.split("Traceback (most recent call last)")[1:]
+    app: list[str] = []
+    transport: list[str] = []
+    for block in blocks:
+        # A traceback ends where the next log timestamp begins; 40 lines is a
+        # generous bound that never runs into the following record.
+        body = "\n".join(block.splitlines()[:40])
+        if any(marker in body for marker in PROJECT_MARKERS):
+            app.append(body.strip())
+        else:
+            transport.append(body.strip())
+    return app, transport
+
+
 # --------------------------------------------------------------------------
 # Page helpers
 # --------------------------------------------------------------------------
@@ -377,15 +415,22 @@ def main() -> int:
         log = read_server_log()
         panics = PANIC_PATTERN.findall(log)
         teardown = TEARDOWN_PATTERN.findall(log)
-        tracebacks = log.count("Traceback (most recent call last)")
+
+        app_tracebacks, transport_tracebacks = classify_tracebacks(log)
+
         report["panics"] = len(panics)
         report["teardown_messages"] = len(teardown)
-        report["tracebacks"] = tracebacks
+        report["tracebacks_application"] = len(app_tracebacks)
+        report["tracebacks_transport"] = len(transport_tracebacks)
+
         check("no 'sent to another thread' panic", not panics,
               f"{len(panics)} occurrences (this is the fatal one)")
-        check("no tracebacks in server log", tracebacks == 0,
-              f"{tracebacks} tracebacks")
+        check("no application tracebacks", not app_tracebacks,
+              f"{len(app_tracebacks)} tracebacks touching project source"
+              + (f" -> {app_tracebacks[0][:160]}" if app_tracebacks else ""))
         print(f"    (benign exit-time 'dropped on another thread' messages: {len(teardown)})")
+        print(f"    (transport-level tracebacks from closing browser contexts: "
+              f"{len(transport_tracebacks)})")
 
     finally:
         if not args.keep_server:
