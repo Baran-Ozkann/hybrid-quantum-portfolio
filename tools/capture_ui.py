@@ -110,6 +110,28 @@ def read_server_log() -> str:
 #: Directories whose appearance in a traceback means OUR code failed.
 PROJECT_MARKERS = ("ui\\app.py", "ui/app.py", "quantum", "classical", "training", "tools")
 
+#: Library-level failures that are dangerous even with NO project frames.
+#:
+#: Frame-based classification alone has a hole: the pyo3 `unsendable` panic
+#: originates entirely inside qdk and never touches project source, so a purely
+#: structural rule would file the exact failure this project spent a phase
+#: eliminating as harmless transport noise. These signatures override the frame
+#: check in both directions.
+DANGEROUS_SIGNATURES = (
+    "unsendable, but sent to another thread",   # the pyo3 panic
+    "PanicException",                           # any Rust panic surfaced to Python
+    "pyo3_runtime",
+    "SIGSEGV",
+    "Fatal Python error",
+)
+
+#: Known-benign, harness-induced transport teardown. Narrow on purpose.
+BENIGN_TRANSPORT = (
+    "_call_connection_lost",
+    "WinError 10054",
+    "ConnectionResetError",
+)
+
 
 def classify_tracebacks(log: str) -> tuple[list[str], list[str]]:
     """Split server-log tracebacks into application failures and transport noise.
@@ -117,16 +139,21 @@ def classify_tracebacks(log: str) -> tuple[list[str], list[str]]:
     Not every traceback in the log is a defect. This harness opens and closes
     several browser contexts (five for the cold-start samples, plus a second
     session), and each close tears down a websocket. On Windows, asyncio's
-    proactor event loop logs the resulting
+    proactor event loop logs the resulting ``ConnectionResetError``
+    ``[WinError 10054]`` from ``_call_connection_lost`` -- caused by the harness,
+    not the app.
 
-        ConnectionResetError: [WinError 10054]
+    Classification, in priority order:
 
-    from ``_call_connection_lost`` -- caused by the harness, not the app.
-
-    Rather than pattern-match that specific message (which would quietly
-    suppress genuine errors that happen to resemble it), a traceback counts as
-    an APPLICATION failure if and only if its frames reference project source.
-    Transport teardown never does: its frames are entirely inside asyncio.
+    1. Any ``DANGEROUS_SIGNATURES`` match is an APPLICATION failure regardless
+       of which frames appear. This exists specifically so the pyo3 panic, whose
+       frames live entirely inside qdk, can never be filed as noise.
+    2. Otherwise a traceback referencing project source is an application
+       failure.
+    3. Otherwise, only if it matches a known benign transport signature, it is
+       noise.
+    4. Anything else is treated as an application failure -- unknown tracebacks
+       fail the gate rather than being waved through.
 
     Returns:
         ``(application_tracebacks, transport_tracebacks)``.
@@ -137,11 +164,18 @@ def classify_tracebacks(log: str) -> tuple[list[str], list[str]]:
     for block in blocks:
         # A traceback ends where the next log timestamp begins; 40 lines is a
         # generous bound that never runs into the following record.
-        body = "\n".join(block.splitlines()[:40])
-        if any(marker in body for marker in PROJECT_MARKERS):
-            app.append(body.strip())
+        body = "\n".join(block.splitlines()[:40]).strip()
+
+        if any(sig in body for sig in DANGEROUS_SIGNATURES):
+            app.append(body)
+        elif any(marker in body for marker in PROJECT_MARKERS):
+            app.append(body)
+        elif any(sig in body for sig in BENIGN_TRANSPORT):
+            transport.append(body)
         else:
-            transport.append(body.strip())
+            # Default to failing: an unrecognised traceback is not evidence of
+            # health.
+            app.append(body)
     return app, transport
 
 
