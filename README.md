@@ -182,24 +182,43 @@ all correct.
 Full analysis, including the seed-123 case study (98.3% confident and wrong) in
 [`docs/stability_report.md`](docs/stability_report.md).
 
-### Does a different objective help? Yes — and it reveals why
+### A different objective trades energy for readout
 
 A follow-up controlled study replaced the mean-energy objective with **CVaR**
 (minimising the mean of the lowest α-quantile), holding everything else fixed
-across the same 30 seeds. At **α = 0.4** single-run accuracy rises from 66.7% to
-**100%** (McNemar exact p = 0.0020), and the gain survives shot noise. The effect
-is **non-monotone**: α = 0.1 performs *worse* than plain VQE (56.7%) and produces
-readouts that violate the budget constraint.
+across the same 30 seeds. The result worth carrying away is not a rate but a
+**trade**: CVaR gives up **1.88 in mean energy** — about 11% of the spectral
+width, enough that *every* CVaR run fails the convergence criterion *every*
+plain-VQE run passes — and buys a large gain in readout accuracy.
 
-The mechanism is `1/α` gradient amplification traded against a saturation point —
-CVaR is exactly minimised once P(ground) ≥ α, after which training halts. Two
-pre-registered predictions, one from each party, were both refuted by the data.
-Notably CVaR **abandons the energy** while fixing the readout (mean ⟨H⟩ −2.73 vs
-−4.91), which is the clearest demonstration in this project that optimising the
-readout and optimising the energy are different objectives.
+| | plain VQE | CVaR (α = 0.5) |
+|---|---|---|
+| mean plain ⟨H⟩ | −4.905 | −3.042 |
+| runs inside the "converged" band | 30/30 | **0/30** |
+| readout accuracy | 66.7% | **96.7%** |
+
+This is the sharpest form of a thread running through the project since Phase 5:
+energy convergence and a correct readout are different objectives, and here they
+are actively traded rather than merely imperfectly correlated.
+
+Accuracy is **non-monotone in α**, peaking at the sampled point α = 0.4
+(30 of 30, Wilson 95% [88.6%, 100%] — a point estimate, not a demonstration of
+perfect reliability). At the other end α = 0.1 is *worse* than plain VQE (56.7%)
+and **abandons the budget constraint entirely**, producing 6 of 30 readouts that
+hold 0, 1, or 4 assets instead of the required 2 — because CVaR constrains only
+the lowest α-quantile, so the penalty term stops binding on the rest of the
+distribution. Two pre-registered predictions, one from each party, were both
+refuted.
 
 **This does not change the recommendation** — at k = 5 seeds plain VQE already
-reaches 99.59%. Full study: [`docs/objective_comparison.md`](docs/objective_comparison.md).
+reaches 99.59%, and Phase 7 already recommends five seeds. Full study, with the
+mechanism and limitations:
+[`docs/objective_comparison.md`](docs/objective_comparison.md).
+
+> **The 66.7% baseline is itself not converged.** Seed 456 changed basin at epoch
+> **176 of 200** and held the new answer for only 24 epochs, so a longer run could
+> move it again. Neither the baseline nor the CVaR figures should be read as
+> converged with respect to epoch count.
 
 ---
 

@@ -123,17 +123,31 @@ identity 3.6e-15, gradient identity 2.7e-9, α=1 reduces to plain VQE to 5.6e-15
 All arms: 200 epochs, constant lr = 0.05, 3 layers, init U(−0.1, 0.1), same 30
 seeds, exact backend. Paired against `lr_constant_200`.
 
-| α | exact | E[shot acc] @4096 | mean rank | worst rank | min margin† | mean ⟨H⟩ | McNemar p |
-|---|---|---|---|---|---|---|---|
-| 0.1 | 56.7% | **54.2%** | 1.567 | 3 | 0.0051 | −0.0771 | 0.6291 |
-| **0.4** | **100.0%** | **100.0%** | **1.000** | 1 | **0.1810** | −2.7327 | **0.0020** |
-| 0.5 | 96.7% | 95.5% | 1.033 | 2 | 0.0053 | −3.0423 | 0.0039 |
-| 0.6 | 86.7% | 86.7% | 1.267 | 4 | 0.1249 | −3.3496 | 0.0703 |
-| 1.0 (plain) | 66.7% | 66.3% | 3.033 | 14 | 0.0023 | −4.9052 | — |
+**The headline is a TRADE, not a rate.** CVaR gives up 1.88 in mean energy —
+**48× the degeneracy gap**, against plain VQE's 0.4× — and buys ~30 points of
+readout accuracy. Every CVaR run fails the 0.5%-of-spectrum converged criterion
+that every plain-VQE run passes. Energy convergence and correct readout are not
+merely imperfectly correlated here; they are actively traded.
+
+| α | exact | Wilson 95% | E[shot acc] @4096 | mean rank | worst rank | min margin† | mean ⟨H⟩ | McNemar p |
+|---|---|---|---|---|---|---|---|---|
+| 0.1 | 56.7% | [39.2%, 72.6%] | **54.2%** | 1.567 | 3 | 0.0051 | −0.0771 | 0.6291 |
+| **0.4** | **100.0%** | **[88.6%, 100%]** | **100.0%** | **1.000** | 1 | **0.1810** | −2.7327 | **0.0020** |
+| 0.5 | 96.7% | [83.3%, 99.4%] | 95.5% | 1.033 | 2 | 0.0053 | −3.0423 | 0.0039 |
+| 0.6 | 86.7% | [70.3%, 94.7%] | 86.7% | 1.267 | 4 | 0.1249 | −3.3496 | 0.0703 |
+| 1.0 (plain) | 66.7% | [48.8%, 80.8%] | 66.3% | 3.033 | 14 | 0.0023 | −4.9052 | — |
 
 † minimum top-two margin among correct runs.
 
-**Non-monotone, interior peak at α = 0.4. Both pre-registered predictions failed:**
+**Do not overstate these.** 30/30 is a point estimate with Wilson [88.6%, 100%] —
+a true rate near 90% is consistent with it. Accuracy peaks at the **sampled
+point** α = 0.4 on a five-point grid; the true optimum lies somewhere in
+(0.1, 0.5) and this design cannot resolve it further (0.4 is already at ceiling,
+so a finer grid needs more *seeds*, not more α). Two conclusions in this project
+have already been overturned by more data (1-of-3 → 18-of-30; Priority 2's
+"clean null" → two effects cancelling).
+
+**Non-monotone, peak at the sampled α = 0.4. Both pre-registered predictions failed:**
 
 - **User:** peak at 0.5 with a 0.4/0.6 cliff, from the argmax guarantee.
   *Shape confirmed, location and mechanism refuted.*
@@ -153,13 +167,20 @@ P(ground) ≥ α, after which the gradient vanishes). They balance near 0.4.
    failures. Under-optimised discrimination.
 2. **Large α (0.6) — insufficient pressure.** Failures at ranks 2–4. Seed 1006
    regresses decisively (1010 → rank 2 at P = 0.15 while 0110 holds 0.52).
-3. **Small α (0.1) — saturation/flatness.** Median 185 of 200 epochs with a
-   degenerate tail (m = 0, zero gradient), halting at P(ground) ≈ 0.17 with
-   median max-probability 0.19. Ground state still ranks 1–3 in every run but
-   median margin 0.031, so only 6 of 30 readouts survive 4096 shots. **Also
-   produces infeasible readouts** — 7 distinct attractors including `0000`,
-   `1111`, `0001` (6 runs violating the budget constraint), because the upper
-   1−α of the distribution is unconstrained.
+3. **Small α (0.1) — saturation/flatness, and loss of structure.** Median 185 of
+   200 epochs with a degenerate tail (m = 0, zero gradient), halting at
+   P(ground) ≈ 0.17 with median max-probability 0.19. Ground state still ranks
+   1–3 in every run but median margin 0.031, so only 6 of 30 readouts survive
+   4096 shots. Scatters across **7 distinct attractors** (every other arm has
+   ≤ 2): 3 infeasible (`0000`, `1111`, `0001` — 6 runs violating the budget
+   constraint) and 4 feasible-but-wrong.
+
+**A second, independent lower bound on α** (docs §7, not anticipated by the
+derivation): the budget penalty is enforced only through the objective, and CVaR
+zero-weights everything above the α-quantile, so **α cannot go below the mass the
+feasible subspace must retain**. This is about *validity of the solution*, distinct
+from gate 1's α > 1/2ⁿ bound about *optimisability* — and it binds first: 0.1 is
+well above 1/16 = 0.0625 yet still yields illegal portfolios.
 
 **Seed structure.** Stable core recovered by every CVaR arm:
 **123, 1008, 1011, 1017, 1022, 1025**. Fringe (α-dependent): **1004, 1014, 1023**
