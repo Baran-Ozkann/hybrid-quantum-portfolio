@@ -1,0 +1,582 @@
+{
+  "seeds": [
+    42,
+    123,
+    456,
+    1000,
+    1001,
+    1002,
+    1003,
+    1004,
+    1005,
+    1006,
+    1007,
+    1008,
+    1009,
+    1010,
+    1011,
+    1012,
+    1013,
+    1014,
+    1015,
+    1016,
+    1017,
+    1018,
+    1019,
+    1020,
+    1021,
+    1022,
+    1023,
+    1024,
+    1025,
+    1026
+  ],
+  "ground_bitstring": "1010",
+  "ground_energy": -4.921118600476328,
+  "runs": [
+    {
+      "seed": 42,
+      "final_energy": -2.984765068343391,
+      "energy_gap": 1.9363535321329373,
+      "ground_state_prob": 0.5204601221663449,
+      "mode_bitstring": "1010",
+      "found_ground_state": true,
+      "decoded_weights": [
+        0.5,
+        0.0,
+        0.5,
+        0.0
+      ],
+      "expected_return": 1.0628155490078228,
+      "volatility": 0.46891929081127065,
+      "sharpe_ratio": 2.1598931177592733,
+      "wall_time_s": 26.71186137199402
+    },
+    {
+      "seed": 123,
+      "final_energy": -3.868023505781516,
+      "energy_gap": 1.0530950946948119,
+      "ground_state_prob": 0.5256344546817053,
+      "mode_bitstring": "1010",
+      "found_ground_state": true,
+      "decoded_weights": [
+        0.5,
+        0.0,
+        0.5,
+        0.0
+      ],
+      "expected_return": 1.0628155490078228,
+      "volatility": 0.46891929081127065,
+      "sharpe_ratio": 2.1598931177592733,
+      "wall_time_s": 25.14221429824829
+    },
+    {
+      "seed": 456,
+      "final_energy": -3.30406066250218,
+      "energy_gap": 1.617057937974148,
+      "ground_state_prob": 0.5395211638416126,
+      "mode_bitstring": "1010",
+      "found_ground_state": true,
+      "decoded_weights": [
+        0.5,
+        0.0,
+        0.5,
+        0.0
+      ],
+      "expected_return": 1.0628155490078228,
+      "volatility": 0.46891929081127065,
+      "sharpe_ratio": 2.1598931177592733,
+      "wall_time_s": 24.356221437454224
+    },
+    {
+      "seed": 1000,
+      "final_energy": -2.0976569594772023,
+      "energy_gap": 2.8234616409991258,
+      "ground_state_prob": 0.5169030243127785,
+      "mode_bitstring": "1010",
+      "found_ground_state": true,
+      "decoded_weights": [
+        0.5,
+        0.0,
+        0.5,
+        0.0
+      ],
+      "expected_return": 1.0628155490078228,
+      "volatility": 0.46891929081127065,
+      "sharpe_ratio": 2.1598931177592733,
+      "wall_time_s": 23.30512237548828
+    },
+    {
+      "seed": 1001,
+      "final_energy": -3.181819096436957,
+      "energy_gap": 1.739299504039371,
+      "ground_state_prob": 0.5240426219396211,
+      "mode_bitstring": "1010",
+      "found_ground_state": true,
+      "decoded_weights": [
+        0.5,
+        0.0,
+        0.5,
+        0.0
+      ],
+      "expected_return": 1.0628155490078228,
+      "volatility": 0.46891929081127065,
+      "sharpe_ratio": 2.1598931177592733,
+      "wall_time_s": 24.673733711242676
+    },
+    {
+      "seed": 1002,
+      "final_energy": -3.0161574843346073,
+      "energy_gap": 1.9049611161417208,
+      "ground_state_prob": 0.5223656576987032,
+      "mode_bitstring": "1010",
+      "found_ground_state": true,
+      "decoded_weights": [
+        0.5,
+        0.0,
+        0.5,
+        0.0
+      ],
+      "expected_return": 1.0628155490078228,
+      "volatility": 0.46891929081127065,
+      "sharpe_ratio": 2.1598931177592733,
+      "wall_time_s": 25.473297595977783
+    },
+    {
+      "seed": 1003,
+      "final_energy": -2.7995981232586153,
+      "energy_gap": 2.1215204772177128,
+      "ground_state_prob": 0.5056644056590965,
+      "mode_bitstring": "1010",
+      "found_ground_state": true,
+      "decoded_weights": [
+        0.5,
+        0.0,
+        0.5,
+        0.0
+      ],
+      "expected_return": 1.0628155490078228,
+      "volatility": 0.46891929081127065,
+      "sharpe_ratio": 2.1598931177592733,
+      "wall_time_s": 27.92963147163391
+    },
+    {
+      "seed": 1004,
+      "final_energy": -2.754585895557091,
+      "energy_gap": 2.166532704919237,
+      "ground_state_prob": 0.5366939933315404,
+      "mode_bitstring": "1010",
+      "found_ground_state": true,
+      "decoded_weights": [
+        0.5,
+        0.0,
+        0.5,
+        0.0
+      ],
+      "expected_return": 1.0628155490078228,
+      "volatility": 0.46891929081127065,
+      "sharpe_ratio": 2.1598931177592733,
+      "wall_time_s": 36.542778968811035
+    },
+    {
+      "seed": 1005,
+      "final_energy": -2.9158247305379548,
+      "energy_gap": 2.0052938699383733,
+      "ground_state_prob": 0.5477293830063176,
+      "mode_bitstring": "1010",
+      "found_ground_state": true,
+      "decoded_weights": [
+        0.5,
+        0.0,
+        0.5,
+        0.0
+      ],
+      "expected_return": 1.0628155490078228,
+      "volatility": 0.46891929081127065,
+      "sharpe_ratio": 2.1598931177592733,
+      "wall_time_s": 34.42282295227051
+    },
+    {
+      "seed": 1006,
+      "final_energy": -2.3098747075743313,
+      "energy_gap": 2.6112438929019968,
+      "ground_state_prob": 0.4160413042811648,
+      "mode_bitstring": "1010",
+      "found_ground_state": true,
+      "decoded_weights": [
+        0.5,
+        0.0,
+        0.5,
+        0.0
+      ],
+      "expected_return": 1.0628155490078228,
+      "volatility": 0.46891929081127065,
+      "sharpe_ratio": 2.1598931177592733,
+      "wall_time_s": 35.555193185806274
+    },
+    {
+      "seed": 1007,
+      "final_energy": -3.001657858880103,
+      "energy_gap": 1.9194607415962253,
+      "ground_state_prob": 0.5423762801785434,
+      "mode_bitstring": "1010",
+      "found_ground_state": true,
+      "decoded_weights": [
+        0.5,
+        0.0,
+        0.5,
+        0.0
+      ],
+      "expected_return": 1.0628155490078228,
+      "volatility": 0.46891929081127065,
+      "sharpe_ratio": 2.1598931177592733,
+      "wall_time_s": 36.24437069892883
+    },
+    {
+      "seed": 1008,
+      "final_energy": -2.6298540037068805,
+      "energy_gap": 2.2912645967694476,
+      "ground_state_prob": 0.5406754848846025,
+      "mode_bitstring": "1010",
+      "found_ground_state": true,
+      "decoded_weights": [
+        0.5,
+        0.0,
+        0.5,
+        0.0
+      ],
+      "expected_return": 1.0628155490078228,
+      "volatility": 0.46891929081127065,
+      "sharpe_ratio": 2.1598931177592733,
+      "wall_time_s": 35.881598234176636
+    },
+    {
+      "seed": 1009,
+      "final_energy": -3.8939382425989786,
+      "energy_gap": 1.0271803578773495,
+      "ground_state_prob": 0.5304182421280589,
+      "mode_bitstring": "1010",
+      "found_ground_state": true,
+      "decoded_weights": [
+        0.5,
+        0.0,
+        0.5,
+        0.0
+      ],
+      "expected_return": 1.0628155490078228,
+      "volatility": 0.46891929081127065,
+      "sharpe_ratio": 2.1598931177592733,
+      "wall_time_s": 36.12781620025635
+    },
+    {
+      "seed": 1010,
+      "final_energy": -2.8228220658395076,
+      "energy_gap": 2.0982965346368205,
+      "ground_state_prob": 0.539251956969486,
+      "mode_bitstring": "1010",
+      "found_ground_state": true,
+      "decoded_weights": [
+        0.5,
+        0.0,
+        0.5,
+        0.0
+      ],
+      "expected_return": 1.0628155490078228,
+      "volatility": 0.46891929081127065,
+      "sharpe_ratio": 2.1598931177592733,
+      "wall_time_s": 35.44997835159302
+    },
+    {
+      "seed": 1011,
+      "final_energy": -3.1026516131944377,
+      "energy_gap": 1.8184669872818904,
+      "ground_state_prob": 0.5295237389015438,
+      "mode_bitstring": "1010",
+      "found_ground_state": true,
+      "decoded_weights": [
+        0.5,
+        0.0,
+        0.5,
+        0.0
+      ],
+      "expected_return": 1.0628155490078228,
+      "volatility": 0.46891929081127065,
+      "sharpe_ratio": 2.1598931177592733,
+      "wall_time_s": 38.85957956314087
+    },
+    {
+      "seed": 1012,
+      "final_energy": -3.6794040939362738,
+      "energy_gap": 1.2417145065400543,
+      "ground_state_prob": 0.5015739604622188,
+      "mode_bitstring": "1010",
+      "found_ground_state": true,
+      "decoded_weights": [
+        0.5,
+        0.0,
+        0.5,
+        0.0
+      ],
+      "expected_return": 1.0628155490078228,
+      "volatility": 0.46891929081127065,
+      "sharpe_ratio": 2.1598931177592733,
+      "wall_time_s": 34.31920766830444
+    },
+    {
+      "seed": 1013,
+      "final_energy": -3.7370255408522386,
+      "energy_gap": 1.1840930596240895,
+      "ground_state_prob": 0.4939738523126917,
+      "mode_bitstring": "1010",
+      "found_ground_state": true,
+      "decoded_weights": [
+        0.5,
+        0.0,
+        0.5,
+        0.0
+      ],
+      "expected_return": 1.0628155490078228,
+      "volatility": 0.46891929081127065,
+      "sharpe_ratio": 2.1598931177592733,
+      "wall_time_s": 35.81679058074951
+    },
+    {
+      "seed": 1014,
+      "final_energy": -3.480058444287555,
+      "energy_gap": 1.4410601561887733,
+      "ground_state_prob": 0.31626997117427075,
+      "mode_bitstring": "1010",
+      "found_ground_state": true,
+      "decoded_weights": [
+        0.5,
+        0.0,
+        0.5,
+        0.0
+      ],
+      "expected_return": 1.0628155490078228,
+      "volatility": 0.46891929081127065,
+      "sharpe_ratio": 2.1598931177592733,
+      "wall_time_s": 37.65586018562317
+    },
+    {
+      "seed": 1015,
+      "final_energy": -3.808392811322166,
+      "energy_gap": 1.1127257891541622,
+      "ground_state_prob": 0.5519360718608131,
+      "mode_bitstring": "1010",
+      "found_ground_state": true,
+      "decoded_weights": [
+        0.5,
+        0.0,
+        0.5,
+        0.0
+      ],
+      "expected_return": 1.0628155490078228,
+      "volatility": 0.46891929081127065,
+      "sharpe_ratio": 2.1598931177592733,
+      "wall_time_s": 39.857237577438354
+    },
+    {
+      "seed": 1016,
+      "final_energy": -1.9392717299652131,
+      "energy_gap": 2.9818468705111147,
+      "ground_state_prob": 0.5365168177856532,
+      "mode_bitstring": "1010",
+      "found_ground_state": true,
+      "decoded_weights": [
+        0.5,
+        0.0,
+        0.5,
+        0.0
+      ],
+      "expected_return": 1.0628155490078228,
+      "volatility": 0.46891929081127065,
+      "sharpe_ratio": 2.1598931177592733,
+      "wall_time_s": 34.99011492729187
+    },
+    {
+      "seed": 1017,
+      "final_energy": -2.9574341210970303,
+      "energy_gap": 1.9636844793792978,
+      "ground_state_prob": 0.5276755811763851,
+      "mode_bitstring": "1010",
+      "found_ground_state": true,
+      "decoded_weights": [
+        0.5,
+        0.0,
+        0.5,
+        0.0
+      ],
+      "expected_return": 1.0628155490078228,
+      "volatility": 0.46891929081127065,
+      "sharpe_ratio": 2.1598931177592733,
+      "wall_time_s": 38.12342119216919
+    },
+    {
+      "seed": 1018,
+      "final_energy": -3.1922307409655737,
+      "energy_gap": 1.7288878595107544,
+      "ground_state_prob": 0.5167963136468028,
+      "mode_bitstring": "1010",
+      "found_ground_state": true,
+      "decoded_weights": [
+        0.5,
+        0.0,
+        0.5,
+        0.0
+      ],
+      "expected_return": 1.0628155490078228,
+      "volatility": 0.46891929081127065,
+      "sharpe_ratio": 2.1598931177592733,
+      "wall_time_s": 35.70883631706238
+    },
+    {
+      "seed": 1019,
+      "final_energy": -3.04150617036967,
+      "energy_gap": 1.8796124301066581,
+      "ground_state_prob": 0.5670284941077676,
+      "mode_bitstring": "1010",
+      "found_ground_state": true,
+      "decoded_weights": [
+        0.5,
+        0.0,
+        0.5,
+        0.0
+      ],
+      "expected_return": 1.0628155490078228,
+      "volatility": 0.46891929081127065,
+      "sharpe_ratio": 2.1598931177592733,
+      "wall_time_s": 34.93355703353882
+    },
+    {
+      "seed": 1020,
+      "final_energy": -4.005288450149475,
+      "energy_gap": 0.9158301503268529,
+      "ground_state_prob": 0.48251030235370007,
+      "mode_bitstring": "1010",
+      "found_ground_state": true,
+      "decoded_weights": [
+        0.5,
+        0.0,
+        0.5,
+        0.0
+      ],
+      "expected_return": 1.0628155490078228,
+      "volatility": 0.46891929081127065,
+      "sharpe_ratio": 2.1598931177592733,
+      "wall_time_s": 36.10175085067749
+    },
+    {
+      "seed": 1021,
+      "final_energy": -2.035338066406797,
+      "energy_gap": 2.8857805340695313,
+      "ground_state_prob": 0.23792373906735323,
+      "mode_bitstring": "0110",
+      "found_ground_state": false,
+      "decoded_weights": [
+        0.0,
+        0.5,
+        0.5,
+        0.0
+      ],
+      "expected_return": 1.0106629593185532,
+      "volatility": 0.4512329898003851,
+      "sharpe_ratio": 2.1289732378466564,
+      "wall_time_s": 37.03649878501892
+    },
+    {
+      "seed": 1022,
+      "final_energy": -2.767457555435394,
+      "energy_gap": 2.153661045040934,
+      "ground_state_prob": 0.5313889997010942,
+      "mode_bitstring": "1010",
+      "found_ground_state": true,
+      "decoded_weights": [
+        0.5,
+        0.0,
+        0.5,
+        0.0
+      ],
+      "expected_return": 1.0628155490078228,
+      "volatility": 0.46891929081127065,
+      "sharpe_ratio": 2.1598931177592733,
+      "wall_time_s": 35.777111530303955
+    },
+    {
+      "seed": 1023,
+      "final_energy": -2.2775283141552882,
+      "energy_gap": 2.64359028632104,
+      "ground_state_prob": 0.42254964323937516,
+      "mode_bitstring": "1010",
+      "found_ground_state": true,
+      "decoded_weights": [
+        0.5,
+        0.0,
+        0.5,
+        0.0
+      ],
+      "expected_return": 1.0628155490078228,
+      "volatility": 0.46891929081127065,
+      "sharpe_ratio": 2.1598931177592733,
+      "wall_time_s": 32.359593868255615
+    },
+    {
+      "seed": 1024,
+      "final_energy": -3.542487889015998,
+      "energy_gap": 1.37863071146033,
+      "ground_state_prob": 0.523206709175547,
+      "mode_bitstring": "1010",
+      "found_ground_state": true,
+      "decoded_weights": [
+        0.5,
+        0.0,
+        0.5,
+        0.0
+      ],
+      "expected_return": 1.0628155490078228,
+      "volatility": 0.46891929081127065,
+      "sharpe_ratio": 2.1598931177592733,
+      "wall_time_s": 24.751880168914795
+    },
+    {
+      "seed": 1025,
+      "final_energy": -2.7878189430586104,
+      "energy_gap": 2.1332996574177177,
+      "ground_state_prob": 0.5721075239844851,
+      "mode_bitstring": "1010",
+      "found_ground_state": true,
+      "decoded_weights": [
+        0.5,
+        0.0,
+        0.5,
+        0.0
+      ],
+      "expected_return": 1.0628155490078228,
+      "volatility": 0.46891929081127065,
+      "sharpe_ratio": 2.1598931177592733,
+      "wall_time_s": 24.882866621017456
+    },
+    {
+      "seed": 1026,
+      "final_energy": -3.3359131155042205,
+      "energy_gap": 1.5852054849721076,
+      "ground_state_prob": 0.5349016502667789,
+      "mode_bitstring": "1010",
+      "found_ground_state": true,
+      "decoded_weights": [
+        0.5,
+        0.0,
+        0.5,
+        0.0
+      ],
+      "expected_return": 1.0628155490078228,
+      "volatility": 0.46891929081127065,
+      "sharpe_ratio": 2.1598931177592733,
+      "wall_time_s": 26.687502145767212
+    }
+  ],
+  "mean_final_energy": -3.042348200151509,
+  "std_final_energy": 0.5545405841611493,
+  "all_seeds_agree": false,
+  "n_found_ground_state": 29
+}

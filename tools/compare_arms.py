@@ -54,8 +54,42 @@ def load_arm(tag: str | None) -> dict[int, object]:
     return runs
 
 
+def readout_margins(runs: dict[int, object], ground_idx: int,
+                    runner_idx: int) -> dict[int, dict]:
+    """Per-run readout robustness, computed from the final distribution.
+
+    Under the PLAIN objective these quantities are implied: runs collapse into
+    the two lowest-energy states, so the readout margin is just
+    ``|P(ground) - P(runner-up)|`` and correctness is equivalent to
+    ``P(ground) > 0.5``.
+
+    Under CVaR that equivalence breaks. CVaR is indifferent to how the upper
+    ``1 - alpha`` of the distribution is arranged, so mass fragments and the
+    argmax can win with well under 0.5 -- seed 1006 reads out correctly at
+    P(ground) = 0.416. An argmax held at 0.42 against fifteen scattered
+    competitors is a materially weaker result than the same argmax at 0.60
+    against a single competitor, and it is the first thing that would degrade
+    under finite shots. So the margin is measured rather than inferred.
+    """
+    out = {}
+    for seed, r in runs.items():
+        p = np.asarray(r.final_probabilities, dtype=float)
+        order = np.argsort(p)[::-1]
+        top, second = int(order[0]), int(order[1])
+        out[seed] = {
+            "p_ground": float(p[ground_idx]),
+            "p_runner_up_state": float(p[runner_idx]),
+            "p_mode": float(p[top]),
+            "p_second": float(p[second]),
+            "readout_margin": float(p[top] - p[second]),
+            "two_state_mass": float(p[ground_idx] + p[runner_idx]),
+        }
+    return out
+
+
 def arm_stats(runs: dict[int, object], ground_energy: float,
-              spectral_width: float, gap: float) -> dict:
+              spectral_width: float, gap: float,
+              ground_idx: int = 10, runner_idx: int = 6) -> dict:
     """All per-arm statistics, in the same structure for every arm."""
     seeds = sorted(runs)
     energies = np.array([runs[s].final_energy for s in seeds])
@@ -85,6 +119,10 @@ def arm_stats(runs: dict[int, object], ground_energy: float,
     # whose objective saturates at or above 0.5 this fraction must EQUAL the
     # readout accuracy; a mismatch means the theory or the code is wrong.
     n_ge_half = int((gs_probs >= 0.5).sum())
+
+    margins = readout_margins(runs, ground_idx, runner_idx)
+    margin_vals = np.array([margins[s]["readout_margin"] for s in seeds])
+    two_state = np.array([margins[s]["two_state_mass"] for s in seeds])
 
     by_energy = np.argsort(energies)
     curves = {
@@ -121,6 +159,13 @@ def arm_stats(runs: dict[int, object], ground_energy: float,
         "n_p_ground_ge_half": n_ge_half,
         "argmax_guarantee_holds": n_ge_half == n_correct,
         "mode_prob_mean": float(mode_probs.mean()),
+        "readout_margin_median": float(np.median(margin_vals)),
+        "readout_margin_min": float(margin_vals.min()),
+        "n_margin_below_0.05": int((margin_vals < 0.05).sum()),
+        "two_state_mass_median": float(np.median(two_state)),
+        "two_state_mass_min": float(two_state.min()),
+        "n_two_state_below_0.5": int((two_state < 0.5).sum()),
+        "margins": {int(s): margins[s] for s in seeds},
         "multi_start": curves,
         "per_seed": {
             int(s): {
@@ -194,8 +239,10 @@ def main() -> int:
         print(f"No runs found for arm {args.arm!r}")
         return 1
 
-    base = arm_stats(base_runs, ground_e, width, gap)
-    arm = arm_stats(arm_runs, ground_e, width, gap)
+    g_idx = qb.bitstring_to_index([int(c) for c in spectrum[0]["bitstring"]], 4)
+    r_idx = qb.bitstring_to_index([int(c) for c in spectrum[1]["bitstring"]], 4)
+    base = arm_stats(base_runs, ground_e, width, gap, g_idx, r_idx)
+    arm = arm_stats(arm_runs, ground_e, width, gap, g_idx, r_idx)
     paired = mcnemar(base, arm)
 
     bl = args.baseline or "baseline"
@@ -241,6 +288,17 @@ def main() -> int:
         print(f"    {name:<24} P>=0.5 in {st['n_p_ground_ge_half']:>2} runs, "
               f"correct in {st['n_correct']:>2} -> "
               f"{'consistent' if st['argmax_guarantee_holds'] else 'MISMATCH'}")
+
+    print("\n  Readout robustness (margin = P(mode) - P(second best)):")
+    for name, st in ((bl, base), (args.arm, arm)):
+        print(f"    {name:<24} margin median {st['readout_margin_median']:.4f}, "
+              f"min {st['readout_margin_min']:.4f}, "
+              f"{st['n_margin_below_0.05']} runs below 0.05")
+    print("\n  Two-state mass  P(ground) + P(runner-up):")
+    for name, st in ((bl, base), (args.arm, arm)):
+        print(f"    {name:<24} median {st['two_state_mass_median']:.4f}, "
+              f"min {st['two_state_mass_min']:.4f}, "
+              f"{st['n_two_state_below_0.5']} runs below 0.5")
 
     print("\n  Attractors:")
     for name, st in ((bl, base), (args.arm, arm)):

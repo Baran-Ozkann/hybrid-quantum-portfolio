@@ -99,6 +99,8 @@ class TrainingConfig:
     readout_shots: int = 4096
     #: "constant" (the Phase 5 baseline), "cosine", or "step".
     lr_schedule: str = "constant"
+    #: CVaR tail fraction. None (or 1.0) is the plain mean-energy objective.
+    cvar_alpha: float | None = None
 
 
 def build_scheduler(optimiser, config: TrainingConfig):
@@ -151,6 +153,24 @@ class TrainingResult:
     wall_time_s: float
     circuit_evaluations: int
     recycle_stats: dict = field(default_factory=dict)
+    #: Per-epoch readout (argmax basis state) and P(ground state).
+    mode_history: list[str] = field(default_factory=list)
+    ground_prob_history: list[float] = field(default_factory=list)
+    #: Epoch at which the readout LAST changed; -1 if it never changed.
+    #:
+    #: Deliberately the last change, not the first epoch matching the final
+    #: answer: a run oscillating 1010 -> 0110 -> 1010 would otherwise report an
+    #: early settling epoch that never actually held.
+    settle_epoch: int = -1
+    #: CVaR diagnostics; empty for plain-VQE arms.
+    cvar_history: list[float] = field(default_factory=list)
+    #: Per-epoch tail boundary index m. m = 0 means the tail is degenerate and
+    #: the gradient is identically zero.
+    m_history: list[int] = field(default_factory=list)
+    #: Epochs spent saturated (m = 0), and how often m moved between steps --
+    #: a rapidly oscillating boundary means the subgradient is chattering.
+    n_saturated_epochs: int = 0
+    n_m_changes: int = 0
 
 
 # --------------------------------------------------------------------------
@@ -210,12 +230,48 @@ def train(
     energy_hist: list[float] = []
     pnorm_hist: list[float] = []
     gnorm_hist: list[float] = []
+    mode_hist: list[str] = []
+    gprob_hist: list[float] = []
+    cvar_hist: list[float] = []
+    m_hist: list[int] = []
+
+    gs_index = qb.bitstring_to_index([int(c) for c in ground_bits], ham.n_assets)
+
+    # CVaR objective, if this arm uses one. alpha = 1.0 is the plain mean and is
+    # routed through the same code path so the control exercises it too.
+    cvar_obj = None
+    if config.cvar_alpha is not None:
+        from training.cvar import CVaRObjective, CVaRLoss
+        cvar_obj = CVaRObjective(evaluator, energies_table, config.cvar_alpha)
+        logger.info("  objective: CVaR at alpha = %.4f "
+                    "(saturates once P(ground) >= alpha)", config.cvar_alpha)
 
     for epoch in range(config.epochs + 1):
         optimiser.zero_grad(set_to_none=True)
 
-        energy = layer()                       # forward: 1 circuit evaluation
-        loss = energy
+        if cvar_obj is None:
+            energy = layer()                   # forward: 1 circuit evaluation
+            loss = energy
+            energy_val = float(energy.detach())
+            cvar_val = energy_val
+            m_now = -1
+        else:
+            # Freeze the tail decomposition for the whole step: the weights
+            # encode the linearisation point and must not be recomputed inside
+            # the parameter-shift evaluations.
+            tail = cvar_obj.linearise(layer.theta.detach().cpu().numpy())
+            loss = CVaRLoss.apply(layer.theta, cvar_obj, tail)
+            cvar_val = float(loss.detach())
+            m_now = tail.m
+            # Plain <H> is tracked SEPARATELY and is not the training signal.
+            # Saturating runs stop early, so their plain energy is worse than a
+            # plain-VQE run's even when the readout is better -- which makes
+            # cross-arm energy comparison meaningless.
+            energy_val = float(
+                qb.probabilities(layer.theta.detach().cpu().numpy(),
+                                 config.num_layers) @ energies_table
+            )
+
         if config.l2_coefficient:
             loss = loss + config.l2_coefficient * (layer.theta ** 2).sum()
 
@@ -224,21 +280,39 @@ def train(
         grad_norm = float(layer.theta.grad.norm())
         param_norm = float(layer.theta.detach().norm())
         loss_val = float(loss.detach())
-        energy_val = float(energy.detach())
+        cvar_hist.append(cvar_val)
+        m_hist.append(m_now)
+
+        # A degenerate tail (m = 0) gives an identically zero gradient, so
+        # training does nothing. Fail loudly at step 0 rather than reporting a
+        # flat loss curve after 200 wasted epochs.
+        if epoch == 0 and cvar_obj is not None and grad_norm == 0.0:
+            raise RuntimeError(
+                f"CVaR alpha={config.cvar_alpha} is degenerate at initialisation "
+                f"(m=0, gradient identically zero): P(ground) already exceeds "
+                f"alpha, so CVaR is at its floor and training cannot start. "
+                f"Raise alpha above 1/{2 ** ham.n_assets} = "
+                f"{1 / 2 ** ham.n_assets:.4f}."
+            )
 
         loss_hist.append(loss_val)
         energy_hist.append(energy_val)
         pnorm_hist.append(param_norm)
         gnorm_hist.append(grad_norm)
 
+        # Per-epoch readout, so the epoch at which the basin settles is measured
+        # rather than inferred. One extra evaluation against the 57 the step
+        # already costs.
+        probs = layer.probabilities()
+        mode_idx = int(np.argmax(probs))
+        mode_bits = "".join(str(b) for b in qb.index_to_bitstring(mode_idx, ham.n_assets))
+        mode_hist.append(mode_bits)
+        gprob_hist.append(float(probs[gs_index]))
+
         if epoch % config.log_every == 0 or epoch == config.epochs:
-            probs = layer.probabilities()
-            gs_idx = qb.bitstring_to_index([int(c) for c in ground_bits], ham.n_assets)
-            mode_idx = int(np.argmax(probs))
-            mode_bits = "".join(str(b) for b in qb.index_to_bitstring(mode_idx, ham.n_assets))
             logger.info("  %5d %12.6f %12.6f %11.5f %11.5f %9.4f %8.4f %6s",
                         epoch, loss_val, energy_val, param_norm, grad_norm,
-                        optimiser.param_groups[0]["lr"], probs[gs_idx], mode_bits)
+                        optimiser.param_groups[0]["lr"], probs[gs_index], mode_bits)
 
         # The final iteration is measured, not stepped, so the reported
         # parameters are exactly those the metrics describe.
@@ -284,9 +358,17 @@ def train(
     vol = float(np.sqrt(max(weights @ ham.sigma @ weights, 0.0)))
     sharpe = (ret - risk_free) / vol if vol > 1e-12 else 0.0
 
+    # Epoch of the LAST readout change. Anything earlier did not hold.
+    settle_epoch = -1
+    for e in range(1, len(mode_hist)):
+        if mode_hist[e] != mode_hist[e - 1]:
+            settle_epoch = e
+
     elapsed = time.time() - started
 
     logger.info("")
+    logger.info("  readout settled at   : epoch %s (last change)",
+                settle_epoch if settle_epoch >= 0 else "0 (never changed)")
     logger.info("  final <H>            : %.6f", final_energy)
     logger.info("  ground-state energy  : %.6f  (%s)", ground_energy, ground_bits)
     logger.info("  energy gap           : %+.6f", final_energy - ground_energy)
@@ -324,6 +406,14 @@ def train(
         wall_time_s=elapsed,
         circuit_evaluations=evaluator.n_evaluations,
         recycle_stats=qb.recycle_stats(),
+        mode_history=mode_hist,
+        ground_prob_history=gprob_hist,
+        settle_epoch=settle_epoch,
+        cvar_history=cvar_hist if cvar_obj is not None else [],
+        m_history=m_hist if cvar_obj is not None else [],
+        n_saturated_epochs=sum(1 for m in m_hist if m == 0) if cvar_obj else 0,
+        n_m_changes=sum(1 for a, b in zip(m_hist, m_hist[1:]) if a != b)
+        if cvar_obj else 0,
     )
 
 
@@ -571,6 +661,10 @@ def main() -> int:
     parser.add_argument("--schedule", choices=("constant", "cosine", "step"),
                         default="constant",
                         help="learning-rate schedule (default: constant)")
+    parser.add_argument("--cvar-alpha", type=float, default=None,
+                        help="CVaR tail fraction; omit for the plain mean "
+                             "objective. 1.0 routes the plain mean through the "
+                             "CVaR code path (the control).")
     parser.add_argument("--tag", default=None,
                         help="experiment arm name; results go to "
                              "training/arms/<tag>/ instead of overwriting the "
@@ -581,7 +675,7 @@ def main() -> int:
     config = TrainingConfig(
         epochs=args.epochs, learning_rate=args.lr,
         num_layers=args.layers, l2_coefficient=args.l2,
-        lr_schedule=args.schedule,
+        lr_schedule=args.schedule, cvar_alpha=args.cvar_alpha,
     )
     run_all(args.seeds, config, tag=args.tag)
     return 0
