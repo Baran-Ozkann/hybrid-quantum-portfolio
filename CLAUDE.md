@@ -114,36 +114,63 @@ untouched** — it accurately describes what it measured.
 
 ---
 
-## Phase 9: pre-registered predictions
+## Phase 9: COMPLETE — see [`docs/objective_comparison.md`](docs/objective_comparison.md)
 
 CVaR minimises the mean of the lowest α-quantile instead of the plain mean.
-Implementation and gate: `training/cvar.py`, `tools/verify_cvar_gradient.py`
-(value identity 3.6e-15, gradient identity 2.7e-9, α=1 reduces to plain VQE to
-5.6e-15).
+Implementation `training/cvar.py`; gate `tools/verify_cvar_gradient.py` (value
+identity 3.6e-15, gradient identity 2.7e-9, α=1 reduces to plain VQE to 5.6e-15).
 
-Key fact: `CVaR_α` is **exactly minimised once P(ground) ≥ α**, after which the
-gradient vanishes identically and training halts.
+All arms: 200 epochs, constant lr = 0.05, 3 layers, init U(−0.1, 0.1), same 30
+seeds, exact backend. Paired against `lr_constant_200`.
 
-| | prediction |
-|---|---|
-| **User** | Non-monotone, **peak at α = 0.5**, discontinuity between 0.4 and 0.6. Because P(ground) ≥ 0.5 forces the ground state to be the argmax, α = 0.5 is the weakest target that still guarantees a correct readout — and tail weights carry 1/α, so it pursues that target with twice plain VQE's gradient pressure. |
-| **Claude** | Monotone increasing in α, best at α = 1.0. Reasoning: small α halts under-concentrated. **Wrong** — missed that 0.5 is exactly the argmax threshold. |
+| α | exact | E[shot acc] @4096 | mean rank | worst rank | min margin† | mean ⟨H⟩ | McNemar p |
+|---|---|---|---|---|---|---|---|
+| 0.1 | 56.7% | **54.2%** | 1.567 | 3 | 0.0051 | −0.0771 | 0.6291 |
+| **0.4** | **100.0%** | **100.0%** | **1.000** | 1 | **0.1810** | −2.7327 | **0.0020** |
+| 0.5 | 96.7% | 95.5% | 1.033 | 2 | 0.0053 | −3.0423 | 0.0039 |
+| 0.6 | 86.7% | 86.7% | 1.267 | 4 | 0.1249 | −3.3496 | 0.0703 |
+| 1.0 (plain) | 66.7% | 66.3% | 3.033 | 14 | 0.0023 | −4.9052 | — |
 
-Both stay on the record with whichever the data supports.
+† minimum top-two margin among correct runs.
 
-**Configuration for all CVaR arms** (must be identical): 200 epochs, constant
-lr = 0.05, 3 layers, init U(−0.1, 0.1), same 30 seeds.
-**Sweep:** α ∈ {0.1, 0.4, 0.5, 0.6} at 30 seeds, plus a 5-seed α = 1.0 code-path
-check. Order: 0.5 → 0.6 → 0.4 → 0.1, reporting after the triple.
+**Non-monotone, interior peak at α = 0.4. Both pre-registered predictions failed:**
 
-Report must include, per arm: fraction with P(ground) ≥ 0.5 checked against
-readout accuracy (must coincide for α ≥ 0.5); plain ⟨H⟩ alongside the CVaR value,
-with an explicit note that **cross-arm energy comparison is meaningless** because
-saturating runs stop early; and multi-start curves recomputed within each arm.
+- **User:** peak at 0.5 with a 0.4/0.6 cliff, from the argmax guarantee.
+  *Shape confirmed, location and mechanism refuted.*
+- **Claude:** monotone increasing to α = 1.0. *Refuted; ordering reverses.*
 
-Deliverable: `docs/objective_comparison.md` + figures + a README paragraph.
-`stability_report.md` gets **one line** in future-work noting CVaR moved to a
-separate study.
+**Mechanism (measured, not argued).** The argmax guarantee never binds:
+P(ground) ≥ 0.5 is sufficient but **not necessary** — a *plurality* suffices, and
+CVaR fragments losing mass across fifteen states. Decisive evidence: at α = 0.4
+**only 2 of 30 runs reach P ≥ 0.5, yet all 30 read out correctly**. What drives
+the result is the `1/α` tail weight (2.5× plain gradient pressure at 0.4 vs 2.0×
+at 0.5), traded against the saturation target (CVaR is exactly minimised once
+P(ground) ≥ α, after which the gradient vanishes). They balance near 0.4.
+
+**Three distinct failure modes:**
+
+1. **Plain VQE — wrong basin.** Ground state scattered to ranks 6–14 in half its
+   failures. Under-optimised discrimination.
+2. **Large α (0.6) — insufficient pressure.** Failures at ranks 2–4. Seed 1006
+   regresses decisively (1010 → rank 2 at P = 0.15 while 0110 holds 0.52).
+3. **Small α (0.1) — saturation/flatness.** Median 185 of 200 epochs with a
+   degenerate tail (m = 0, zero gradient), halting at P(ground) ≈ 0.17 with
+   median max-probability 0.19. Ground state still ranks 1–3 in every run but
+   median margin 0.031, so only 6 of 30 readouts survive 4096 shots. **Also
+   produces infeasible readouts** — 7 distinct attractors including `0000`,
+   `1111`, `0001` (6 runs violating the budget constraint), because the upper
+   1−α of the distribution is unconstrained.
+
+**Seed structure.** Stable core recovered by every CVaR arm:
+**123, 1008, 1011, 1017, 1022, 1025**. Fringe (α-dependent): **1004, 1014, 1023**
+(α ≤ 0.5), **1021** (α = 0.6, 0.4). Core recoveries carry ~2× the fringe's margin
+at α ≥ 0.5. Only regression in the phase: **1006** at α = 0.6.
+
+**Recommendation unchanged.** At k = 5 plain VQE already reaches 99.59%, and
+Phase 7 already recommends five seeds. This is a mechanistic result about how the
+objective shapes the readout, **not** a change to what the demo should do. The
+one practical caveat: α = 0.4 reaches 100% at **k = 1**, which matters only if
+runs are expensive.
 
 ---
 
@@ -161,6 +188,14 @@ separate study.
 
 2. **Priority 3 (5- and 7-layer ansätze)** — not started, outcome genuinely
    uncertain; more parameters may worsen the landscape.
+
+2b. **Should the α grid be refined around 0.3–0.45?** α = 0.4 is at ceiling
+   (30/30), so a finer grid cannot resolve the peak with n = 30 — it would need
+   more seeds, not more α values. Probably not worth it.
+
+2c. **200 epochs is not a converged setting.** Seed 456 crossed basins at epoch
+   176 of 200 and held for only 24 epochs, so a 250-epoch arm could move the
+   plain-VQE baseline again. The 66.7% should not be presented as converged.
 
 3. Git is **local only, no remote**. Identity is set repo-locally. Confirm before
    any push whether that email should be in public history.

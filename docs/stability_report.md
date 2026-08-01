@@ -217,7 +217,7 @@ Unattempted. Listed as directions, not as claims.
 - **Deeper or differently entangled ansätze.** Three layers reach within 0.5% of the ground energy but do not concentrate; more expressive circuits might.
 - **Out-of-sample evaluation.** Everything here is in-sample (see Scope). A walk-forward study would speak to whether the selected portfolios have any predictive value — a different question from the one asked here.
 
-Multi-start selection has moved out of this list: it is measured above.
+Multi-start selection has moved out of this list: it is measured above. So has the CVaR objective, which is now a separate controlled study -- see [`objective_comparison.md`](objective_comparison.md).
 
 ## Figures
 

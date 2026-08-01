@@ -8,7 +8,8 @@ Setup, usage, results, and known issues live in the
 | [`architecture.md`](architecture.md) | System diagram and module boundaries; phase-by-phase summary; the **single-owner-thread interpreter** design, why it was forced, and its serialization limit for concurrent sessions; interpreter recycling and the quadratic-cost bug it fixes; deviations from the original specification. |
 | [`mathematical_foundations.md`](mathematical_foundations.md) | Full QUBO derivation and penalty-weight selection; the QUBO→Ising conversion with its exhaustive verification; why the Hamiltonian is diagonal and what follows; the **exact-backend-for-training vs sampling-for-readout** distinction; the parameter-shift rule and its validation; the **rf = 5%** and simple-return conventions. |
 | [`encoding_schema.md`](encoding_schema.md) | Qubit↔asset map and bit ordering (verified, not assumed); bitstring→weights rule; all 6 reachable portfolios; worked examples including an infeasible one; the three decode/repair policies; what the encoding cannot express. |
-| [`stability_report.md`](stability_report.md) | 3-seed variance analysis; why energy ranking does not track correctness; why no run was both confident and correct. |
+| [`stability_report.md`](stability_report.md) | 30-seed variance analysis; the converged/failed split; measured multi-start curves; why energy ranking does not perfectly track correctness. |
+| [`objective_comparison.md`](objective_comparison.md) | Controlled CVaR-vs-plain-VQE study across α ∈ {0.1, 0.4, 0.5, 0.6, 1.0}. Two pre-registered predictions and how the data refuted both; the 1/α-vs-saturation mechanism; three distinct failure modes; shot-limited accuracy. |
 
 ## Figures
 

@@ -864,7 +864,9 @@ def main() -> int:
       "A walk-forward study would speak to whether the selected portfolios have "
       "any predictive value — a different question from the one asked here.")
     a("")
-    a("Multi-start selection has moved out of this list: it is measured above.")
+    a("Multi-start selection has moved out of this list: it is measured above. "
+      "So has the CVaR objective, which is now a separate controlled study -- "
+      "see [`objective_comparison.md`](objective_comparison.md).")
     a("")
 
     a("## Figures")
