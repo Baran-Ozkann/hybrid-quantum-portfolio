@@ -154,6 +154,14 @@ robust to exactly that; the mean is not. Where the two appear to disagree — a
 positive mean beside a coin-flip sign test — **the sign test is the one to
 believe.**
 
+![the headline discrimination test](figures/backtest_discrimination.png)
+
+Each point is one fold. The horizontal axis is how much the objective preferred
+its pick; the vertical axis is what that pick actually earned. **A predictive
+objective would put the points on a rising line.** They are scattered, and the
+one fold left of zero (13) is the case noted above where the objective's pick has
+the *lower* in-sample Sharpe — yet won anyway.
+
 **The Spearman row is the cleanest single number in this document — because it is
 near zero, not because it is negative.** With p = 0.753 the sign carries no
 information whatsoever, and nothing here should be read as the in-sample edge

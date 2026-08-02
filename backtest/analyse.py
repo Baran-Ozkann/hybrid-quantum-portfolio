@@ -388,6 +388,66 @@ def make_figures(payload: dict, res: dict) -> list[Path]:
     plt.close(fig)
     paths.append(p)
 
+    # ---- 2b. THE HEADLINE TEST: in-sample vs realised edge, per fold
+    fig, ax = plt.subplots(figsize=(7.2, 6.4))
+    dis, doos, labels_f = [], [], []
+    for f in folds:
+        by = {p["bitstring"]: p for p in f["portfolios"]}
+        g, r = by.get(f["ground_bitstring"]), by.get(f["runner_up_bitstring"])
+        if g is None or r is None:
+            continue
+        dis.append(g["is_sharpe"] - r["is_sharpe"])
+        doos.append(g["oos_sharpe"] - r["oos_sharpe"])
+        labels_f.append(f["index"])
+    dis, doos = np.asarray(dis), np.asarray(doos)
+    # Colour by the quantity the 10/16 test actually measures -- did the
+    # objective's pick win out of sample -- NOT by sign agreement between the
+    # two axes. The two differ at fold 13, whose ground state has the LOWER
+    # in-sample Sharpe (the Hamiltonian ranks by mean-variance utility, not by
+    # Sharpe) yet still won. Colouring by agreement would report 9/16 beside a
+    # title quoting 10/16.
+    won = doos > 0
+
+    ax.axhspan(0, max(doos.max() * 1.15, 0.1), color="#55A868", alpha=0.06)
+    ax.axhline(0, color="k", lw=1.0)
+    ax.axvline(0, color="k", lw=1.0)
+    ax.scatter(dis[won], doos[won], s=90, c="#55A868", edgecolor="k",
+               lw=0.6, zorder=3,
+               label=f"objective's pick won out of sample ({won.sum()})")
+    ax.scatter(dis[~won], doos[~won], s=90, c="#C44E52", marker="X",
+               edgecolor="k", lw=0.6, zorder=3,
+               label=f"objective's pick lost ({(~won).sum()})")
+    for x, y, i in zip(dis, doos, labels_f):
+        ax.annotate(str(i), (x, y), textcoords="offset points", xytext=(7, -3),
+                    fontsize=7.5, alpha=0.75)
+    # The one fold where the two orderings disagree is worth pointing at.
+    neg = np.where(dis < 0)[0]
+    if len(neg) == 1:
+        j = int(neg[0])
+        ax.annotate(
+            "fold 13: ground state has the LOWER\nin-sample Sharpe "
+            "(objective ranks by\nmean-variance utility, not Sharpe)",
+            xy=(dis[j], doos[j]), xytext=(dis[j] + 0.06, doos[j] + 0.75),
+            fontsize=7.2, ha="left",
+            arrowprops=dict(arrowstyle="->", lw=0.8, color="#555555"))
+
+    td_ = res["top_two_discrimination"]
+    ax.set_xlabel("in-sample Δ Sharpe  (ground − runner-up)")
+    ax.set_ylabel("realised Δ Sharpe, next 63 days")
+    ax.set_title(
+        "The headline test: a bigger in-sample edge does not predict a bigger\n"
+        f"realised one.  Spearman ρ = {td_['spearman_dis_doos']:+.3f} "
+        f"(p = {td_['spearman_dis_doos_p']:.2f});  the pick wins "
+        f"{td_['k']}/{td_['n']} (p = {td_['p_vs_coinflip']:.2f})",
+        fontsize=9.5)
+    ax.legend(fontsize=8, loc="lower left")
+    ax.grid(alpha=0.3)
+    fig.tight_layout()
+    p = FIG_DIR / "backtest_discrimination.png"
+    fig.savefig(p, dpi=140)
+    plt.close(fig)
+    paths.append(p)
+
     # ---- 3. per-fold degeneracy gap
     fig, ax = plt.subplots(figsize=(9, 4))
     gf = np.asarray(res["degeneracy"]["gap_fraction_per_fold"]) * 100

@@ -340,18 +340,42 @@ writes `data/prices.csv`.
 
 ## Open decisions
 
-1. **Does `lr_constant_200` become the recommended configuration?** If so the
-   headline moves 60% → 66.7%, and then:
-   - the UI's pre-trained model (`training/trained_seed42.json`, 100 epochs)
-     describes a configuration no longer recommended;
-   - `docs/stability_report.md`'s illustrative trio does too — and **seed 456 is
-     correct under the new settings**, which changes that narrative;
-   - the winning arm's full run files must become tracked.
+1. ~~**Does `lr_constant_200` become the recommended configuration?**~~
+   **DECIDED (2026-08-02): no. It stays a documented alternative, not the
+   recommendation.** Do not reopen this without a new reason.
 
-   A documentation change, not a rerun, but not trivial. Pending Phase 9.
+   *Reasoning, recorded so the decision reads as made rather than deferred:*
+   adopting it would move the headline 60% → 66.7% and cascade through three
+   places — the UI's pre-trained model (`training/trained_seed42.json`, 100
+   epochs), `docs/stability_report.md`'s illustrative trio (**seed 456 is
+   correct under the new settings**, which breaks that narrative), and the
+   arm's full run files would have to become tracked. That is real work in
+   service of moving a *readout-accuracy* number, and **Phase 8 §4 found that
+   number has no measurable economic value**: the 1.45% edge it resolves is
+   indistinguishable from a coin flip out of sample. Phase 8 lowered the stakes
+   of this decision rather than raising them. The 66.7% figure stays documented
+   in `README.md` and CLAUDE.md as the better-converged measurement; the
+   *recommendation* stays where the artifacts already point.
+
+1b. **Shrinkage arm (next experiment, PRE-REGISTERED — read before running).**
+   Phase 8 estimates µ and Σ with plain sample estimators. Ledoit–Wolf shrinkage
+   on Σ is the obvious remedy and is cheap.
+
+   > **Pre-registered expectation: shrinking Σ alone will sharpen the covariance
+   > estimate without moving the discrimination result much.** Phase 8's noise is
+   > dominated by **µ**, not Σ — a single 250-day window gives essentially *one*
+   > observation of each annualised mean, and that is what ρ = −0.085 is
+   > measuring. **A null result here is the predicted outcome, not a surprise,
+   > and must not be reported as one.**
+   >
+   > **The version that could actually move the result shrinks µ toward the
+   > grand mean as well.** That attacks the term the data says is noisy. Run
+   > both arms — Σ-only and µ+Σ — so the prediction is testable rather than
+   > merely asserted.
 
 2. **Priority 3 (5- and 7-layer ansätze)** — not started, outcome genuinely
-   uncertain; more parameters may worsen the landscape.
+   uncertain; more parameters may worsen the landscape. Lowest expected value of
+   the remaining work: it touches nothing else.
 
 2b. **Should the α grid be refined around 0.3–0.45?** α = 0.4 is at ceiling
    (30/30), so a finer grid cannot resolve the peak with n = 30 — it would need
@@ -361,8 +385,18 @@ writes `data/prices.csv`.
    176 of 200 and held for only 24 epochs, so a 250-epoch arm could move the
    plain-VQE baseline again. The 66.7% should not be presented as converged.
 
-3. Git is **local only, no remote**. Identity is set repo-locally. Confirm before
-   any push whether that email should be in public history.
+3. Git is **local only, no remote** — **decided (2026-08-02): keep it that way
+   for now.** Identity is set repo-locally and `ozkanbarran@gmail.com` is in
+   every author line. **If this ever goes public, the author-email question is
+   decided BEFORE the first push, not after** — rewriting authorship
+   retroactively is far more painful than choosing now.
+
+4. **`docs/presentation_notes.md`** holds the three framing claims and the three
+   scope disclaimers, with every number re-derived from the artifacts. It also
+   records two claims that were wrong in an earlier draft (a 40% that was really
+   33.3%, and an 11%-buys-100% that really buys 96.7%) **specifically so the
+   rounder-sounding versions do not get restored.** If a headline number changes,
+   that file changes with it.
 
 ---
 
