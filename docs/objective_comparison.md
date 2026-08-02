@@ -330,9 +330,28 @@ an open question this design cannot answer, and it is the single most useful
 follow-up: run the same sweep at 6 and 8 assets and see whether the optimal α
 moves down (plurality dominates) or up (feasibility dominates).
 
-**The baseline is itself not converged.** Seed 456 changed basin at epoch **176
-of 200** and held the new answer for only 24 epochs. A longer arm could move the
-66.7% plain-VQE figure again, which would change the comparison target.
+**No epoch budget tested is converged — and this was measured rather than left
+as a worry.** Seed 456 changed basin at epoch **176 of 200**, holding only 24
+epochs, so a 250-epoch arm (`lr_constant_250`) was run to test whether the
+comparison target moves.
+
+| | 200 epochs | 250 epochs |
+|---|---|---|
+| correct | 20 / 30 = 66.7% | 21 / 30 = 70.0% |
+| Wilson 95% | [48.8%, 80.8%] | [52.1%, 83.3%] |
+| discordant seeds | — | **1** (1022 recovered, none lost) |
+| McNemar exact p | — | **1.0000** |
+| latest readout change | seed 456 @ **176 / 200** (held 24) | seed 1022 @ **215 / 250** (held 35) |
+
+**The comparison target does not meaningfully move** — one seed, p = 1.0, heavily
+overlapping intervals — so every α arm above remains paired against 66.7% and
+none of the McNemar results change.
+
+**But the late-crossing tail persists at the longer budget.** Extending 200 → 250
+did not remove the run that settles near the end; it produced a different one.
+So 250 is no more converged than 200, and a 300-epoch arm would likely find a
+third. Every figure in this document should be read as **"at 200 epochs"**.
+Verify with `python tools/settle_analysis.py --arm <arm> --baseline <shorter>`.
 
 **Exact backend.** Training uses exact state vectors. The shot-limited column
 simulates sampling *at readout only*; sampled **gradients** would add noise

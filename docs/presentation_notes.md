@@ -69,6 +69,15 @@ correctly, to 1e-10 against finite differences. It is the *readout* that fails,
 because the two lowest states are 0.24% of the spectrum apart. That is the
 project's actual subject.
 
+**If asked "did you just not train long enough?"** Tested directly. A 250-epoch
+arm moved the rate from 66.7% to 70.0% — **one** seed out of thirty, McNemar
+exact **p = 1.0000**, Wilson intervals almost entirely overlapping. But it also
+produced a **new** run settling late: seed 1022's readout last changed at epoch
+**215 of 250**, where at 200 epochs it had been seed 456 at **176**. So the
+answer is that **no budget tested is converged** — extending it relocates the
+late-crossing tail rather than removing it. Say "at 200 epochs", never
+"converged". This is a measurement (`tools/settle_analysis.py`), not a hedge.
+
 ---
 
 ## 2. In-sample Sharpe is not a result

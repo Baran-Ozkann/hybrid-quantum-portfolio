@@ -217,10 +217,13 @@ reaches 99.59%, and Phase 7 already recommends five seeds. Full study, with the
 mechanism and limitations:
 [`docs/objective_comparison.md`](docs/objective_comparison.md).
 
-> **The 66.7% baseline is itself not converged.** Seed 456 changed basin at epoch
-> **176 of 200** and held the new answer for only 24 epochs, so a longer run could
-> move it again. Neither the baseline nor the CVaR figures should be read as
-> converged with respect to epoch count.
+> **No epoch budget tested is converged — measured, not assumed.** Seed 456
+> changed basin at epoch **176 of 200**, holding only 24 epochs, so a 250-epoch
+> arm was run to check. The rate barely moved (66.7% → 70.0%: **one** discordant
+> seed, McNemar exact **p = 1.0000**, Wilson intervals almost entirely
+> overlapping) — but a **new** late crosser appeared, seed 1022 at epoch **215 of
+> 250**. Extending the budget relocated the tail rather than removing it. Read
+> every accuracy figure here as **"at 200 epochs"**, never as converged.
 
 ### Out of sample, the edge being resolved does not survive
 

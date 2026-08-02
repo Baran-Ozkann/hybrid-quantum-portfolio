@@ -102,6 +102,7 @@ degeneracy is the whole difficulty.
 | baseline (Phase 5/7) | 100 | constant | 18/30 | 60.0% | 7 | 14.71× |
 | `lr_cosine_200` | 200 | cosine | 18/30 | 60.0% | 6 | 7.52× |
 | **`lr_constant_200`** ← standing baseline | 200 | constant | **20/30** | **66.7%** | **0** | **1.08×** |
+| `lr_constant_250` | 250 | constant | 21/30 | 70.0% | 0 | 1.03× |
 
 - **Longer training fixes all 7 non-converging runs; cosine decay undoes most of
   it** (decaying to lr×0.02 freezes runs that have not yet reached a basin).
@@ -116,6 +117,27 @@ degeneracy is the whole difficulty.
   read "one at 65%", which inverted the two quantities).
   **The margin is 0.33% of the gap; this is a property of these 30 seeds, not a
   guarantee.**
+
+### Epoch count: MEASURED, and the answer is "no budget tested is converged"
+
+`lr_constant_250` was run to settle whether 66.7% is converged. **It is not — but
+neither is 70.0%, and for the same reason.** Verify with
+`python tools/settle_analysis.py --arm <arm> --baseline <shorter arm>`.
+
+- **The rate does not meaningfully move.** 20/30 → 21/30. Exactly **one**
+  discordant seed (1022 recovered, none lost), **McNemar exact p = 1.0000**,
+  Wilson [48.8%, 80.8%] → [52.1%, 83.3%] — almost entirely overlapping.
+- **The late-crossing tail persists at the new budget.** At 200, seed 456's
+  readout last changed at epoch **176 of 200** and held 24. At 250, seed 1022's
+  last changed at epoch **215 of 250** and held 35. Extending the budget did not
+  remove the late crosser; **it relocated it.** (456 settles at 176 under both
+  budgets, so that crossing was real and merely needed room to show.)
+
+**Therefore: `lr_constant_200` REMAINS the standing baseline.** A single-seed,
+p = 1.0 change is not grounds to re-pair seven Phase 9 arms. But every accuracy
+figure in this project should be read as **"at N epochs"**, never as
+*converged* — and that is now a measurement, not a suspicion. A 300-epoch arm
+would very likely find another late crosser rather than a stable number.
 
 **`docs/stability_report.md` documents the 100-epoch baseline and is deliberately
 untouched** — it accurately describes what it measured.
@@ -401,9 +423,12 @@ writes `data/prices.csv`.
    (30/30), so a finer grid cannot resolve the peak with n = 30 — it would need
    more seeds, not more α values. Probably not worth it.
 
-2c. **200 epochs is not a converged setting.** Seed 456 crossed basins at epoch
-   176 of 200 and held for only 24 epochs, so a 250-epoch arm could move the
-   plain-VQE baseline again. The 66.7% should not be presented as converged.
+2c. ~~**200 epochs is not a converged setting.**~~ **RESOLVED (2026-08-02) by
+   `lr_constant_250`.** It is not converged — and neither is 250. The rate moved
+   only 66.7% → 70.0% (one seed, McNemar p = 1.0000), but a *new* late crosser
+   appeared: seed 1022 at epoch 215 of 250. The tail relocates rather than
+   disappearing. See "Epoch count" above. Baseline stays `lr_constant_200`;
+   the fix is wording ("at 200 epochs"), not a rerun.
 
 3. Git is **local only, no remote** — **decided (2026-08-02): keep it that way
    for now.** Identity is set repo-locally and `ozkanbarran@gmail.com` is in
