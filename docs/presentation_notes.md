@@ -4,6 +4,28 @@ Three framing claims in the form *"normally reported as X, I measured Y"*, each
 with the numbers behind it so they can be checked live, and the three scope
 disclaimers that must be said alongside them.
 
+---
+
+## 0. "So what does this project actually do?"
+
+The first question a non-specialist asks, and the honest answer is not obvious
+from any of the numbers. **Lead with this.**
+
+> The standard practice in this area is to run the algorithm, show the energy
+> curve going down, and call it converged — because at realistic problem sizes
+> **nobody knows the right answer to check against.** I deliberately picked a
+> size where the answer *is* knowable: four assets, sixteen possible portfolios,
+> so the true optimum can be found by enumeration and the check is actually
+> possible. Then I ran it thirty times and checked. **It failed a third of the
+> time — including runs whose energy curves looked perfect.**
+>
+> That is a statement about **the method**, not about portfolios. The portfolio
+> is the test instance; it could have been any problem small enough to have a
+> verifiable answer.
+
+Paired with the three scope disclaimers below, that paragraph is the whole
+project.
+
 **Every number here was re-derived from the committed artifacts before this
 document was written.** Where an earlier draft of a claim was wrong, the
 correction is recorded under it — those notes exist so nobody restores the
@@ -135,6 +157,107 @@ even the *ground state* is unstable across windows: the project's `1010` wins
 only **2 of 16** quarters, and the main instance's energy gap is **5× tighter**
 than the median fold, so it is a harder-than-typical case in one respect and an
 unrepresentative one in another.
+
+---
+
+## Why the backtest result is not a failure
+
+Someone will conflate these two, and the answer should be ready rather than
+improvised.
+
+> **The optimiser scored 30/30 on the main instance and 16/16 on sixteen
+> Hamiltonians it had never seen.** It did its job. What the backtest showed is
+> that the **objective** it was minimising does not predict the future.
+>
+> Those are different claims about different things. "Minimising this Hamiltonian
+> selects the portfolio with the best in-sample mean–variance trade-off" is a
+> mathematical statement, and it is true. "That portfolio then outperforms" is an
+> empirical statement about markets, and it is **not** true here — which is a
+> fact about in-sample mean–variance estimation, known since the 1950s, not a
+> fact about the optimiser or about quantum computing.
+
+**The one-line version:** *the optimiser answered the question correctly; the
+backtest showed the question wasn't worth much.*
+
+**If pushed further:** the cleanest evidence that these are separable is that the
+quantum arm and brute-force enumeration picked the **identical** portfolio on all
+16 folds. There was no optimiser error to blame anything on. Whatever the
+backtest measured, it was not the optimiser.
+
+---
+
+## Q&A backup: "did you actually do this work?"
+
+Three moments where a plausible result was checked and did not survive. These are
+the concrete answers, and they are written down so they do not have to be
+reconstructed under pressure. Where the catch came from review rather than from
+building, that is noted — the point is that the check happened.
+
+### 1. The figure that contradicted its own caption
+
+Building the Phase 8 discrimination scatter, I coloured each fold by whether the
+in-sample and realised Δ Sharpe **agreed in sign** — which gives **9 of 16** —
+while the title of the same figure quoted the test result, **10 of 16**.
+
+The two differ at exactly one fold. **Fold 13's ground state has the *lower*
+in-sample Sharpe than its runner-up** (Δ = −0.0724), because the Hamiltonian
+ranks states by **penalised mean–variance utility**, not by Sharpe ratio. The two
+orderings agree in 15 of 16 folds and diverge in that one. So the figure as first
+drawn would have shown 9 while its caption said 10.
+
+*Why it matters:* it is not a plotting bug, it is a conceptual one — "the
+in-sample winner" and "the Sharpe maximiser" are not the same portfolio, and the
+document said so in several places once this surfaced. Caught while building the
+figure; the fix was to colour by the quantity the test actually measures.
+
+### 2. The multi-start curve that was the oracle
+
+I reported a multi-start reliability curve for plain VQE: **66.7% → 88.9% →
+96.3% → 99.6%** for k = 1, 2, 3, 5 restarts.
+
+Those are **exactly `1 − (1/3)^k`**. That formula assumes you can *identify*
+which of your k runs is correct — an **oracle**. The rule actually available is
+"keep the run with the lowest energy", which is strictly weaker.
+
+They coincided in that arm only because it happens to show **perfect energy
+separation** — every correct run finished below every incorrect one (correct
+range [−4.921115, −4.901300], incorrect [−4.901171, −4.878653]). But the margin
+is **+0.000129**, which is **0.33% of the degeneracy gap**, and it holds only
+because all 30 runs collapsed into the two lowest states (two-state mass ≥
+**0.9983**). In the 100-epoch baseline it fails outright: **14 of 30** runs keep
+≥1% of their amplitude outside that pair, the worst at **34.6%**.
+
+*Why it matters:* the number was right and the mechanism behind it was wrong, in
+a way that would have made the method sound more reliable than it is. Caught in
+review — the reviewer recognised the arithmetic.
+
+### 3. The clean null that was two effects cancelling
+
+Training for 200 epochs with a cosine learning-rate schedule gave **18/30 =
+60.0%** — identical to the 100-epoch baseline. That reads as a clean null: longer
+training doesn't help.
+
+It changed **two variables at once**. Adding a third arm — 200 epochs, *constant*
+rate — gave **20/30 = 66.7% with zero runs failing to optimise**, against seven
+in the baseline. So:
+
+- longer training **fixed all 7** non-converging runs (helps)
+- cosine decay to lr × 0.02 **freezes** runs that have not yet reached a basin
+  (hurts)
+
+The two effects were roughly equal and cancelled to look like nothing happening.
+
+*Why it matters:* a null result from a two-variable change is not a null result.
+Caught in review, and it is the reason the project's arm convention is now **one
+variable per arm, same 30 seeds, paired tests**.
+
+> **The honest summary if asked directly:** every conclusion in this project that
+> was checked hard enough eventually moved. A 1-of-3 success rate became
+> 18-of-30. A clean null became two effects cancelling. Two pre-registered
+> predictions about CVaR — mine and the reviewer's — were both refuted by the
+> sweep. The documents record the refutations rather than quietly dropping them,
+> and `docs/backtest.md` §7 records a hypothesis that was **tested and left
+> unsupported** for the same reason.
 
 ---
 

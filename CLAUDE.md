@@ -111,7 +111,9 @@ degeneracy is the whole difficulty.
   lower energy than every incorrect one, margin **+0.000129**. Cause: all 30 runs
   collapse into the `{1010, 0110}` manifold (mass ≥ 0.9983), where energy is
   near-affine and monotone in P(1010), and correctness ⟺ P(1010) > 0.5. In the
-  baseline this fails — 14/30 runs keep ≥1% amplitude elsewhere (one at 65%).
+  baseline this fails — 14/30 runs keep ≥1% amplitude **outside** that pair, the
+  worst at **34.6%** (i.e. two-state mass down to 65.4%; an earlier note here
+  read "one at 65%", which inverted the two quantities).
   **The margin is 0.33% of the gap; this is a property of these 30 seeds, not a
   guarantee.**
 
@@ -376,6 +378,24 @@ writes `data/prices.csv`.
 2. **Priority 3 (5- and 7-layer ansätze)** — not started, outcome genuinely
    uncertain; more parameters may worsen the landscape. Lowest expected value of
    the remaining work: it touches nothing else.
+
+> ## WHERE TO STOP (decided 2026-08-02)
+>
+> **Close the project after the shrinkage arm (1b). Do not start a fourth phase
+> of results.**
+>
+> The 6- and 8-asset sweeps are the real open science — they are the only thing
+> that answers `objective_comparison.md` §8's plurality-vs-feasibility question —
+> but **they are a new study, not a completion of this one.** The project already
+> carries more findings than a single presentation can hold: the
+> converged-but-wrong result, the energy/readout trade, and the out-of-sample
+> null are three distinct headline claims, and a fourth would dilute rather than
+> strengthen.
+>
+> A session picking this up cold should **finish shrinkage, then stop** — not
+> because the remaining questions are uninteresting, but because closing clean
+> beats accumulating results nobody has time to hear. If the 6/8-asset work
+> happens, it should open as its own study with its own framing.
 
 2b. **Should the α grid be refined around 0.3–0.45?** α = 0.4 is at ceiling
    (30/30), so a finer grid cannot resolve the peak with n = 30 — it would need
