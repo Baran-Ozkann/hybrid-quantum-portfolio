@@ -51,6 +51,13 @@ training/final_distribution.png
 # must be committed. Everything else in data/ is derived from it.
 !data/prices.csv
 
+# The Phase 8 backtest snapshot is a SECOND frozen input, independent of
+# prices.csv and covering a different window (2021-06..2026-06). Same argument:
+# a re-fetch would silently change every number in docs/backtest.md. Its
+# manifest carries the SHA-256 that backtest/fetch_snapshot.py verifies.
+!data/backtest_prices.csv
+!data/backtest_manifest.json
+
 # Trained circuit parameters and their loss histories are a project
 # deliverable, and the UI loads seed 42 as its pre-trained model.
 !training/trained_seed*.json
@@ -64,6 +71,14 @@ training/final_distribution.png
 # shows the reliability result without a 12-minute retrain first.
 !logs/stability_summary.json
 !logs/compare_*.json
+
+# Phase 8 per-fold outcomes and the derived analysis. Same reasoning as the
+# per-arm summaries below: these carry everything docs/backtest.md quotes, so a
+# fresh clone can rebuild the document without re-running the quantum arm
+# (16 training runs, ~8 minutes). backtest_run.log stays ignored -- it is a
+# transient console capture, not a result.
+!logs/backtest_results.json
+!logs/backtest_analysis.json
 
 # ---------------------------------------------------------------------------
 # Experiment arms

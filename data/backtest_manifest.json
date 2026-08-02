@@ -1,0 +1,19 @@
+{
+  "purpose": "Phase 8 out-of-sample backtest; independent of data/prices.csv",
+  "file": "backtest_prices.csv",
+  "sha256": "17e87c2f6bfcb320952d677422ded4670d6a835c6fadd115e9e811082264c746",
+  "tickers": [
+    "TSLA",
+    "NVDA",
+    "AMD",
+    "COIN"
+  ],
+  "requested_start": "2021-06-01",
+  "requested_end": "2026-07-01",
+  "first_date": "2021-06-01",
+  "last_date": "2026-06-30",
+  "n_rows": 1276,
+  "n_return_rows": 1275,
+  "auto_adjust": true,
+  "note": "Adjusted closes are point-in-time contaminated: today's split and dividend factors were not knowable during the window. Acceptable for a total-return study, but see docs/backtest.md."
+}

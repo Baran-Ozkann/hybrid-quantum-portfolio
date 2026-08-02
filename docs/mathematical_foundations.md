@@ -290,7 +290,8 @@ reliably would need on the order of `10^5` shots per evaluation, i.e. about
 that is infeasible, and no amount of tuning changes it.
 
 The exact backend has no such error, so the Phase 4 gate is met with roughly
-eight orders of magnitude of headroom (achieved 3.0e-10 against a 1e-2 bound).
+eight orders of magnitude of headroom (**< 1e-9** against a 1e-2 bound; stated as
+a bound rather than a figure for the reason given in §8).
 
 ### The two are cross-validated
 
@@ -379,15 +380,40 @@ forward pass — about 30 ms on the exact backend.
 
 | Check | Result | Bound |
 |---|---|---|
-| max \|parameter-shift − central difference\|, 5 points × 28 params | **3.0e-10** | 1e-2 |
-| Richardson-extrapolated difference | **1.8e-11** | 1e-8 |
+| max \|parameter-shift − central difference\|, 5 points × 28 params † | **< 1e-9** | 1e-2 |
+| Richardson-extrapolated difference † | **< 1e-10** | 1e-8 |
 | pure-sinusoid least-squares fit residual | **2.6e-15** | 1e-9 |
-| chain rule through `⟨H⟩²` vs `2⟨H⟩∇⟨H⟩` | **1.0e-13** | 1e-9 |
+| chain rule through `⟨H⟩²` vs `2⟨H⟩∇⟨H⟩` † | **< 1e-12** | 1e-9 |
 | `torch.autograd.gradcheck` | pass | `nondet_tol=1e-12` |
 | 10 plain descent steps at lr=0.05 | `⟨H⟩ −0.856 → −3.092` | must decrease |
 
-The sinusoid fit is the most informative of these: it tests the *premise* the
-rule rests on, not merely its consequence, and it holds to machine precision.
+† **These three are bounds, not measurements, and must not be "corrected" to
+whatever a given run prints.** The gate seeds its probe points
+(`default_rng(0)`), so the *inputs* are fixed — but every row marked † compares
+against a **finite-difference** reference, and the exact backend is not
+bit-reproducible. It carries a ~1.4e-15 nondeterminism floor, roughly 10 ULP,
+from global phase; the gate prints it as `<H> spread over 50 evaluations`.
+Central differences at ε = 1e-5 amplify that by `1/(2ε) = 5e4`, which lands
+precisely at the observed scale.
+
+**The order of magnitude is stable; the digits after the first are not.**
+Measured across consecutive runs:
+
+| row | observed spread |
+|---|---|
+| max \|PS − central difference\| | 2.14, 2.14, 2.26, 2.36 e-10 |
+| Richardson | 1.81, 1.88, 2.05 e-11 |
+| chain rule | 5.68, 8.06, 9.59 e-14, 1.56 e-13 |
+| Phase 9 CVaR gate, for comparison | 1.82, 2.06, 2.11, 2.70 e-09 |
+
+So these rows measure **amplified simulator noise, not gradient disagreement**,
+and every one sits several orders of magnitude inside its bound regardless of the
+draw. Earlier revisions of this document quoted single draws (3.0e-10, 1.8e-11,
+1.0e-13) as though they were constants; they were not.
+
+The sinusoid fit is the most informative of these, and is *not* marked †: it
+tests the *premise* the rule rests on rather than its consequence, it uses no
+finite differences, and it holds to machine precision.
 
 The `zeros` test point returns *exactly* 0.0 for both estimators. That is
 correct, not a defect: at `theta = 0` the state is `|0000>`, `<H>` is at a

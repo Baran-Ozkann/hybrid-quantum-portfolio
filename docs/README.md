@@ -10,6 +10,7 @@ Setup, usage, results, and known issues live in the
 | [`encoding_schema.md`](encoding_schema.md) | Qubit↔asset map and bit ordering (verified, not assumed); bitstring→weights rule; all 6 reachable portfolios; worked examples including an infeasible one; the three decode/repair policies; what the encoding cannot express. |
 | [`stability_report.md`](stability_report.md) | 30-seed variance analysis; the converged/failed split; measured multi-start curves; why energy ranking does not perfectly track correctness. |
 | [`objective_comparison.md`](objective_comparison.md) | Controlled CVaR-vs-plain-VQE study across α ∈ {0.1, 0.4, 0.5, 0.6, 1.0}. Two pre-registered predictions and how the data refuted both; the 1/α-vs-saturation mechanism; three distinct failure modes; shot-limited accuracy. |
+| [`backtest.md`](backtest.md) | Out-of-sample rolling backtest over 16 quarterly folds. **Tests the objective, not the optimiser** — read the framing in §1 before any number. Whether the in-sample edge the optimiser resolves survives out of sample; the optimiser-error / objective-value decomposition; per-fold degeneracy gaps; why selection bias makes the absolute returns uninformative. |
 
 ## Figures
 
@@ -20,6 +21,7 @@ Everything in [`figures/`](figures/) is generated, never hand-edited.
 | `ui_01_load.png`, `ui_02_after_run.png` | `tools/capture_ui.py` |
 | `ui_section1..4_*.png` | `tools/capture_ui.py` |
 | `stability_summary.png` | `tools/stability_report.py` |
+| `backtest_equity.png`, `backtest_is_vs_oos.png`, `backtest_degeneracy.png` | `backtest/analyse.py` |
 | `../../training/convergence.png` | `training/optimization.py` |
 | `../../training/final_distribution.png` | `training/optimization.py` |
 

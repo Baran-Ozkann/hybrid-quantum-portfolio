@@ -1,0 +1,4143 @@
+{
+  "config": {
+    "train_days": 250,
+    "test_days": 63,
+    "step_days": 63,
+    "n_folds": 16,
+    "cost_per_side": 0.001,
+    "risk_free": 0.05,
+    "cvar_alpha": 0.4,
+    "quantum_seed": 42,
+    "epochs": 200,
+    "k_restarts": 1
+  },
+  "folds": [
+    {
+      "index": 0,
+      "train_start": "2021-06-02",
+      "train_end": "2022-05-26",
+      "test_start": "2022-05-26",
+      "test_end": "2022-08-26",
+      "ground_bitstring": "1010",
+      "runner_up_bitstring": "1100",
+      "energy_gap": 0.12365310459585466,
+      "spectral_width": 30.384135393751166,
+      "gap_fraction": 0.0040696601365620986,
+      "ground_feasible": true,
+      "portfolios": [
+        {
+          "bitstring": "1010",
+          "held": [
+            "TSLA",
+            "AMD"
+          ],
+          "energy": -7.722005364985849,
+          "is_return": 0.3260280940751158,
+          "is_vol": 0.5042842377497849,
+          "is_sharpe": 0.5473660951744342,
+          "oos_total_return": 0.07226389314395676,
+          "oos_ann_vol": 0.5292674283802664,
+          "oos_sharpe": 0.6947105255859642
+        },
+        {
+          "bitstring": "1100",
+          "held": [
+            "TSLA",
+            "NVDA"
+          ],
+          "energy": -7.598352260389994,
+          "is_return": 0.274233368414117,
+          "is_vol": 0.5092332528040028,
+          "is_sharpe": 0.4403352828579352,
+          "oos_total_return": 0.06612591657309652,
+          "oos_ann_vol": 0.5555506713015111,
+          "oos_sharpe": 0.6451562898374277
+        },
+        {
+          "bitstring": "0110",
+          "held": [
+            "NVDA",
+            "AMD"
+          ],
+          "energy": -7.579043284594185,
+          "is_return": 0.30080460374296225,
+          "is_vol": 0.5267175404092033,
+          "is_sharpe": 0.476165277404876,
+          "oos_total_return": -0.0827962013285739,
+          "oos_ann_vol": 0.5577040095275211,
+          "oos_sharpe": -0.433318124408757
+        },
+        {
+          "bitstring": "0011",
+          "held": [
+            "AMD",
+            "COIN"
+          ],
+          "energy": -6.1299246500049875,
+          "is_return": -0.28149737436818967,
+          "is_vol": 0.59038973311402,
+          "is_sharpe": -0.5614890567620502,
+          "oos_total_return": -0.0607278869585931,
+          "oos_ann_vol": 0.8561101851918976,
+          "oos_sharpe": 0.07230202905976972
+        },
+        {
+          "bitstring": "1001",
+          "held": [
+            "TSLA",
+            "COIN"
+          ],
+          "energy": -5.983168344874727,
+          "is_return": -0.30806860969703487,
+          "is_vol": 0.6098881008714515,
+          "is_sharpe": -0.5871054201342852,
+          "oos_total_return": 0.08819423094307721,
+          "oos_ann_vol": 0.8425005240802775,
+          "oos_sharpe": 0.7590711826981237
+        },
+        {
+          "bitstring": "0101",
+          "held": [
+            "NVDA",
+            "COIN"
+          ],
+          "energy": -5.961813431372976,
+          "is_return": -0.3332921000291884,
+          "is_vol": 0.6038960827774482,
+          "is_sharpe": -0.6346987684807384,
+          "oos_total_return": -0.06686586352945345,
+          "oos_ann_vol": 0.8776473874315079,
+          "oos_sharpe": 0.06096517159345011
+        }
+      ],
+      "ew4_total_return": 0.002699014807251654,
+      "ew4_sharpe": 0.2691003370504111,
+      "single_asset": {
+        "TSLA": {
+          "total_return": 0.22118601104562718,
+          "sharpe": 1.5432030474271576
+        },
+        "NVDA": {
+          "total_return": -0.08893417789943436,
+          "sharpe": -0.41457501124638624
+        },
+        "AMD": {
+          "total_return": -0.07665822475771356,
+          "sharpe": -0.41033699886064917
+        },
+        "COIN": {
+          "total_return": -0.04479754915947265,
+          "sharpe": 0.46835620527933713
+        }
+      }
+    },
+    {
+      "index": 1,
+      "train_start": "2021-08-31",
+      "train_end": "2022-08-26",
+      "test_start": "2022-08-26",
+      "test_end": "2022-11-25",
+      "ground_bitstring": "1010",
+      "runner_up_bitstring": "1100",
+      "energy_gap": 0.18247266206390123,
+      "spectral_width": 44.67727763169376,
+      "gap_fraction": 0.004084238604870954,
+      "ground_feasible": true,
+      "portfolios": [
+        {
+          "bitstring": "1010",
+          "held": [
+            "TSLA",
+            "AMD"
+          ],
+          "energy": -11.215434763275248,
+          "is_return": 0.16860739532800656,
+          "is_vol": 0.5482107193112663,
+          "is_sharpe": 0.21635365955086872,
+          "oos_total_return": -0.2705917842624337,
+          "oos_ann_vol": 0.535264186480509,
+          "oos_sharpe": -2.181111731335263
+        },
+        {
+          "bitstring": "1100",
+          "held": [
+            "TSLA",
+            "NVDA"
+          ],
+          "energy": -11.032962101211346,
+          "is_return": 0.10965733624115648,
+          "is_vol": 0.5627416180986851,
+          "is_sharpe": 0.1060119499295584,
+          "oos_total_return": -0.18217767081998715,
+          "oos_ann_vol": 0.530561709377287,
+          "oos_sharpe": -1.3483525345174834
+        },
+        {
+          "bitstring": "0110",
+          "held": [
+            "NVDA",
+            "AMD"
+          ],
+          "energy": -10.582208197143803,
+          "is_return": -0.09255911268567708,
+          "is_vol": 0.572938373905776,
+          "is_sharpe": -0.2488210236536225,
+          "oos_total_return": -0.0875016670120623,
+          "oos_ann_vol": 0.6006051352153304,
+          "oos_sharpe": -0.39776640407918873
+        },
+        {
+          "bitstring": "1001",
+          "held": [
+            "TSLA",
+            "COIN"
+          ],
+          "energy": -9.448061855377166,
+          "is_return": -0.25642469021292125,
+          "is_vol": 0.7279163255291311,
+          "is_sharpe": -0.42096142024315425,
+          "oos_total_return": -0.35089880116267325,
+          "oos_ann_vol": 0.7299331806466817,
+          "oos_sharpe": -2.0705272194161255
+        },
+        {
+          "bitstring": "0011",
+          "held": [
+            "AMD",
+            "COIN"
+          ],
+          "energy": -9.190086970058225,
+          "is_return": -0.4586411391397548,
+          "is_vol": 0.7023159359135674,
+          "is_sharpe": -0.7242340848753748,
+          "oos_total_return": -0.2562227973547483,
+          "oos_ann_vol": 0.756861924645473,
+          "oos_sharpe": -1.2559079895014573
+        },
+        {
+          "bitstring": "0101",
+          "held": [
+            "NVDA",
+            "COIN"
+          ],
+          "energy": -8.948902876612841,
+          "is_return": -0.5175911982266048,
+          "is_vol": 0.7239258716581907,
+          "is_sharpe": -0.7840460196932969,
+          "oos_total_return": -0.16780868391230186,
+          "oos_ann_vol": 0.7340507098703675,
+          "oos_sharpe": -0.7098240375864725
+        }
+      ],
+      "ew4_total_return": -0.21920023408736777,
+      "ew4_sharpe": -1.38151583766749,
+      "single_asset": {
+        "TSLA": {
+          "total_return": -0.36526778807035865,
+          "sharpe": -2.9092115210362457
+        },
+        "NVDA": {
+          "total_return": 0.0009124464303842394,
+          "sharpe": 0.2190491337369926
+        },
+        "AMD": {
+          "total_return": -0.17591578045450873,
+          "sharpe": -1.007840334128755
+        },
+        "COIN": {
+          "total_return": -0.33652981425498785,
+          "sharpe": -1.2412706387952068
+        }
+      }
+    },
+    {
+      "index": 2,
+      "train_start": "2021-11-30",
+      "train_end": "2022-11-25",
+      "test_start": "2022-11-25",
+      "test_end": "2023-02-28",
+      "ground_bitstring": "1100",
+      "runner_up_bitstring": "1010",
+      "energy_gap": 0.015129697232779904,
+      "spectral_width": 66.34717660602163,
+      "gap_fraction": 0.00022803829803673577,
+      "ground_feasible": true,
+      "portfolios": [
+        {
+          "bitstring": "1100",
+          "held": [
+            "TSLA",
+            "NVDA"
+          ],
+          "energy": -16.103677895312238,
+          "is_return": -0.5222930874375286,
+          "is_vol": 0.5904111800406132,
+          "is_sharpe": -0.9693127548806947,
+          "oos_total_return": 0.2761223384465634,
+          "oos_ann_vol": 0.6145546572554329,
+          "oos_sharpe": 1.8105525485022882
+        },
+        {
+          "bitstring": "1010",
+          "held": [
+            "TSLA",
+            "AMD"
+          ],
+          "energy": -16.088548198079458,
+          "is_return": -0.5509328541832395,
+          "is_vol": 0.5814188700517818,
+          "is_sharpe": -1.033562694877309,
+          "oos_total_return": 0.08537012962556134,
+          "oos_ann_vol": 0.5566720569424631,
+          "oos_sharpe": 0.7712101649585072
+        },
+        {
+          "bitstring": "0110",
+          "held": [
+            "NVDA",
+            "AMD"
+          ],
+          "energy": -15.943764040139936,
+          "is_return": -0.550710773647048,
+          "is_vol": 0.6118455542089568,
+          "is_sharpe": -0.9818013214522664,
+          "oos_total_return": 0.23653345009527538,
+          "oos_ann_vol": 0.5542556733846352,
+          "oos_sharpe": 1.7128246331220844
+        },
+        {
+          "bitstring": "0011",
+          "held": [
+            "AMD",
+            "COIN"
+          ],
+          "energy": -14.209329979136342,
+          "is_return": -0.9935401517849056,
+          "is_vol": 0.7658647454918107,
+          "is_sharpe": -1.3625645493249356,
+          "oos_total_return": 0.2549367319546234,
+          "oos_ann_vol": 0.7968384275734598,
+          "oos_sharpe": 1.4621919554884788
+        },
+        {
+          "bitstring": "0101",
+          "held": [
+            "NVDA",
+            "COIN"
+          ],
+          "energy": -14.15895297202598,
+          "is_return": -0.9649003850391948,
+          "is_vol": 0.7832387525765575,
+          "is_sharpe": -1.295773966367929,
+          "oos_total_return": 0.4456889407756255,
+          "oos_ann_vol": 0.8000749624954206,
+          "oos_sharpe": 2.1715564193564516
+        },
+        {
+          "bitstring": "1001",
+          "held": [
+            "TSLA",
+            "COIN"
+          ],
+          "energy": -14.156138018587061,
+          "is_return": -0.9651224655753863,
+          "is_vol": 0.7836170248465241,
+          "is_sharpe": -1.2954318670835463,
+          "oos_total_return": 0.29452562030591145,
+          "oos_ann_vol": 0.8950554943531559,
+          "oos_sharpe": 1.530758480031649
+        }
+      ],
+      "ew4_total_return": 0.2655295352005935,
+      "ew4_sharpe": 1.6906136456172152,
+      "single_asset": {
+        "TSLA": {
+          "total_return": 0.12495901797684938,
+          "sharpe": 0.9264476730372821
+        },
+        "NVDA": {
+          "total_return": 0.42728565891627746,
+          "sharpe": 2.5061025949244535
+        },
+        "AMD": {
+          "total_return": 0.0457812412742733,
+          "sharpe": 0.49867793024048507
+        },
+        "COIN": {
+          "total_return": 0.4640922226349735,
+          "sharpe": 1.8085700997218717
+        }
+      }
+    },
+    {
+      "index": 3,
+      "train_start": "2022-03-02",
+      "train_end": "2023-02-28",
+      "test_start": "2023-02-28",
+      "test_end": "2023-05-30",
+      "ground_bitstring": "1100",
+      "runner_up_bitstring": "0110",
+      "energy_gap": 0.08482262985452316,
+      "spectral_width": 52.047254300701084,
+      "gap_fraction": 0.0016297234310279568,
+      "ground_feasible": true,
+      "portfolios": [
+        {
+          "bitstring": "1100",
+          "held": [
+            "TSLA",
+            "NVDA"
+          ],
+          "energy": -12.785281922789745,
+          "is_return": 0.03969895015077576,
+          "is_vol": 0.597104471355409,
+          "is_sharpe": -0.017251670927603633,
+          "oos_total_return": 0.35295286826745254,
+          "oos_ann_vol": 0.4509170232088343,
+          "oos_sharpe": 2.790574128601531
+        },
+        {
+          "bitstring": "0110",
+          "held": [
+            "NVDA",
+            "AMD"
+          ],
+          "energy": -12.700459292935221,
+          "is_return": -0.0037099355545219953,
+          "is_vol": 0.5966866550574151,
+          "is_sharpe": -0.09001363630187749,
+          "oos_total_return": 0.6610978660308038,
+          "oos_ann_vol": 0.49136053549103054,
+          "oos_sharpe": 4.27495622996297
+        },
+        {
+          "bitstring": "1010",
+          "held": [
+            "TSLA",
+            "AMD"
+          ],
+          "energy": -12.530956582943123,
+          "is_return": -0.15505544568090412,
+          "is_vol": 0.5681002435824506,
+          "is_sharpe": -0.36094940637205275,
+          "oos_total_return": 0.28602646729202275,
+          "oos_ann_vol": 0.39491781301154133,
+          "oos_sharpe": 2.618900888658966
+        },
+        {
+          "bitstring": "0101",
+          "held": [
+            "NVDA",
+            "COIN"
+          ],
+          "energy": -11.15424582720291,
+          "is_return": -0.11832990140066107,
+          "is_vol": 0.8278154068592922,
+          "is_sharpe": -0.20334231521408844,
+          "oos_total_return": 0.3357844336825364,
+          "oos_ann_vol": 0.5601813618780208,
+          "oos_sharpe": 2.2517250582236294
+        },
+        {
+          "bitstring": "0011",
+          "held": [
+            "AMD",
+            "COIN"
+          ],
+          "energy": -10.923048370245,
+          "is_return": -0.31308429723234094,
+          "is_vol": 0.8035549229251562,
+          "is_sharpe": -0.4518475176663922,
+          "oos_total_return": 0.2688580327071066,
+          "oos_ann_vol": 0.5367245617815065,
+          "oos_sharpe": 1.946989765651895
+        },
+        {
+          "bitstring": "1001",
+          "held": [
+            "TSLA",
+            "COIN"
+          ],
+          "energy": -10.802239702670953,
+          "is_return": -0.2696754115270432,
+          "is_vol": 0.8352287853656701,
+          "is_sharpe": -0.3827399356058911,
+          "oos_total_return": -0.03928696505624463,
+          "oos_ann_vol": 0.6260201593704922,
+          "oos_sharpe": -0.03107888787547535
+        }
+      ],
+      "ew4_total_return": 0.31090545048727947,
+      "ew4_sharpe": 2.564217427283517,
+      "single_asset": {
+        "TSLA": {
+          "total_return": -0.02211853047132839,
+          "sharpe": -0.02751820887732583
+        },
+        "NVDA": {
+          "total_return": 0.7280242670062336,
+          "sharpe": 3.940031617880905
+        },
+        "AMD": {
+          "total_return": 0.5941714650553738,
+          "sharpe": 3.944186311274281
+        },
+        "COIN": {
+          "total_return": -0.05645539964116075,
+          "sharpe": 0.12186406723484862
+        }
+      }
+    },
+    {
+      "index": 4,
+      "train_start": "2022-06-01",
+      "train_end": "2023-05-30",
+      "test_start": "2023-05-30",
+      "test_end": "2023-08-29",
+      "ground_bitstring": "0110",
+      "runner_up_bitstring": "1100",
+      "energy_gap": 0.3329378357842643,
+      "spectral_width": 31.77072026192473,
+      "gap_fraction": 0.010479392127073366,
+      "ground_feasible": true,
+      "portfolios": [
+        {
+          "bitstring": "0110",
+          "held": [
+            "NVDA",
+            "AMD"
+          ],
+          "energy": -8.168695805942516,
+          "is_return": 0.653945217148677,
+          "is_vol": 0.5528162447363557,
+          "is_sharpe": 1.0924881873482304,
+          "oos_total_return": 0.03094223209094471,
+          "oos_ann_vol": 0.39907969881982547,
+          "oos_sharpe": 0.3768597978307774
+        },
+        {
+          "bitstring": "1100",
+          "held": [
+            "TSLA",
+            "NVDA"
+          ],
+          "energy": -7.835757970158252,
+          "is_return": 0.45652455623004096,
+          "is_vol": 0.5386371031883657,
+          "is_sharpe": 0.7547280976815222,
+          "oos_total_return": 0.24741776868115384,
+          "oos_ann_vol": 0.4079662762519892,
+          "oos_sharpe": 2.248867219835818
+        },
+        {
+          "bitstring": "1010",
+          "held": [
+            "TSLA",
+            "AMD"
+          ],
+          "energy": -7.374061320116188,
+          "is_return": 0.1617829143949042,
+          "is_vol": 0.5081173786873489,
+          "is_sharpe": 0.21999427510958183,
+          "oos_total_return": 0.06200919195338983,
+          "oos_ann_vol": 0.41479255810693577,
+          "oos_sharpe": 0.665446863210423
+        },
+        {
+          "bitstring": "0101",
+          "held": [
+            "NVDA",
+            "COIN"
+          ],
+          "energy": -7.130448248974258,
+          "is_return": 0.6498692569955518,
+          "is_vol": 0.7504196889807112,
+          "is_sharpe": 0.7993783556110436,
+          "oos_total_return": 0.30050824308550883,
+          "oos_ann_vol": 0.5787821993889402,
+          "oos_sharpe": 2.008503460797136
+        },
+        {
+          "bitstring": "0011",
+          "held": [
+            "AMD",
+            "COIN"
+          ],
+          "energy": -6.633697524242354,
+          "is_return": 0.355127615160415,
+          "is_vol": 0.7348105673405334,
+          "is_sharpe": 0.41524663460509226,
+          "oos_total_return": 0.11509966635774505,
+          "oos_ann_vol": 0.5706513111909783,
+          "oos_sharpe": 0.94803151050035
+        },
+        {
+          "bitstring": "1001",
+          "held": [
+            "TSLA",
+            "COIN"
+          ],
+          "energy": -6.0369807196781,
+          "is_return": 0.15770695424177902,
+          "is_vol": 0.7683849559674251,
+          "is_sharpe": 0.14017316893740064,
+          "oos_total_return": 0.3315752029479542,
+          "oos_ann_vol": 0.5945916173092394,
+          "oos_sharpe": 2.1319564106909694
+        }
+      ],
+      "ew4_total_return": 0.18125871751944933,
+      "ew4_sharpe": 1.6271795415147121,
+      "single_asset": {
+        "TSLA": {
+          "total_return": 0.27848472854359896,
+          "sharpe": 2.112202500712304
+        },
+        "NVDA": {
+          "total_return": 0.2163508088187085,
+          "sharpe": 1.8825871167700494
+        },
+        "AMD": {
+          "total_return": -0.1544663446368192,
+          "sharpe": -1.3792614582096983
+        },
+        "COIN": {
+          "total_return": 0.3846656773523094,
+          "sharpe": 1.8244742724697196
+        }
+      }
+    },
+    {
+      "index": 5,
+      "train_start": "2022-08-31",
+      "train_end": "2023-08-29",
+      "test_start": "2023-08-29",
+      "test_end": "2023-11-28",
+      "ground_bitstring": "0110",
+      "runner_up_bitstring": "1100",
+      "energy_gap": 0.1864790349970047,
+      "spectral_width": 21.266194394556955,
+      "gap_fraction": 0.008768801391410851,
+      "ground_feasible": true,
+      "portfolios": [
+        {
+          "bitstring": "0110",
+          "held": [
+            "NVDA",
+            "AMD"
+          ],
+          "energy": -5.626336912917035,
+          "is_return": 0.8273951355202187,
+          "is_vol": 0.5172855292789299,
+          "is_sharpe": 1.5028356517219195,
+          "oos_total_return": 0.066123951713974,
+          "oos_ann_vol": 0.3325830228898197,
+          "oos_sharpe": 0.7835254353641334
+        },
+        {
+          "bitstring": "1100",
+          "held": [
+            "TSLA",
+            "NVDA"
+          ],
+          "energy": -5.43985787792003,
+          "is_return": 0.7110233043044097,
+          "is_vol": 0.505982373154174,
+          "is_sharpe": 1.306415676466647,
+          "oos_total_return": -0.030165553615828622,
+          "oos_ann_vol": 0.3438654738569035,
+          "oos_sharpe": -0.3321761508049575
+        },
+        {
+          "bitstring": "0101",
+          "held": [
+            "NVDA",
+            "COIN"
+          ],
+          "energy": -5.280726671829742,
+          "is_return": 1.0172124093113697,
+          "is_vol": 0.6699966536996892,
+          "is_sharpe": 1.443607820980104,
+          "oos_total_return": 0.2473723233476135,
+          "oos_ann_vol": 0.3655133163325592,
+          "oos_sharpe": 2.4658452353142315
+        },
+        {
+          "bitstring": "1010",
+          "held": [
+            "TSLA",
+            "AMD"
+          ],
+          "energy": -4.560757603425937,
+          "is_return": 0.22212763224347765,
+          "is_vol": 0.48098377783017404,
+          "is_sharpe": 0.3578657746420973,
+          "oos_total_return": 0.05561763444961043,
+          "oos_ann_vol": 0.3557301475772362,
+          "oos_sharpe": 0.6423261392004961
+        },
+        {
+          "bitstring": "0011",
+          "held": [
+            "AMD",
+            "COIN"
+          ],
+          "energy": -4.382454700864754,
+          "is_return": 0.5283167372504376,
+          "is_vol": 0.6549928798693633,
+          "is_sharpe": 0.7302624989539378,
+          "oos_total_return": 0.33315551141305266,
+          "oos_ann_vol": 0.375907716131352,
+          "oos_sharpe": 3.1183446115311386
+        },
+        {
+          "bitstring": "1001",
+          "held": [
+            "TSLA",
+            "COIN"
+          ],
+          "energy": -3.887190096590118,
+          "is_return": 0.4119449060346286,
+          "is_vol": 0.7033106768280409,
+          "is_sharpe": 0.5146301882789758,
+          "oos_total_return": 0.23686600608324992,
+          "oos_ann_vol": 0.4267561591406999,
+          "oos_sharpe": 2.0875686619719187
+        }
+      ],
+      "ew4_total_return": 0.15149497889861196,
+      "ew4_sharpe": 1.7915817528101678,
+      "single_asset": {
+        "TSLA": {
+          "total_return": -0.040671870880192085,
+          "sharpe": -0.17851182604948765
+        },
+        "NVDA": {
+          "total_return": -0.01965923635146516,
+          "sharpe": -0.22177345038041787
+        },
+        "AMD": {
+          "total_return": 0.15190713977941317,
+          "sharpe": 1.4892310022412165
+        },
+        "COIN": {
+          "total_return": 0.5144038830466922,
+          "sharpe": 3.2258090512533983
+        }
+      }
+    },
+    {
+      "index": 6,
+      "train_start": "2022-11-30",
+      "train_end": "2023-11-28",
+      "test_start": "2023-11-28",
+      "test_end": "2024-02-29",
+      "ground_bitstring": "0101",
+      "runner_up_bitstring": "0110",
+      "energy_gap": 0.3101262462342338,
+      "spectral_width": 9.576867195764908,
+      "gap_fraction": 0.0323828492026472,
+      "ground_feasible": true,
+      "portfolios": [
+        {
+          "bitstring": "0101",
+          "held": [
+            "NVDA",
+            "COIN"
+          ],
+          "energy": -2.768491792389151,
+          "is_return": 1.3763493995343596,
+          "is_vol": 0.5883398069907064,
+          "is_sharpe": 2.254393436878751,
+          "oos_total_return": 0.6207231590413569,
+          "oos_ann_vol": 0.5054281985704827,
+          "oos_sharpe": 3.9822298487886916
+        },
+        {
+          "bitstring": "0110",
+          "held": [
+            "NVDA",
+            "AMD"
+          ],
+          "energy": -2.4583655461549174,
+          "is_return": 0.9383051641472895,
+          "is_vol": 0.4523860877114647,
+          "is_sharpe": 1.9635996514416625,
+          "oos_total_return": 0.6162333838307981,
+          "oos_ann_vol": 0.4592969408874701,
+          "oos_sharpe": 4.306752218979607
+        },
+        {
+          "bitstring": "1100",
+          "held": [
+            "TSLA",
+            "NVDA"
+          ],
+          "energy": -2.277524941963595,
+          "is_return": 0.8691109779275438,
+          "is_vol": 0.463967919465175,
+          "is_sharpe": 1.7654474448831488,
+          "oos_total_return": 0.2363684611635568,
+          "oos_ann_vol": 0.3541949623581247,
+          "oos_sharpe": 2.429362596463239
+        },
+        {
+          "bitstring": "0011",
+          "held": [
+            "AMD",
+            "COIN"
+          ],
+          "energy": -2.2198050961497744,
+          "is_return": 1.0607101675918726,
+          "is_vol": 0.5705223804360897,
+          "is_sharpe": 1.7715521813873751,
+          "oos_total_return": 0.5824751486091033,
+          "oos_ann_vol": 0.5293159472215514,
+          "oos_sharpe": 3.6451923203418666
+        },
+        {
+          "bitstring": "1001",
+          "held": [
+            "TSLA",
+            "COIN"
+          ],
+          "energy": -1.7514100920941071,
+          "is_return": 0.991515981372127,
+          "is_vol": 0.6387467764948068,
+          "is_sharpe": 1.4740050611899749,
+          "oos_total_return": 0.20261022594186207,
+          "oos_ann_vol": 0.5882675298438174,
+          "oos_sharpe": 1.4573073271830166
+        },
+        {
+          "bitstring": "1010",
+          "held": [
+            "TSLA",
+            "AMD"
+          ],
+          "energy": -1.7445069594142593,
+          "is_return": 0.553471745985057,
+          "is_vol": 0.43669338208740205,
+          "is_sharpe": 1.1529181953215164,
+          "oos_total_return": 0.19812045073130324,
+          "oos_ann_vol": 0.3848927805738007,
+          "oos_sharpe": 1.938541867750346
+        }
+      ],
+      "ew4_total_return": 0.40942180488633007,
+      "ew4_sharpe": 3.4733014688779895,
+      "single_asset": {
+        "TSLA": {
+          "total_return": -0.1817444719359378,
+          "sharpe": -1.827875149378187
+        },
+        "NVDA": {
+          "total_return": 0.6544813942630516,
+          "sharpe": 4.492823734272178
+        },
+        "AMD": {
+          "total_return": 0.5779853733985445,
+          "sharpe": 3.5850272314212175
+        },
+        "COIN": {
+          "total_return": 0.5869649238196621,
+          "sharpe": 2.5608268424589844
+        }
+      }
+    },
+    {
+      "index": 7,
+      "train_start": "2023-03-03",
+      "train_end": "2024-02-29",
+      "test_start": "2024-02-29",
+      "test_end": "2024-05-30",
+      "ground_bitstring": "0101",
+      "runner_up_bitstring": "0110",
+      "energy_gap": 0.2071755387536509,
+      "spectral_width": 15.06686566298203,
+      "gap_fraction": 0.013750407243801414,
+      "ground_feasible": true,
+      "portfolios": [
+        {
+          "bitstring": "0101",
+          "held": [
+            "NVDA",
+            "COIN"
+          ],
+          "energy": -4.07385662295664,
+          "is_return": 1.413188205607242,
+          "is_vol": 0.5048994056055854,
+          "is_sharpe": 2.6999204009206736,
+          "oos_total_return": 0.2750455406898169,
+          "oos_ann_vol": 0.5658830721565173,
+          "oos_sharpe": 1.9092843187276727
+        },
+        {
+          "bitstring": "0110",
+          "held": [
+            "NVDA",
+            "AMD"
+          ],
+          "energy": -3.8666810842029893,
+          "is_return": 1.1646256160612283,
+          "is_vol": 0.4271252740078483,
+          "is_sharpe": 2.6095988317487095,
+          "oos_total_return": 0.1314590635991828,
+          "oos_ann_vol": 0.4428944433673531,
+          "oos_sharpe": 1.2233457780724672
+        },
+        {
+          "bitstring": "0011",
+          "held": [
+            "AMD",
+            "COIN"
+          ],
+          "energy": -3.7393004271850523,
+          "is_return": 1.240585149808831,
+          "is_vol": 0.5022558420014296,
+          "is_sharpe": 2.3704754633903136,
+          "oos_total_return": 0.009685272380975718,
+          "oos_ann_vol": 0.5631943140942759,
+          "oos_sharpe": 0.2555332027824024
+        },
+        {
+          "bitstring": "1100",
+          "held": [
+            "TSLA",
+            "NVDA"
+          ],
+          "energy": -3.1978370890501684,
+          "is_return": 0.754608138445783,
+          "is_vol": 0.38031337036286533,
+          "is_sharpe": 1.8527040944511124,
+          "oos_total_return": 0.14122220053344448,
+          "oos_ann_vol": 0.3895131134626218,
+          "oos_sharpe": 1.4213084848221176
+        },
+        {
+          "bitstring": "1010",
+          "held": [
+            "TSLA",
+            "AMD"
+          ],
+          "energy": -2.8555721541498595,
+          "is_return": 0.5820050826473718,
+          "is_vol": 0.37934544349792004,
+          "is_sharpe": 1.402429083480711,
+          "oos_total_return": -0.1241380677753966,
+          "oos_ann_vol": 0.40962009257921067,
+          "oos_sharpe": -1.214525304451555
+        },
+        {
+          "bitstring": "1001",
+          "held": [
+            "TSLA",
+            "COIN"
+          ],
+          "energy": -2.7295693150101883,
+          "is_return": 0.8305676721933855,
+          "is_vol": 0.5474349002945995,
+          "is_sharpe": 1.4258639187478304,
+          "oos_total_return": 0.01944840931523739,
+          "oos_ann_vol": 0.5312380693227869,
+          "oos_sharpe": 0.3128537884015145
+        }
+      ],
+      "ew4_total_return": 0.0754537364572101,
+      "ew4_sharpe": 0.7992176746091353,
+      "single_asset": {
+        "TSLA": {
+          "total_return": -0.11437493084113504,
+          "sharpe": -0.5877706014527264
+        },
+        "NVDA": {
+          "total_return": 0.396819331908024,
+          "sharpe": 2.711881362671992
+        },
+        "AMD": {
+          "total_return": -0.13390120470965816,
+          "sharpe": -1.1443496960946273
+        },
+        "COIN": {
+          "total_return": 0.1532717494716096,
+          "sharpe": 1.0292709429317686
+        }
+      }
+    },
+    {
+      "index": 8,
+      "train_start": "2023-06-02",
+      "train_end": "2024-05-30",
+      "test_start": "2024-05-30",
+      "test_end": "2024-08-29",
+      "ground_bitstring": "0101",
+      "runner_up_bitstring": "0011",
+      "energy_gap": 0.6562539054098058,
+      "spectral_width": 13.844656223434967,
+      "gap_fraction": 0.047401242386861095,
+      "ground_feasible": true,
+      "portfolios": [
+        {
+          "bitstring": "0101",
+          "held": [
+            "NVDA",
+            "COIN"
+          ],
+          "energy": -4.072347500475845,
+          "is_return": 1.37495940972619,
+          "is_vol": 0.5037536685531965,
+          "is_sharpe": 2.6301732224234393,
+          "oos_total_return": -0.06686955383580617,
+          "oos_ann_vol": 0.5456708191465772,
+          "oos_sharpe": -0.3292414062323555
+        },
+        {
+          "bitstring": "0011",
+          "held": [
+            "AMD",
+            "COIN"
+          ],
+          "energy": -3.4160935950660396,
+          "is_return": 1.0321426833626657,
+          "is_vol": 0.496409983533262,
+          "is_sharpe": 1.97849099724413,
+          "oos_total_return": -0.1627428206924053,
+          "oos_ann_vol": 0.45163836823024706,
+          "oos_sharpe": -1.4584986307014067
+        },
+        {
+          "bitstring": "0110",
+          "held": [
+            "NVDA",
+            "AMD"
+          ],
+          "energy": -3.250899580637417,
+          "is_return": 0.7849114615313602,
+          "is_vol": 0.4050996969179273,
+          "is_sharpe": 1.8141496207543504,
+          "oos_total_return": -0.031622952074950805,
+          "oos_ann_vol": 0.49296267400256094,
+          "oos_sharpe": -0.11882059369216061
+        },
+        {
+          "bitstring": "1100",
+          "held": [
+            "TSLA",
+            "NVDA"
+          ],
+          "energy": -2.903888292746004,
+          "is_return": 0.5539326272827495,
+          "is_vol": 0.3679254942125426,
+          "is_sharpe": 1.3696594424947308,
+          "oos_total_return": 0.10900307708840318,
+          "oos_ann_vol": 0.5552365922021336,
+          "oos_sharpe": 0.9315633535377341
+        },
+        {
+          "bitstring": "1001",
+          "held": [
+            "TSLA",
+            "COIN"
+          ],
+          "energy": -2.854786863757968,
+          "is_return": 0.8011638491140549,
+          "is_vol": 0.5208263985765369,
+          "is_sharpe": 1.4422537935232354,
+          "oos_total_return": -0.022116791529051216,
+          "oos_ann_vol": 0.5243821118041562,
+          "oos_sharpe": -0.005598414443263515
+        },
+        {
+          "bitstring": "1010",
+          "held": [
+            "TSLA",
+            "AMD"
+          ],
+          "energy": -2.1655901641836452,
+          "is_return": 0.21111590091922514,
+          "is_vol": 0.3854028259501633,
+          "is_sharpe": 0.41804545807886506,
+          "oos_total_return": 0.013129810231804262,
+          "oos_ann_vol": 0.4915848831129374,
+          "oos_sharpe": 0.24914571616419537
+        }
+      ],
+      "ew4_total_return": -0.026869871802000955,
+      "ew4_sharpe": -0.11796014669253237,
+      "single_asset": {
+        "TSLA": {
+          "total_return": 0.15375583939515836,
+          "sharpe": 1.1524954585140044
+        },
+        "NVDA": {
+          "total_return": 0.06425031478164822,
+          "sharpe": 0.6245276053148936
+        },
+        "AMD": {
+          "total_return": -0.12749621893154983,
+          "sharpe": -0.9755755273402273
+        },
+        "COIN": {
+          "total_return": -0.19798942245326068,
+          "sharpe": -1.0756014187680532
+        }
+      }
+    },
+    {
+      "index": 9,
+      "train_start": "2023-09-01",
+      "train_end": "2024-08-29",
+      "test_start": "2024-08-29",
+      "test_end": "2024-11-27",
+      "ground_bitstring": "0101",
+      "runner_up_bitstring": "0110",
+      "energy_gap": 0.4322108296821314,
+      "spectral_width": 10.066796654797365,
+      "gap_fraction": 0.04293429623177696,
+      "ground_feasible": true,
+      "portfolios": [
+        {
+          "bitstring": "0101",
+          "held": [
+            "NVDA",
+            "COIN"
+          ],
+          "energy": -3.0475187877028374,
+          "is_return": 1.0667525257676314,
+          "is_vol": 0.5041865433769379,
+          "is_sharpe": 2.016619719672865,
+          "oos_total_return": 0.40136783619830174,
+          "oos_ann_vol": 0.6325703464586668,
+          "oos_sharpe": 2.3666961183012245
+        },
+        {
+          "bitstring": "0110",
+          "held": [
+            "NVDA",
+            "AMD"
+          ],
+          "energy": -2.615307958020706,
+          "is_return": 0.7177463270873656,
+          "is_vol": 0.4333055257007283,
+          "is_sharpe": 1.5410519540629142,
+          "oos_total_return": 0.043734189533925605,
+          "oos_ann_vol": 0.39893558642617905,
+          "oos_sharpe": 0.5025285216764328
+        },
+        {
+          "bitstring": "0011",
+          "held": [
+            "AMD",
+            "COIN"
+          ],
+          "energy": -2.5675847428514276,
+          "is_return": 0.7830699123862046,
+          "is_vol": 0.4820231063388184,
+          "is_sharpe": 1.5208190286855732,
+          "oos_total_return": 0.2940553962639758,
+          "oos_ann_vol": 0.6761414466536638,
+          "oos_sharpe": 1.7804932606724955
+        },
+        {
+          "bitstring": "1100",
+          "held": [
+            "TSLA",
+            "NVDA"
+          ],
+          "energy": -2.160239649924935,
+          "is_return": 0.4612341488852349,
+          "is_vol": 0.4162507255557184,
+          "is_sharpe": 0.9879481851622335,
+          "oos_total_return": 0.38241204999295064,
+          "oos_ann_vol": 0.47957831266829815,
+          "oos_sharpe": 2.8359084620635784
+        },
+        {
+          "bitstring": "1001",
+          "held": [
+            "TSLA",
+            "COIN"
+          ],
+          "energy": -1.9767339014130947,
+          "is_return": 0.5265577341840739,
+          "is_vol": 0.5017996575357957,
+          "is_sharpe": 0.9496972088907392,
+          "oos_total_return": 0.6327332567230006,
+          "oos_ann_vol": 0.7810793336647296,
+          "oos_sharpe": 2.820228388518818
+        },
+        {
+          "bitstring": "1010",
+          "held": [
+            "TSLA",
+            "AMD"
+          ],
+          "energy": -1.6232301025462954,
+          "is_return": 0.17755153550380817,
+          "is_vol": 0.40703285700248887,
+          "is_sharpe": 0.31336913791956655,
+          "oos_total_return": 0.2750996100586245,
+          "oos_ann_vol": 0.5044867370562718,
+          "oos_sharpe": 2.075204673135428
+        }
+      ],
+      "ew4_total_return": 0.3382337231284631,
+      "ew4_sharpe": 2.440808406827472,
+      "single_asset": {
+        "TSLA": {
+          "total_return": 0.6137774705176493,
+          "sharpe": 2.8301865696812123
+        },
+        "NVDA": {
+          "total_return": 0.15104662946825176,
+          "sharpe": 1.3617279200482066
+        },
+        "AMD": {
+          "total_return": -0.06357825040040033,
+          "sharpe": -0.46624167283844903
+        },
+        "COIN": {
+          "total_return": 0.651689042928352,
+          "sharpe": 2.32261521641282
+        }
+      }
+    },
+    {
+      "index": 10,
+      "train_start": "2023-12-01",
+      "train_end": "2024-11-27",
+      "test_start": "2024-11-27",
+      "test_end": "2025-03-04",
+      "ground_bitstring": "0101",
+      "runner_up_bitstring": "1100",
+      "energy_gap": 0.2818542494943803,
+      "spectral_width": 8.6826015880558,
+      "gap_fraction": 0.03246195816264476,
+      "ground_feasible": true,
+      "portfolios": [
+        {
+          "bitstring": "0101",
+          "held": [
+            "NVDA",
+            "COIN"
+          ],
+          "energy": -2.624468377664589,
+          "is_return": 1.2474706780630072,
+          "is_vol": 0.5682339647049472,
+          "is_sharpe": 2.1073549848164883,
+          "oos_total_return": -0.22971483657785507,
+          "oos_ann_vol": 0.553818799741929,
+          "oos_sharpe": -1.6933595419545295
+        },
+        {
+          "bitstring": "1100",
+          "held": [
+            "TSLA",
+            "NVDA"
+          ],
+          "energy": -2.342614128170209,
+          "is_return": 0.861035811951538,
+          "is_vol": 0.4473655864750482,
+          "is_sharpe": 1.812915066493997,
+          "oos_total_return": -0.1628536262057536,
+          "oos_ann_vol": 0.49185030114097594,
+          "oos_sharpe": -1.300807113970532
+        },
+        {
+          "bitstring": "0110",
+          "held": [
+            "NVDA",
+            "AMD"
+          ],
+          "energy": -2.0690419347946456,
+          "is_return": 0.7224542826193994,
+          "is_vol": 0.4463611224557818,
+          "is_sharpe": 1.5065252074815614,
+          "oos_total_return": -0.20170517015007738,
+          "oos_ann_vol": 0.4577162743229181,
+          "oos_sharpe": -1.8429606095638533
+        },
+        {
+          "bitstring": "1001",
+          "held": [
+            "TSLA",
+            "COIN"
+          ],
+          "energy": -1.7531736320847038,
+          "is_return": 0.8999180296879681,
+          "is_vol": 0.6057534158812109,
+          "is_sharpe": 1.4030759173707048,
+          "oos_total_return": -0.24965433550617577,
+          "oos_ann_vol": 0.5618699461742107,
+          "oos_sharpe": -1.8526556465520978
+        },
+        {
+          "bitstring": "0011",
+          "held": [
+            "AMD",
+            "COIN"
+          ],
+          "energy": -1.7356727934605516,
+          "is_return": 0.7613365003558294,
+          "is_vol": 0.5495649605294392,
+          "is_sharpe": 1.2943629078363057,
+          "oos_total_return": -0.28850587945049955,
+          "oos_ann_vol": 0.47620553634270524,
+          "oos_sharpe": -2.7199677920704217
+        },
+        {
+          "bitstring": "1010",
+          "held": [
+            "TSLA",
+            "AMD"
+          ],
+          "energy": -1.3990250948645362,
+          "is_return": 0.3749016342443602,
+          "is_vol": 0.43927911108427764,
+          "is_sharpe": 0.7396245941274143,
+          "oos_total_return": -0.22164466907839797,
+          "oos_ann_vol": 0.44494236928968167,
+          "oos_sharpe": -2.141611007395076
+        }
+      ],
+      "ew4_total_return": -0.22567975282812647,
+      "ew4_sharpe": -2.1827264884045543,
+      "single_asset": {
+        "TSLA": {
+          "total_return": -0.1827931251340742,
+          "sharpe": -1.0904727061476431
+        },
+        "NVDA": {
+          "total_return": -0.1429141272774329,
+          "sharpe": -0.7668841246474325
+        },
+        "AMD": {
+          "total_return": -0.26049621302272186,
+          "sharpe": -2.9132592936053143
+        },
+        "COIN": {
+          "total_return": -0.31651554587827724,
+          "sharpe": -1.9736994168100523
+        }
+      }
+    },
+    {
+      "index": 11,
+      "train_start": "2024-03-05",
+      "train_end": "2025-03-04",
+      "test_start": "2025-03-04",
+      "test_end": "2025-06-03",
+      "ground_bitstring": "1100",
+      "runner_up_bitstring": "0101",
+      "energy_gap": 0.7101517867564553,
+      "spectral_width": 18.713823908230776,
+      "gap_fraction": 0.03794797846976181,
+      "ground_feasible": true,
+      "portfolios": [
+        {
+          "bitstring": "1100",
+          "held": [
+            "TSLA",
+            "NVDA"
+          ],
+          "energy": -4.999899728800713,
+          "is_return": 0.5234731803737676,
+          "is_vol": 0.4821734670149611,
+          "is_sharpe": 0.9819561065957129,
+          "oos_total_return": 0.24157154426507033,
+          "oos_ann_vol": 0.7252206396765163,
+          "oos_sharpe": 1.4733995908027169
+        },
+        {
+          "bitstring": "0101",
+          "held": [
+            "NVDA",
+            "COIN"
+          ],
+          "energy": -4.289747942044258,
+          "is_return": 0.36241150288557755,
+          "is_vol": 0.5740194772289935,
+          "is_sharpe": 0.5442524431291158,
+          "oos_total_return": 0.2178720644239458,
+          "oos_ann_vol": 0.7094756129963116,
+          "oos_sharpe": 1.3824386173840069
+        },
+        {
+          "bitstring": "1001",
+          "held": [
+            "TSLA",
+            "COIN"
+          ],
+          "energy": -4.222316970273777,
+          "is_return": 0.41679724084942527,
+          "is_vol": 0.6111865281260633,
+          "is_sharpe": 0.6001396038195556,
+          "oos_total_return": 0.24181286466691754,
+          "oos_ann_vol": 0.8296558950357149,
+          "oos_sharpe": 1.3883766995145745
+        },
+        {
+          "bitstring": "1010",
+          "held": [
+            "TSLA",
+            "AMD"
+          ],
+          "energy": -4.029926197314362,
+          "is_return": -0.019060624110253832,
+          "is_vol": 0.4513510085541019,
+          "is_sharpe": -0.15300868459669295,
+          "oos_total_return": 0.21493978296664507,
+          "oos_ann_vol": 0.7571654440872705,
+          "oos_sharpe": 1.3217687589383342
+        },
+        {
+          "bitstring": "0110",
+          "held": [
+            "NVDA",
+            "AMD"
+          ],
+          "energy": -3.962112007547548,
+          "is_return": -0.0734463620741016,
+          "is_vol": 0.4398618094158487,
+          "is_sharpe": -0.2806480568023001,
+          "oos_total_return": 0.19099898272367333,
+          "oos_ann_vol": 0.6591719825697054,
+          "oos_sharpe": 1.297749703685274
+        },
+        {
+          "bitstring": "0011",
+          "held": [
+            "AMD",
+            "COIN"
+          ],
+          "energy": -3.4003742118890115,
+          "is_return": -0.18012230159844392,
+          "is_vol": 0.5296932041616617,
+          "is_sharpe": -0.43444450446113503,
+          "oos_total_return": 0.19124030312552076,
+          "oos_ann_vol": 0.7473521881106329,
+          "oos_sharpe": 1.226500166978029
+        }
+      ],
+      "ew4_total_return": 0.21640592369529532,
+      "ew4_sharpe": 1.372532264394886,
+      "single_asset": {
+        "TSLA": {
+          "total_return": 0.26551234450804206,
+          "sharpe": 1.4418920270754365
+        },
+        "NVDA": {
+          "total_return": 0.21763074402209837,
+          "sharpe": 1.4614226513362643
+        },
+        "AMD": {
+          "total_return": 0.1643672214252483,
+          "sharpe": 1.1139258815367215
+        },
+        "COIN": {
+          "total_return": 0.21811338482579323,
+          "sharpe": 1.2454022422144522
+        }
+      }
+    },
+    {
+      "index": 12,
+      "train_start": "2024-06-04",
+      "train_end": "2025-06-03",
+      "test_start": "2025-06-03",
+      "test_end": "2025-09-03",
+      "ground_bitstring": "1100",
+      "runner_up_bitstring": "1010",
+      "energy_gap": 0.5009070029477325,
+      "spectral_width": 23.986349557828632,
+      "gap_fraction": 0.02088300271536096,
+      "ground_feasible": true,
+      "portfolios": [
+        {
+          "bitstring": "1100",
+          "held": [
+            "TSLA",
+            "NVDA"
+          ],
+          "energy": -6.078213057466474,
+          "is_return": 0.656249441767854,
+          "is_vol": 0.5711846271657985,
+          "is_sharpe": 1.061389632938908,
+          "oos_total_return": 0.08934999004422606,
+          "oos_ann_vol": 0.32118633128587226,
+          "oos_sharpe": 1.070788786342206
+        },
+        {
+          "bitstring": "1010",
+          "held": [
+            "TSLA",
+            "AMD"
+          ],
+          "energy": -5.577306054518742,
+          "is_return": 0.3677536463592399,
+          "is_vol": 0.5542839807744393,
+          "is_sharpe": 0.5732686806414252,
+          "oos_total_return": 0.17624744572478335,
+          "oos_ann_vol": 0.400519264976688,
+          "oos_sharpe": 1.6966796733853728
+        },
+        {
+          "bitstring": "1001",
+          "held": [
+            "TSLA",
+            "COIN"
+          ],
+          "energy": -5.541717636141189,
+          "is_return": 0.6987919911661318,
+          "is_vol": 0.6940079310360885,
+          "is_sharpe": 0.9348480934469241,
+          "oos_total_return": 0.06902799795844139,
+          "oos_ann_vol": 0.5268836103754615,
+          "oos_sharpe": 0.674399913042987
+        },
+        {
+          "bitstring": "0101",
+          "held": [
+            "NVDA",
+            "COIN"
+          ],
+          "energy": -5.397758366643737,
+          "is_return": 0.4228114815059669,
+          "is_vol": 0.6161546647435796,
+          "is_sharpe": 0.6050615256822198,
+          "oos_total_return": 0.1879477820615305,
+          "oos_ann_vol": 0.43160568232026225,
+          "oos_sharpe": 1.6952837517535981
+        },
+        {
+          "bitstring": "0110",
+          "held": [
+            "NVDA",
+            "AMD"
+          ],
+          "energy": -5.222571804722551,
+          "is_return": 0.09177313669907504,
+          "is_vol": 0.5078622243897697,
+          "is_sharpe": 0.08225289201075793,
+          "oos_total_return": 0.295167229827872,
+          "oos_ann_vol": 0.32663096962172955,
+          "oos_sharpe": 3.1805904697730987
+        },
+        {
+          "bitstring": "0011",
+          "held": [
+            "AMD",
+            "COIN"
+          ],
+          "energy": -4.921026812798749,
+          "is_return": 0.13431568609735273,
+          "is_vol": 0.5954675151863562,
+          "is_sharpe": 0.14159577801816017,
+          "oos_total_return": 0.2748452377420876,
+          "oos_ann_vol": 0.49295227173761635,
+          "oos_sharpe": 2.114026726264727
+        }
+      ],
+      "ew4_total_return": 0.18209761389315693,
+      "ew4_sharpe": 1.885654384582531,
+      "single_asset": {
+        "TSLA": {
+          "total_return": -0.02956979405886284,
+          "sharpe": -0.021445319544460408
+        },
+        "NVDA": {
+          "total_return": 0.20826977414731496,
+          "sharpe": 2.8765945201443004
+        },
+        "AMD": {
+          "total_return": 0.3820646855084293,
+          "sharpe": 2.9619963839731307
+        },
+        "COIN": {
+          "total_return": 0.16762578997574584,
+          "sharpe": 1.1563530560874185
+        }
+      }
+    },
+    {
+      "index": 13,
+      "train_start": "2024-09-04",
+      "train_end": "2025-09-03",
+      "test_start": "2025-09-03",
+      "test_end": "2025-12-02",
+      "ground_bitstring": "1100",
+      "runner_up_bitstring": "0101",
+      "energy_gap": 0.04835438212663501,
+      "spectral_width": 14.320062905499583,
+      "gap_fraction": 0.0033766878292178894,
+      "ground_feasible": true,
+      "portfolios": [
+        {
+          "bitstring": "1100",
+          "held": [
+            "TSLA",
+            "NVDA"
+          ],
+          "energy": -3.543088588746983,
+          "is_return": 0.651383976141448,
+          "is_vol": 0.5227724163255257,
+          "is_sharpe": 1.150374345242752,
+          "oos_total_return": 0.17419817778015267,
+          "oos_ann_vol": 0.3674621816544959,
+          "oos_sharpe": 1.7956411429452406
+        },
+        {
+          "bitstring": "0101",
+          "held": [
+            "NVDA",
+            "COIN"
+          ],
+          "energy": -3.494734206620348,
+          "is_return": 0.7655456544702213,
+          "is_vol": 0.585201191016281,
+          "is_sharpe": 1.2227344466397607,
+          "oos_total_return": -0.03278956398204946,
+          "oos_ann_vol": 0.4383218098363229,
+          "oos_sharpe": -0.20114316544507826
+        },
+        {
+          "bitstring": "0110",
+          "held": [
+            "NVDA",
+            "AMD"
+          ],
+          "energy": -3.352557510703447,
+          "is_return": 0.44514787972157066,
+          "is_vol": 0.4666966044142323,
+          "is_sharpe": 0.8466911393485175,
+          "oos_total_return": 0.1955847522877363,
+          "oos_ann_vol": 0.4907907204157487,
+          "oos_sharpe": 1.5950379368120677
+        },
+        {
+          "bitstring": "1010",
+          "held": [
+            "TSLA",
+            "AMD"
+          ],
+          "energy": -3.2008538079354785,
+          "is_return": 0.5075491772390184,
+          "is_vol": 0.5356606155230107,
+          "is_sharpe": 0.8541773727237245,
+          "oos_total_return": 0.3061900554243002,
+          "oos_ann_vol": 0.5156523507692253,
+          "oos_sharpe": 2.2284047994843577
+        },
+        {
+          "bitstring": "0011",
+          "held": [
+            "AMD",
+            "COIN"
+          ],
+          "energy": -3.1442516427324496,
+          "is_return": 0.6217108555677917,
+          "is_vol": 0.5984677731404041,
+          "is_sharpe": 0.9552909634010733,
+          "oos_total_return": 0.09920231366209808,
+          "oos_ann_vol": 0.5879997182973882,
+          "oos_sharpe": 0.8460918848133322
+        },
+        {
+          "bitstring": "1001",
+          "held": [
+            "TSLA",
+            "COIN"
+          ],
+          "energy": -3.0892777712822537,
+          "is_return": 0.827946951987669,
+          "is_vol": 0.6892207132407742,
+          "is_sharpe": 1.1287341442913061,
+          "oos_total_return": 0.07781573915451445,
+          "oos_ann_vol": 0.46003392505827057,
+          "oos_sharpe": 0.7715781248177057
+        }
+      ],
+      "ew4_total_return": 0.1367002457211255,
+      "ew4_sharpe": 1.3080305208354217,
+      "single_asset": {
+        "TSLA": {
+          "total_return": 0.2848034809167166,
+          "sharpe": 2.1444734184358816
+        },
+        "NVDA": {
+          "total_return": 0.06359287464358876,
+          "sharpe": 0.7104335333284154
+        },
+        "AMD": {
+          "total_return": 0.32757662993188386,
+          "sharpe": 1.78176661412275
+        },
+        "COIN": {
+          "total_return": -0.12917200260768757,
+          "sharpe": -0.6257292864434817
+        }
+      }
+    },
+    {
+      "index": 14,
+      "train_start": "2024-12-03",
+      "train_end": "2025-12-02",
+      "test_start": "2025-12-02",
+      "test_end": "2026-03-05",
+      "ground_bitstring": "0110",
+      "runner_up_bitstring": "1010",
+      "energy_gap": 0.21405741758893448,
+      "spectral_width": 19.097694102815893,
+      "gap_fraction": 0.01120854781925596,
+      "ground_feasible": true,
+      "portfolios": [
+        {
+          "bitstring": "0110",
+          "held": [
+            "NVDA",
+            "AMD"
+          ],
+          "energy": -4.804819023456631,
+          "is_return": 0.4955981152909802,
+          "is_vol": 0.49379787786892937,
+          "is_sharpe": 0.9023896927504759,
+          "oos_total_return": -0.0314716663279595,
+          "oos_ann_vol": 0.42656214114061514,
+          "oos_sharpe": -0.20474664840043127
+        },
+        {
+          "bitstring": "1010",
+          "held": [
+            "TSLA",
+            "AMD"
+          ],
+          "energy": -4.590761605867696,
+          "is_return": 0.49589227719514206,
+          "is_vol": 0.5454335702330507,
+          "is_sharpe": 0.8175006114944905,
+          "oos_total_return": -0.06427529220742245,
+          "oos_ann_vol": 0.41043725642107565,
+          "oos_sharpe": -0.5636011621883636
+        },
+        {
+          "bitstring": "1100",
+          "held": [
+            "TSLA",
+            "NVDA"
+          ],
+          "energy": -4.5765319563935805,
+          "is_return": 0.39620944270053127,
+          "is_vol": 0.5012123049750437,
+          "is_sharpe": 0.6907441003823115,
+          "oos_total_return": -0.022386950442353948,
+          "oos_ann_vol": 0.2995241705723667,
+          "oos_sharpe": -0.32164206827362146
+        },
+        {
+          "bitstring": "0101",
+          "held": [
+            "NVDA",
+            "COIN"
+          ],
+          "energy": -4.128042159922609,
+          "is_return": 0.26409156951967827,
+          "is_vol": 0.5452314070059724,
+          "is_sharpe": 0.392661843702876,
+          "oos_total_return": -0.10409425461780786,
+          "oos_ann_vol": 0.43966527368662245,
+          "oos_sharpe": -0.8993187863433734
+        },
+        {
+          "bitstring": "0011",
+          "held": [
+            "AMD",
+            "COIN"
+          ],
+          "energy": -4.12593991746667,
+          "is_return": 0.36377440401428907,
+          "is_vol": 0.5896136574461296,
+          "is_sharpe": 0.5321694978596341,
+          "oos_total_return": -0.14598259638287647,
+          "oos_ann_vol": 0.5796311794336697,
+          "oos_sharpe": -0.8873109058406381
+        },
+        {
+          "bitstring": "1001",
+          "held": [
+            "TSLA",
+            "COIN"
+          ],
+          "energy": -3.8281081088928457,
+          "is_return": 0.2643857314238402,
+          "is_vol": 0.6102523092092598,
+          "is_sharpe": 0.3513067106646963,
+          "oos_total_return": -0.13689788049727092,
+          "oos_ann_vol": 0.45732552760751516,
+          "oos_sharpe": -1.1726245792334768
+        }
+      ],
+      "ew4_total_return": -0.0841847734126151,
+      "ew4_sharpe": -0.8604626156709557,
+      "single_asset": {
+        "TSLA": {
+          "total_return": -0.0551905763218169,
+          "sharpe": -0.5706843934588927
+        },
+        "NVDA": {
+          "total_return": 0.010416675437109113,
+          "sharpe": 0.14612149544206426
+        },
+        "AMD": {
+          "total_return": -0.073360008093028,
+          "sharpe": -0.2801749506250045
+        },
+        "COIN": {
+          "total_return": -0.21860518467272494,
+          "sharpe": -0.8817379044726674
+        }
+      }
+    },
+    {
+      "index": 15,
+      "train_start": "2025-03-07",
+      "train_end": "2026-03-05",
+      "test_start": "2026-03-05",
+      "test_end": "2026-06-04",
+      "ground_bitstring": "0110",
+      "runner_up_bitstring": "1100",
+      "energy_gap": 0.19691360816870596,
+      "spectral_width": 14.453588772436309,
+      "gap_fraction": 0.013623855726698806,
+      "ground_feasible": true,
+      "portfolios": [
+        {
+          "bitstring": "0110",
+          "held": [
+            "NVDA",
+            "AMD"
+          ],
+          "energy": -3.8347587675228043,
+          "is_return": 0.754242633032214,
+          "is_vol": 0.485064756398878,
+          "is_sharpe": 1.451852817055836,
+          "oos_total_return": 0.9086580831589337,
+          "oos_ann_vol": 0.5157940712894219,
+          "oos_sharpe": 5.187529104320523
+        },
+        {
+          "bitstring": "1100",
+          "held": [
+            "TSLA",
+            "NVDA"
+          ],
+          "energy": -3.6378451593540984,
+          "is_return": 0.606701225624185,
+          "is_vol": 0.45907027374734843,
+          "is_sharpe": 1.2126710385316044,
+          "oos_total_return": 0.11295547149635476,
+          "oos_ann_vol": 0.32745805154458374,
+          "oos_sharpe": 1.3163830465263933
+        },
+        {
+          "bitstring": "1010",
+          "held": [
+            "TSLA",
+            "AMD"
+          ],
+          "energy": -3.6282958032401345,
+          "is_return": 0.762397129059992,
+          "is_vol": 0.5394263684552877,
+          "is_sharpe": 1.320656850906319,
+          "oos_total_return": 0.8275113277329833,
+          "oos_ann_vol": 0.5333365918091315,
+          "oos_sharpe": 4.705483980570699
+        },
+        {
+          "bitstring": "0101",
+          "held": [
+            "NVDA",
+            "COIN"
+          ],
+          "energy": -3.0060478831602238,
+          "is_return": 0.425483639086972,
+          "is_vol": 0.5273386407407739,
+          "is_sharpe": 0.7120351327934457,
+          "oos_total_return": -0.00401349320353539,
+          "oos_ann_vol": 0.4255164366122869,
+          "oos_sharpe": 0.05435522430579274
+        },
+        {
+          "bitstring": "0011",
+          "held": [
+            "AMD",
+            "COIN"
+          ],
+          "energy": -2.9165223871415566,
+          "is_return": 0.581179542522779,
+          "is_vol": 0.6150734653201171,
+          "is_sharpe": 0.8636034107670777,
+          "oos_total_return": 0.7105423630330929,
+          "oos_ann_vol": 0.558669812102147,
+          "oos_sharpe": 4.039495794355413
+        },
+        {
+          "bitstring": "1001",
+          "held": [
+            "TSLA",
+            "COIN"
+          ],
+          "energy": -2.7167256078090825,
+          "is_return": 0.43363813511475013,
+          "is_vol": 0.5953938686869404,
+          "is_sharpe": 0.644343442704258,
+          "oos_total_return": -0.08516024862948601,
+          "oos_ann_vol": 0.44848956451036165,
+          "oos_sharpe": -0.6845186120533802
+        }
+      ],
+      "ew4_total_return": 0.41174891726472396,
+      "ew4_sharpe": 3.400524417010579,
+      "single_asset": {
+        "TSLA": {
+          "total_return": 0.031808716070404364,
+          "sharpe": 0.3846061733136305
+        },
+        "NVDA": {
+          "total_return": 0.1941022269223054,
+          "sharpe": 1.9240413177284899
+        },
+        "AMD": {
+          "total_return": 1.623213939395562,
+          "sharpe": 5.6615039056094725
+        },
+        "COIN": {
+          "total_return": -0.20212921332937628,
+          "sharpe": -1.1732260290728578
+        }
+      }
+    }
+  ],
+  "quantum": [
+    {
+      "fold": 0,
+      "readout": "1010",
+      "target": "1010",
+      "matched": true,
+      "feasible": true,
+      "n_held": 2,
+      "ground_state_prob": 0.41897752841822294,
+      "mode_probability": 0.41897752841822294,
+      "final_energy": -3.4722954329217792,
+      "ground_energy": -7.722005364985849,
+      "energy_gap": 0.12365310459585466,
+      "settle_epoch": 26,
+      "n_saturated_epochs": 159,
+      "wall_time_s": 35.3188796043396
+    },
+    {
+      "fold": 1,
+      "readout": "1010",
+      "target": "1010",
+      "matched": true,
+      "feasible": true,
+      "n_held": 2,
+      "ground_state_prob": 0.4189912337654664,
+      "mode_probability": 0.4189912337654664,
+      "final_energy": -5.276393453969687,
+      "ground_energy": -11.215434763275248,
+      "energy_gap": 0.18247266206390123,
+      "settle_epoch": 29,
+      "n_saturated_epochs": 152,
+      "wall_time_s": 32.399436712265015
+    },
+    {
+      "fold": 2,
+      "readout": "1100",
+      "target": "1100",
+      "matched": true,
+      "feasible": true,
+      "n_held": 2,
+      "ground_state_prob": 0.4168699566721312,
+      "mode_probability": 0.4168699566721312,
+      "final_energy": -8.847172658555642,
+      "ground_energy": -16.103677895312238,
+      "energy_gap": 0.015129697232779904,
+      "settle_epoch": 23,
+      "n_saturated_epochs": 110,
+      "wall_time_s": 33.07992506027222
+    },
+    {
+      "fold": 3,
+      "readout": "1100",
+      "target": "1100",
+      "matched": true,
+      "feasible": true,
+      "n_held": 2,
+      "ground_state_prob": 0.46095105090042204,
+      "mode_probability": 0.46095105090042204,
+      "final_energy": -7.069071888918046,
+      "ground_energy": -12.785281922789745,
+      "energy_gap": 0.08482262985452316,
+      "settle_epoch": 22,
+      "n_saturated_epochs": 163,
+      "wall_time_s": 32.39456367492676
+    },
+    {
+      "fold": 4,
+      "readout": "0110",
+      "target": "0110",
+      "matched": true,
+      "feasible": true,
+      "n_held": 2,
+      "ground_state_prob": 0.45106196992997477,
+      "mode_probability": 0.45106196992997477,
+      "final_energy": 0.13342632502724472,
+      "ground_energy": -8.168695805942516,
+      "energy_gap": 0.3329378357842643,
+      "settle_epoch": 37,
+      "n_saturated_epochs": 151,
+      "wall_time_s": 33.05128359794617
+    },
+    {
+      "fold": 5,
+      "readout": "0110",
+      "target": "0110",
+      "matched": true,
+      "feasible": true,
+      "n_held": 2,
+      "ground_state_prob": 0.43403382195037654,
+      "mode_probability": 0.43403382195037654,
+      "final_energy": -1.1269570428191384,
+      "ground_energy": -5.626336912917035,
+      "energy_gap": 0.1864790349970047,
+      "settle_epoch": 36,
+      "n_saturated_epochs": 154,
+      "wall_time_s": 32.573156118392944
+    },
+    {
+      "fold": 6,
+      "readout": "0101",
+      "target": "0101",
+      "matched": true,
+      "feasible": true,
+      "n_held": 2,
+      "ground_state_prob": 0.5821923886886121,
+      "mode_probability": 0.5821923886886121,
+      "final_energy": -2.084309978053045,
+      "ground_energy": -2.768491792389151,
+      "energy_gap": 0.3101262462342338,
+      "settle_epoch": 11,
+      "n_saturated_epochs": 186,
+      "wall_time_s": 32.73308229446411
+    },
+    {
+      "fold": 7,
+      "readout": "0101",
+      "target": "0101",
+      "matched": true,
+      "feasible": true,
+      "n_held": 2,
+      "ground_state_prob": 0.5058261474038455,
+      "mode_probability": 0.5058261474038455,
+      "final_energy": -2.920850898923609,
+      "ground_energy": -4.07385662295664,
+      "energy_gap": 0.2071755387536509,
+      "settle_epoch": 11,
+      "n_saturated_epochs": 185,
+      "wall_time_s": 31.31382465362549
+    },
+    {
+      "fold": 8,
+      "readout": "0101",
+      "target": "0101",
+      "matched": true,
+      "feasible": true,
+      "n_held": 2,
+      "ground_state_prob": 0.604216009001172,
+      "mode_probability": 0.604216009001172,
+      "final_energy": -3.1170934539038133,
+      "ground_energy": -4.072347500475845,
+      "energy_gap": 0.6562539054098058,
+      "settle_epoch": 11,
+      "n_saturated_epochs": 186,
+      "wall_time_s": 30.825067281723022
+    },
+    {
+      "fold": 9,
+      "readout": "0101",
+      "target": "0101",
+      "matched": true,
+      "feasible": true,
+      "n_held": 2,
+      "ground_state_prob": 0.57548328694449,
+      "mode_probability": 0.57548328694449,
+      "final_energy": -2.327411261029084,
+      "ground_energy": -3.0475187877028374,
+      "energy_gap": 0.4322108296821314,
+      "settle_epoch": 11,
+      "n_saturated_epochs": 187,
+      "wall_time_s": 30.925185441970825
+    },
+    {
+      "fold": 10,
+      "readout": "0101",
+      "target": "0101",
+      "matched": true,
+      "feasible": true,
+      "n_held": 2,
+      "ground_state_prob": 0.6302902937404935,
+      "mode_probability": 0.6302902937404935,
+      "final_energy": -2.0779123160978594,
+      "ground_energy": -2.624468377664589,
+      "energy_gap": 0.2818542494943803,
+      "settle_epoch": 11,
+      "n_saturated_epochs": 186,
+      "wall_time_s": 31.120886087417603
+    },
+    {
+      "fold": 11,
+      "readout": "1100",
+      "target": "1100",
+      "matched": true,
+      "feasible": true,
+      "n_held": 2,
+      "ground_state_prob": 0.47304998982221336,
+      "mode_probability": 0.47304998982221336,
+      "final_energy": -1.5536485272978546,
+      "ground_energy": -4.999899728800713,
+      "energy_gap": 0.7101517867564553,
+      "settle_epoch": 20,
+      "n_saturated_epochs": 170,
+      "wall_time_s": 31.28647017478943
+    },
+    {
+      "fold": 12,
+      "readout": "1100",
+      "target": "1100",
+      "matched": true,
+      "feasible": true,
+      "n_held": 2,
+      "ground_state_prob": 0.48850003204448617,
+      "mode_probability": 0.48850003204448617,
+      "final_energy": -1.6437112413305013,
+      "ground_energy": -6.078213057466474,
+      "energy_gap": 0.5009070029477325,
+      "settle_epoch": 21,
+      "n_saturated_epochs": 168,
+      "wall_time_s": 31.197950839996338
+    },
+    {
+      "fold": 13,
+      "readout": "1100",
+      "target": "1100",
+      "matched": true,
+      "feasible": true,
+      "n_held": 2,
+      "ground_state_prob": 0.5499119825276476,
+      "mode_probability": 0.5499119825276476,
+      "final_energy": -1.5713410714445386,
+      "ground_energy": -3.543088588746983,
+      "energy_gap": 0.04835438212663501,
+      "settle_epoch": 32,
+      "n_saturated_epochs": 154,
+      "wall_time_s": 30.444254875183105
+    },
+    {
+      "fold": 14,
+      "readout": "0110",
+      "target": "0110",
+      "matched": true,
+      "feasible": true,
+      "n_held": 2,
+      "ground_state_prob": 0.46408833327524457,
+      "mode_probability": 0.46408833327524457,
+      "final_energy": 0.30420236230605746,
+      "ground_energy": -4.804819023456631,
+      "energy_gap": 0.21405741758893448,
+      "settle_epoch": 39,
+      "n_saturated_epochs": 152,
+      "wall_time_s": 30.28189206123352
+    },
+    {
+      "fold": 15,
+      "readout": "0110",
+      "target": "0110",
+      "matched": true,
+      "feasible": true,
+      "n_held": 2,
+      "ground_state_prob": 0.5064545698785453,
+      "mode_probability": 0.5064545698785453,
+      "final_energy": -0.539598246612778,
+      "ground_energy": -3.8347587675228043,
+      "energy_gap": 0.19691360816870596,
+      "settle_epoch": 30,
+      "n_saturated_epochs": 156,
+      "wall_time_s": 30.272499561309814
+    }
+  ],
+  "arms": {
+    "best_equal_weight": {
+      "final_equity": 9.003221672420732,
+      "total_return": 8.003221672420732,
+      "cagr": 0.7322057895528251,
+      "ann_return": 0.6822279466214072,
+      "ann_vol": 0.5128232668528488,
+      "sharpe": 1.2328378751247662,
+      "total_cost": 0.0073488171831388085,
+      "equity_curve": [
+        1.0711916292508128,
+        0.7812274586135657,
+        0.9958154681025012,
+        1.3471318001695698,
+        1.3874262499225212,
+        1.4789023370094032,
+        2.394301515994093,
+        3.0527798829958,
+        2.8483697934542174,
+        3.9910529280646783,
+        3.0736997151010206,
+        3.812401883783196,
+        4.152959872492134,
+        4.87586557870106,
+        4.717246715540353,
+        9.003221672420732
+      ],
+      "per_fold": [
+        {
+          "fold": 0,
+          "weights": [
+            0.5,
+            0.0,
+            0.5,
+            0.0
+          ],
+          "held": [
+            "TSLA",
+            "AMD"
+          ],
+          "cost": 0.001,
+          "gross_return": 0.07226389314395676,
+          "equity_after": 1.0711916292508128
+        },
+        {
+          "fold": 1,
+          "weights": [
+            0.5,
+            0.0,
+            0.5,
+            0.0
+          ],
+          "held": [
+            "TSLA",
+            "AMD"
+          ],
+          "cost": 0.00013888569675233565,
+          "gross_return": -0.2705917842624337,
+          "equity_after": 0.7812274586135657
+        },
+        {
+          "fold": 2,
+          "weights": [
+            0.5,
+            0.5,
+            0.0,
+            0.0
+          ],
+          "held": [
+            "TSLA",
+            "NVDA"
+          ],
+          "cost": 0.0011297983786927738,
+          "gross_return": 0.2761223384465634,
+          "equity_after": 0.9958154681025012
+        },
+        {
+          "fold": 3,
+          "weights": [
+            0.5,
+            0.5,
+            0.0,
+            0.0
+          ],
+          "held": [
+            "TSLA",
+            "NVDA"
+          ],
+          "cost": 0.00011845519501972413,
+          "gross_return": 0.35295286826745254,
+          "equity_after": 1.3471318001695698
+        },
+        {
+          "fold": 4,
+          "weights": [
+            0.0,
+            0.5,
+            0.5,
+            0.0
+          ],
+          "held": [
+            "NVDA",
+            "AMD"
+          ],
+          "cost": 0.001,
+          "gross_return": 0.03094223209094471,
+          "equity_after": 1.3874262499225212
+        },
+        {
+          "fold": 5,
+          "weights": [
+            0.0,
+            0.5,
+            0.5,
+            0.0
+          ],
+          "held": [
+            "NVDA",
+            "AMD"
+          ],
+          "cost": 0.00017984380788409494,
+          "gross_return": 0.066123951713974,
+          "equity_after": 1.4789023370094032
+        },
+        {
+          "fold": 6,
+          "weights": [
+            0.0,
+            0.5,
+            0.0,
+            0.5
+          ],
+          "held": [
+            "NVDA",
+            "COIN"
+          ],
+          "cost": 0.0010804626778410974,
+          "gross_return": 0.6207231590413569,
+          "equity_after": 2.394301515994093
+        },
+        {
+          "fold": 7,
+          "weights": [
+            0.0,
+            0.5,
+            0.0,
+            0.5
+          ],
+          "held": [
+            "NVDA",
+            "COIN"
+          ],
+          "cost": 2.082911880006849e-05,
+          "gross_return": 0.2750455406898169,
+          "equity_after": 3.0527798829958
+        },
+        {
+          "fold": 8,
+          "weights": [
+            0.0,
+            0.5,
+            0.0,
+            0.5
+          ],
+          "held": [
+            "NVDA",
+            "COIN"
+          ],
+          "cost": 9.550544457598426e-05,
+          "gross_return": -0.06686955383580617,
+          "equity_after": 2.8483697934542174
+        },
+        {
+          "fold": 9,
+          "weights": [
+            0.0,
+            0.5,
+            0.0,
+            0.5
+          ],
+          "held": [
+            "NVDA",
+            "COIN"
+          ],
+          "cost": 0.0001405161187875147,
+          "gross_return": 0.40136783619830174,
+          "equity_after": 3.9910529280646783
+        },
+        {
+          "fold": 10,
+          "weights": [
+            0.0,
+            0.5,
+            0.0,
+            0.5
+          ],
+          "held": [
+            "NVDA",
+            "COIN"
+          ],
+          "cost": 0.0001786263393978939,
+          "gross_return": -0.22971483657785507,
+          "equity_after": 3.0736997151010206
+        },
+        {
+          "fold": 11,
+          "weights": [
+            0.5,
+            0.5,
+            0.0,
+            0.0
+          ],
+          "held": [
+            "TSLA",
+            "NVDA"
+          ],
+          "cost": 0.001,
+          "gross_return": 0.24157154426507033,
+          "equity_after": 3.812401883783196
+        },
+        {
+          "fold": 12,
+          "weights": [
+            0.5,
+            0.5,
+            0.0,
+            0.0
+          ],
+          "held": [
+            "TSLA",
+            "NVDA"
+          ],
+          "cost": 1.9282658622095883e-05,
+          "gross_return": 0.08934999004422606,
+          "equity_after": 4.152959872492134
+        },
+        {
+          "fold": 13,
+          "weights": [
+            0.5,
+            0.5,
+            0.0,
+            0.0
+          ],
+          "held": [
+            "TSLA",
+            "NVDA"
+          ],
+          "cost": 0.00010916581924075742,
+          "gross_return": 0.17419817778015267,
+          "equity_after": 4.87586557870106
+        },
+        {
+          "fold": 14,
+          "weights": [
+            0.0,
+            0.5,
+            0.5,
+            0.0
+          ],
+          "held": [
+            "NVDA",
+            "AMD"
+          ],
+          "cost": 0.0010941964527194767,
+          "gross_return": -0.0314716663279595,
+          "equity_after": 4.717246715540353
+        },
+        {
+          "fold": 15,
+          "weights": [
+            0.0,
+            0.5,
+            0.5,
+            0.0
+          ],
+          "held": [
+            "NVDA",
+            "AMD"
+          ],
+          "cost": 4.32494748049907e-05,
+          "gross_return": 0.9086580831589337,
+          "equity_after": 9.003221672420732
+        }
+      ]
+    },
+    "equal_weight_4": {
+      "final_equity": 5.688352984921975,
+      "total_return": 4.688352984921975,
+      "cagr": 0.5443532080031486,
+      "ann_return": 0.5544802930505675,
+      "ann_vol": 0.4893647695122927,
+      "sharpe": 1.030888050141695,
+      "total_cost": 0.0031626557271248186,
+      "equity_curve": [
+        1.0016963157924443,
+        0.7820390368858254,
+        0.9895265658994118,
+        1.2969911041106168,
+        1.5316727712276021,
+        1.7634628732334323,
+        2.4850709175179926,
+        2.6720183119009175,
+        2.599738951295955,
+        3.478572573669058,
+        2.692936421277791,
+        3.275438033753636,
+        3.8718046631180734,
+        4.40066034115437,
+        4.029590818212945,
+        5.688352984921975
+      ],
+      "per_fold": [
+        {
+          "fold": 0,
+          "weights": [
+            0.25,
+            0.25,
+            0.25,
+            0.25
+          ],
+          "held": [
+            "TSLA",
+            "NVDA",
+            "AMD",
+            "COIN"
+          ],
+          "cost": 0.001,
+          "gross_return": 0.002699014807251654,
+          "equity_after": 1.0016963157924443
+        },
+        {
+          "fold": 1,
+          "weights": [
+            0.25,
+            0.25,
+            0.25,
+            0.25
+          ],
+          "held": [
+            "TSLA",
+            "NVDA",
+            "AMD",
+            "COIN"
+          ],
+          "cost": 0.0001089494419620903,
+          "gross_return": -0.21920023408736777,
+          "equity_after": 0.7820390368858254
+        },
+        {
+          "fold": 2,
+          "weights": [
+            0.25,
+            0.25,
+            0.25,
+            0.25
+          ],
+          "held": [
+            "TSLA",
+            "NVDA",
+            "AMD",
+            "COIN"
+          ],
+          "cost": 0.00016867137110545955,
+          "gross_return": 0.2655295352005935,
+          "equity_after": 0.9895265658994118
+        },
+        {
+          "fold": 3,
+          "weights": [
+            0.25,
+            0.25,
+            0.25,
+            0.25
+          ],
+          "held": [
+            "TSLA",
+            "NVDA",
+            "AMD",
+            "COIN"
+          ],
+          "cost": 0.0001423589102932124,
+          "gross_return": 0.31090545048727947,
+          "equity_after": 1.2969911041106168
+        },
+        {
+          "fold": 4,
+          "weights": [
+            0.25,
+            0.25,
+            0.25,
+            0.25
+          ],
+          "held": [
+            "TSLA",
+            "NVDA",
+            "AMD",
+            "COIN"
+          ],
+          "cost": 0.00026713781334371093,
+          "gross_return": 0.18125871751944933,
+          "equity_after": 1.5316727712276021
+        },
+        {
+          "fold": 5,
+          "weights": [
+            0.25,
+            0.25,
+            0.25,
+            0.25
+          ],
+          "held": [
+            "TSLA",
+            "NVDA",
+            "AMD",
+            "COIN"
+          ],
+          "cost": 0.00014210479769464267,
+          "gross_return": 0.15149497889861196,
+          "equity_after": 1.7634628732334323
+        },
+        {
+          "fold": 6,
+          "weights": [
+            0.25,
+            0.25,
+            0.25,
+            0.25
+          ],
+          "held": [
+            "TSLA",
+            "NVDA",
+            "AMD",
+            "COIN"
+          ],
+          "cost": 0.00015776059456915412,
+          "gross_return": 0.40942180488633007,
+          "equity_after": 2.4850709175179926
+        },
+        {
+          "fold": 7,
+          "weights": [
+            0.25,
+            0.25,
+            0.25,
+            0.25
+          ],
+          "held": [
+            "TSLA",
+            "NVDA",
+            "AMD",
+            "COIN"
+          ],
+          "cost": 0.00020971943061074807,
+          "gross_return": 0.0754537364572101,
+          "equity_after": 2.6720183119009175
+        },
+        {
+          "fold": 8,
+          "weights": [
+            0.25,
+            0.25,
+            0.25,
+            0.25
+          ],
+          "held": [
+            "TSLA",
+            "NVDA",
+            "AMD",
+            "COIN"
+          ],
+          "cost": 0.00018558846137827146,
+          "gross_return": -0.026869871802000955,
+          "equity_after": 2.599738951295955
+        },
+        {
+          "fold": 9,
+          "weights": [
+            0.25,
+            0.25,
+            0.25,
+            0.25
+          ],
+          "held": [
+            "TSLA",
+            "NVDA",
+            "AMD",
+            "COIN"
+          ],
+          "cost": 0.00013962464520753053,
+          "gross_return": 0.3382337231284631,
+          "equity_after": 3.478572573669058
+        },
+        {
+          "fold": 10,
+          "weights": [
+            0.25,
+            0.25,
+            0.25,
+            0.25
+          ],
+          "held": [
+            "TSLA",
+            "NVDA",
+            "AMD",
+            "COIN"
+          ],
+          "cost": 0.0002200658438841831,
+          "gross_return": -0.22567975282812647,
+          "equity_after": 2.692936421277791
+        },
+        {
+          "fold": 11,
+          "weights": [
+            0.25,
+            0.25,
+            0.25,
+            0.25
+          ],
+          "held": [
+            "TSLA",
+            "NVDA",
+            "AMD",
+            "COIN"
+          ],
+          "cost": 8.113713525100125e-05,
+          "gross_return": 0.21640592369529532,
+          "equity_after": 3.275438033753636
+        },
+        {
+          "fold": 12,
+          "weights": [
+            0.25,
+            0.25,
+            0.25,
+            0.25
+          ],
+          "held": [
+            "TSLA",
+            "NVDA",
+            "AMD",
+            "COIN"
+          ],
+          "cost": 2.139035220741109e-05,
+          "gross_return": 0.18209761389315693,
+          "equity_after": 3.8718046631180734
+        },
+        {
+          "fold": 13,
+          "weights": [
+            0.25,
+            0.25,
+            0.25,
+            0.25
+          ],
+          "held": [
+            "TSLA",
+            "NVDA",
+            "AMD",
+            "COIN"
+          ],
+          "cost": 9.565167428291166e-05,
+          "gross_return": 0.1367002457211255,
+          "equity_after": 4.40066034115437
+        },
+        {
+          "fold": 14,
+          "weights": [
+            0.25,
+            0.25,
+            0.25,
+            0.25
+          ],
+          "held": [
+            "TSLA",
+            "NVDA",
+            "AMD",
+            "COIN"
+          ],
+          "cost": 0.0001491068646647913,
+          "gross_return": -0.0841847734126151,
+          "equity_after": 4.029590818212945
+        },
+        {
+          "fold": 15,
+          "weights": [
+            0.25,
+            0.25,
+            0.25,
+            0.25
+          ],
+          "held": [
+            "TSLA",
+            "NVDA",
+            "AMD",
+            "COIN"
+          ],
+          "cost": 7.338839066970005e-05,
+          "gross_return": 0.41174891726472396,
+          "equity_after": 5.688352984921975
+        }
+      ]
+    },
+    "quantum_cvar040": {
+      "final_equity": 9.003221672420732,
+      "total_return": 8.003221672420732,
+      "cagr": 0.7322057895528251,
+      "ann_return": 0.6822279466214072,
+      "ann_vol": 0.5128232668528488,
+      "sharpe": 1.2328378751247662,
+      "total_cost": 0.0073488171831388085,
+      "equity_curve": [
+        1.0711916292508128,
+        0.7812274586135657,
+        0.9958154681025012,
+        1.3471318001695698,
+        1.3874262499225212,
+        1.4789023370094032,
+        2.394301515994093,
+        3.0527798829958,
+        2.8483697934542174,
+        3.9910529280646783,
+        3.0736997151010206,
+        3.812401883783196,
+        4.152959872492134,
+        4.87586557870106,
+        4.717246715540353,
+        9.003221672420732
+      ],
+      "per_fold": [
+        {
+          "fold": 0,
+          "weights": [
+            0.5,
+            0.0,
+            0.5,
+            0.0
+          ],
+          "held": [
+            "TSLA",
+            "AMD"
+          ],
+          "cost": 0.001,
+          "gross_return": 0.07226389314395676,
+          "equity_after": 1.0711916292508128
+        },
+        {
+          "fold": 1,
+          "weights": [
+            0.5,
+            0.0,
+            0.5,
+            0.0
+          ],
+          "held": [
+            "TSLA",
+            "AMD"
+          ],
+          "cost": 0.00013888569675233565,
+          "gross_return": -0.2705917842624337,
+          "equity_after": 0.7812274586135657
+        },
+        {
+          "fold": 2,
+          "weights": [
+            0.5,
+            0.5,
+            0.0,
+            0.0
+          ],
+          "held": [
+            "TSLA",
+            "NVDA"
+          ],
+          "cost": 0.0011297983786927738,
+          "gross_return": 0.2761223384465634,
+          "equity_after": 0.9958154681025012
+        },
+        {
+          "fold": 3,
+          "weights": [
+            0.5,
+            0.5,
+            0.0,
+            0.0
+          ],
+          "held": [
+            "TSLA",
+            "NVDA"
+          ],
+          "cost": 0.00011845519501972413,
+          "gross_return": 0.35295286826745254,
+          "equity_after": 1.3471318001695698
+        },
+        {
+          "fold": 4,
+          "weights": [
+            0.0,
+            0.5,
+            0.5,
+            0.0
+          ],
+          "held": [
+            "NVDA",
+            "AMD"
+          ],
+          "cost": 0.001,
+          "gross_return": 0.03094223209094471,
+          "equity_after": 1.3874262499225212
+        },
+        {
+          "fold": 5,
+          "weights": [
+            0.0,
+            0.5,
+            0.5,
+            0.0
+          ],
+          "held": [
+            "NVDA",
+            "AMD"
+          ],
+          "cost": 0.00017984380788409494,
+          "gross_return": 0.066123951713974,
+          "equity_after": 1.4789023370094032
+        },
+        {
+          "fold": 6,
+          "weights": [
+            0.0,
+            0.5,
+            0.0,
+            0.5
+          ],
+          "held": [
+            "NVDA",
+            "COIN"
+          ],
+          "cost": 0.0010804626778410974,
+          "gross_return": 0.6207231590413569,
+          "equity_after": 2.394301515994093
+        },
+        {
+          "fold": 7,
+          "weights": [
+            0.0,
+            0.5,
+            0.0,
+            0.5
+          ],
+          "held": [
+            "NVDA",
+            "COIN"
+          ],
+          "cost": 2.082911880006849e-05,
+          "gross_return": 0.2750455406898169,
+          "equity_after": 3.0527798829958
+        },
+        {
+          "fold": 8,
+          "weights": [
+            0.0,
+            0.5,
+            0.0,
+            0.5
+          ],
+          "held": [
+            "NVDA",
+            "COIN"
+          ],
+          "cost": 9.550544457598426e-05,
+          "gross_return": -0.06686955383580617,
+          "equity_after": 2.8483697934542174
+        },
+        {
+          "fold": 9,
+          "weights": [
+            0.0,
+            0.5,
+            0.0,
+            0.5
+          ],
+          "held": [
+            "NVDA",
+            "COIN"
+          ],
+          "cost": 0.0001405161187875147,
+          "gross_return": 0.40136783619830174,
+          "equity_after": 3.9910529280646783
+        },
+        {
+          "fold": 10,
+          "weights": [
+            0.0,
+            0.5,
+            0.0,
+            0.5
+          ],
+          "held": [
+            "NVDA",
+            "COIN"
+          ],
+          "cost": 0.0001786263393978939,
+          "gross_return": -0.22971483657785507,
+          "equity_after": 3.0736997151010206
+        },
+        {
+          "fold": 11,
+          "weights": [
+            0.5,
+            0.5,
+            0.0,
+            0.0
+          ],
+          "held": [
+            "TSLA",
+            "NVDA"
+          ],
+          "cost": 0.001,
+          "gross_return": 0.24157154426507033,
+          "equity_after": 3.812401883783196
+        },
+        {
+          "fold": 12,
+          "weights": [
+            0.5,
+            0.5,
+            0.0,
+            0.0
+          ],
+          "held": [
+            "TSLA",
+            "NVDA"
+          ],
+          "cost": 1.9282658622095883e-05,
+          "gross_return": 0.08934999004422606,
+          "equity_after": 4.152959872492134
+        },
+        {
+          "fold": 13,
+          "weights": [
+            0.5,
+            0.5,
+            0.0,
+            0.0
+          ],
+          "held": [
+            "TSLA",
+            "NVDA"
+          ],
+          "cost": 0.00010916581924075742,
+          "gross_return": 0.17419817778015267,
+          "equity_after": 4.87586557870106
+        },
+        {
+          "fold": 14,
+          "weights": [
+            0.0,
+            0.5,
+            0.5,
+            0.0
+          ],
+          "held": [
+            "NVDA",
+            "AMD"
+          ],
+          "cost": 0.0010941964527194767,
+          "gross_return": -0.0314716663279595,
+          "equity_after": 4.717246715540353
+        },
+        {
+          "fold": 15,
+          "weights": [
+            0.0,
+            0.5,
+            0.5,
+            0.0
+          ],
+          "held": [
+            "NVDA",
+            "AMD"
+          ],
+          "cost": 4.32494748049907e-05,
+          "gross_return": 0.9086580831589337,
+          "equity_after": 9.003221672420732
+        }
+      ]
+    },
+    "buy_hold_TSLA": {
+      "final_equity": 1.771995912447889,
+      "total_return": 0.771995912447889,
+      "cagr": 0.15376053323626548,
+      "ann_return": 0.31546611397155033,
+      "ann_vol": 0.5890969144387523,
+      "sharpe": 0.45063232800067654,
+      "total_cost": 0.001,
+      "equity_curve": [
+        1.2199648250345816,
+        0.7743509718705579,
+        0.8711131088849218,
+        0.851845367042077,
+        1.0890712928439124,
+        1.0447767258420408,
+        0.854894331512921,
+        0.7571158514696523,
+        0.8735268347317487,
+        1.4096779257826901,
+        1.1519984922963526,
+        1.4578683128556869,
+        1.4147594470796023,
+        1.8176878622676824,
+        1.7173686215759576,
+        1.771995912447889
+      ],
+      "per_fold": [
+        {
+          "fold": 0,
+          "weights": [
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "held": [
+            "TSLA"
+          ],
+          "cost": 0.001,
+          "gross_return": 0.22118601104562718,
+          "equity_after": 1.2199648250345816
+        },
+        {
+          "fold": 1,
+          "weights": [
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "held": [
+            "TSLA"
+          ],
+          "cost": 0.0,
+          "gross_return": -0.36526778807035865,
+          "equity_after": 0.7743509718705579
+        },
+        {
+          "fold": 2,
+          "weights": [
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "held": [
+            "TSLA"
+          ],
+          "cost": 0.0,
+          "gross_return": 0.12495901797684938,
+          "equity_after": 0.8711131088849218
+        },
+        {
+          "fold": 3,
+          "weights": [
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "held": [
+            "TSLA"
+          ],
+          "cost": 0.0,
+          "gross_return": -0.02211853047132839,
+          "equity_after": 0.851845367042077
+        },
+        {
+          "fold": 4,
+          "weights": [
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "held": [
+            "TSLA"
+          ],
+          "cost": 0.0,
+          "gross_return": 0.27848472854359896,
+          "equity_after": 1.0890712928439124
+        },
+        {
+          "fold": 5,
+          "weights": [
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "held": [
+            "TSLA"
+          ],
+          "cost": 0.0,
+          "gross_return": -0.040671870880192085,
+          "equity_after": 1.0447767258420408
+        },
+        {
+          "fold": 6,
+          "weights": [
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "held": [
+            "TSLA"
+          ],
+          "cost": 0.0,
+          "gross_return": -0.1817444719359378,
+          "equity_after": 0.854894331512921
+        },
+        {
+          "fold": 7,
+          "weights": [
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "held": [
+            "TSLA"
+          ],
+          "cost": 0.0,
+          "gross_return": -0.11437493084113504,
+          "equity_after": 0.7571158514696523
+        },
+        {
+          "fold": 8,
+          "weights": [
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "held": [
+            "TSLA"
+          ],
+          "cost": 0.0,
+          "gross_return": 0.15375583939515836,
+          "equity_after": 0.8735268347317487
+        },
+        {
+          "fold": 9,
+          "weights": [
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "held": [
+            "TSLA"
+          ],
+          "cost": 0.0,
+          "gross_return": 0.6137774705176493,
+          "equity_after": 1.4096779257826901
+        },
+        {
+          "fold": 10,
+          "weights": [
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "held": [
+            "TSLA"
+          ],
+          "cost": 0.0,
+          "gross_return": -0.1827931251340742,
+          "equity_after": 1.1519984922963526
+        },
+        {
+          "fold": 11,
+          "weights": [
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "held": [
+            "TSLA"
+          ],
+          "cost": 0.0,
+          "gross_return": 0.26551234450804206,
+          "equity_after": 1.4578683128556869
+        },
+        {
+          "fold": 12,
+          "weights": [
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "held": [
+            "TSLA"
+          ],
+          "cost": 0.0,
+          "gross_return": -0.02956979405886284,
+          "equity_after": 1.4147594470796023
+        },
+        {
+          "fold": 13,
+          "weights": [
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "held": [
+            "TSLA"
+          ],
+          "cost": 0.0,
+          "gross_return": 0.2848034809167166,
+          "equity_after": 1.8176878622676824
+        },
+        {
+          "fold": 14,
+          "weights": [
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "held": [
+            "TSLA"
+          ],
+          "cost": 0.0,
+          "gross_return": -0.0551905763218169,
+          "equity_after": 1.7173686215759576
+        },
+        {
+          "fold": 15,
+          "weights": [
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "held": [
+            "TSLA"
+          ],
+          "cost": 0.0,
+          "gross_return": 0.031808716070404364,
+          "equity_after": 1.771995912447889
+        }
+      ]
+    },
+    "buy_hold_NVDA": {
+      "final_equity": 12.273490666455757,
+      "total_return": 11.273490666455757,
+      "cagr": 0.8717249269737029,
+      "ann_return": 0.7540028073336004,
+      "ann_vol": 0.5055442869329269,
+      "sharpe": 1.3925640651676556,
+      "total_cost": 0.001,
+      "equity_curve": [
+        0.9101547562784651,
+        0.9109852237369286,
+        1.3002361453243545,
+        2.2468396119591283,
+        2.7329451792923987,
+        2.679217564077092,
+        4.432715610948324,
+        6.191702858223106,
+        6.589521715898372,
+        7.584846760892672,
+        6.500865005526632,
+        7.915653093466616,
+        9.564244375471402,
+        10.172462169101404,
+        10.278425405913204,
+        12.273490666455757
+      ],
+      "per_fold": [
+        {
+          "fold": 0,
+          "weights": [
+            0.0,
+            1.0,
+            0.0,
+            0.0
+          ],
+          "held": [
+            "NVDA"
+          ],
+          "cost": 0.001,
+          "gross_return": -0.08893417789943436,
+          "equity_after": 0.9101547562784651
+        },
+        {
+          "fold": 1,
+          "weights": [
+            0.0,
+            1.0,
+            0.0,
+            0.0
+          ],
+          "held": [
+            "NVDA"
+          ],
+          "cost": 0.0,
+          "gross_return": 0.0009124464303842394,
+          "equity_after": 0.9109852237369286
+        },
+        {
+          "fold": 2,
+          "weights": [
+            0.0,
+            1.0,
+            0.0,
+            0.0
+          ],
+          "held": [
+            "NVDA"
+          ],
+          "cost": 0.0,
+          "gross_return": 0.42728565891627746,
+          "equity_after": 1.3002361453243545
+        },
+        {
+          "fold": 3,
+          "weights": [
+            0.0,
+            1.0,
+            0.0,
+            0.0
+          ],
+          "held": [
+            "NVDA"
+          ],
+          "cost": 0.0,
+          "gross_return": 0.7280242670062336,
+          "equity_after": 2.2468396119591283
+        },
+        {
+          "fold": 4,
+          "weights": [
+            0.0,
+            1.0,
+            0.0,
+            0.0
+          ],
+          "held": [
+            "NVDA"
+          ],
+          "cost": 0.0,
+          "gross_return": 0.2163508088187085,
+          "equity_after": 2.7329451792923987
+        },
+        {
+          "fold": 5,
+          "weights": [
+            0.0,
+            1.0,
+            0.0,
+            0.0
+          ],
+          "held": [
+            "NVDA"
+          ],
+          "cost": 0.0,
+          "gross_return": -0.01965923635146516,
+          "equity_after": 2.679217564077092
+        },
+        {
+          "fold": 6,
+          "weights": [
+            0.0,
+            1.0,
+            0.0,
+            0.0
+          ],
+          "held": [
+            "NVDA"
+          ],
+          "cost": 0.0,
+          "gross_return": 0.6544813942630516,
+          "equity_after": 4.432715610948324
+        },
+        {
+          "fold": 7,
+          "weights": [
+            0.0,
+            1.0,
+            0.0,
+            0.0
+          ],
+          "held": [
+            "NVDA"
+          ],
+          "cost": 0.0,
+          "gross_return": 0.396819331908024,
+          "equity_after": 6.191702858223106
+        },
+        {
+          "fold": 8,
+          "weights": [
+            0.0,
+            1.0,
+            0.0,
+            0.0
+          ],
+          "held": [
+            "NVDA"
+          ],
+          "cost": 0.0,
+          "gross_return": 0.06425031478164822,
+          "equity_after": 6.589521715898372
+        },
+        {
+          "fold": 9,
+          "weights": [
+            0.0,
+            1.0,
+            0.0,
+            0.0
+          ],
+          "held": [
+            "NVDA"
+          ],
+          "cost": 0.0,
+          "gross_return": 0.15104662946825176,
+          "equity_after": 7.584846760892672
+        },
+        {
+          "fold": 10,
+          "weights": [
+            0.0,
+            1.0,
+            0.0,
+            0.0
+          ],
+          "held": [
+            "NVDA"
+          ],
+          "cost": 0.0,
+          "gross_return": -0.1429141272774329,
+          "equity_after": 6.500865005526632
+        },
+        {
+          "fold": 11,
+          "weights": [
+            0.0,
+            1.0,
+            0.0,
+            0.0
+          ],
+          "held": [
+            "NVDA"
+          ],
+          "cost": 0.0,
+          "gross_return": 0.21763074402209837,
+          "equity_after": 7.915653093466616
+        },
+        {
+          "fold": 12,
+          "weights": [
+            0.0,
+            1.0,
+            0.0,
+            0.0
+          ],
+          "held": [
+            "NVDA"
+          ],
+          "cost": 0.0,
+          "gross_return": 0.20826977414731496,
+          "equity_after": 9.564244375471402
+        },
+        {
+          "fold": 13,
+          "weights": [
+            0.0,
+            1.0,
+            0.0,
+            0.0
+          ],
+          "held": [
+            "NVDA"
+          ],
+          "cost": 0.0,
+          "gross_return": 0.06359287464358876,
+          "equity_after": 10.172462169101404
+        },
+        {
+          "fold": 14,
+          "weights": [
+            0.0,
+            1.0,
+            0.0,
+            0.0
+          ],
+          "held": [
+            "NVDA"
+          ],
+          "cost": 0.0,
+          "gross_return": 0.010416675437109113,
+          "equity_after": 10.278425405913204
+        },
+        {
+          "fold": 15,
+          "weights": [
+            0.0,
+            1.0,
+            0.0,
+            0.0
+          ],
+          "held": [
+            "NVDA"
+          ],
+          "cost": 0.0,
+          "gross_return": 0.1941022269223054,
+          "equity_after": 12.273490666455757
+        }
+      ]
+    },
+    "buy_hold_AMD": {
+      "final_equity": 5.292929743745055,
+      "total_return": 4.292929743745055,
+      "cagr": 0.5167850251948589,
+      "ann_return": 0.5676106810686762,
+      "ann_vol": 0.5529559444566117,
+      "sharpe": 0.9360794223440907,
+      "total_cost": 0.001,
+      "equity_curve": [
+        0.9224184334670441,
+        0.7601504748380637,
+        0.7949511071313785,
+        1.2672883711030212,
+        1.0715349688179887,
+        1.234308781104752,
+        1.9477212028406843,
+        1.6869189873417723,
+        1.4718431948118573,
+        1.3782659796219838,
+        1.019232911392405,
+        1.1867613930231409,
+        1.6401810114220727,
+        2.177465979621984,
+        2.0177270577346222,
+        5.292929743745055
+      ],
+      "per_fold": [
+        {
+          "fold": 0,
+          "weights": [
+            0.0,
+            0.0,
+            1.0,
+            0.0
+          ],
+          "held": [
+            "AMD"
+          ],
+          "cost": 0.001,
+          "gross_return": -0.07665822475771356,
+          "equity_after": 0.9224184334670441
+        },
+        {
+          "fold": 1,
+          "weights": [
+            0.0,
+            0.0,
+            1.0,
+            0.0
+          ],
+          "held": [
+            "AMD"
+          ],
+          "cost": 0.0,
+          "gross_return": -0.17591578045450873,
+          "equity_after": 0.7601504748380637
+        },
+        {
+          "fold": 2,
+          "weights": [
+            0.0,
+            0.0,
+            1.0,
+            0.0
+          ],
+          "held": [
+            "AMD"
+          ],
+          "cost": 0.0,
+          "gross_return": 0.0457812412742733,
+          "equity_after": 0.7949511071313785
+        },
+        {
+          "fold": 3,
+          "weights": [
+            0.0,
+            0.0,
+            1.0,
+            0.0
+          ],
+          "held": [
+            "AMD"
+          ],
+          "cost": 0.0,
+          "gross_return": 0.5941714650553738,
+          "equity_after": 1.2672883711030212
+        },
+        {
+          "fold": 4,
+          "weights": [
+            0.0,
+            0.0,
+            1.0,
+            0.0
+          ],
+          "held": [
+            "AMD"
+          ],
+          "cost": 0.0,
+          "gross_return": -0.1544663446368192,
+          "equity_after": 1.0715349688179887
+        },
+        {
+          "fold": 5,
+          "weights": [
+            0.0,
+            0.0,
+            1.0,
+            0.0
+          ],
+          "held": [
+            "AMD"
+          ],
+          "cost": 0.0,
+          "gross_return": 0.15190713977941317,
+          "equity_after": 1.234308781104752
+        },
+        {
+          "fold": 6,
+          "weights": [
+            0.0,
+            0.0,
+            1.0,
+            0.0
+          ],
+          "held": [
+            "AMD"
+          ],
+          "cost": 0.0,
+          "gross_return": 0.5779853733985445,
+          "equity_after": 1.9477212028406843
+        },
+        {
+          "fold": 7,
+          "weights": [
+            0.0,
+            0.0,
+            1.0,
+            0.0
+          ],
+          "held": [
+            "AMD"
+          ],
+          "cost": 0.0,
+          "gross_return": -0.13390120470965816,
+          "equity_after": 1.6869189873417723
+        },
+        {
+          "fold": 8,
+          "weights": [
+            0.0,
+            0.0,
+            1.0,
+            0.0
+          ],
+          "held": [
+            "AMD"
+          ],
+          "cost": 0.0,
+          "gross_return": -0.12749621893154983,
+          "equity_after": 1.4718431948118573
+        },
+        {
+          "fold": 9,
+          "weights": [
+            0.0,
+            0.0,
+            1.0,
+            0.0
+          ],
+          "held": [
+            "AMD"
+          ],
+          "cost": 0.0,
+          "gross_return": -0.06357825040040033,
+          "equity_after": 1.3782659796219838
+        },
+        {
+          "fold": 10,
+          "weights": [
+            0.0,
+            0.0,
+            1.0,
+            0.0
+          ],
+          "held": [
+            "AMD"
+          ],
+          "cost": 0.0,
+          "gross_return": -0.26049621302272186,
+          "equity_after": 1.019232911392405
+        },
+        {
+          "fold": 11,
+          "weights": [
+            0.0,
+            0.0,
+            1.0,
+            0.0
+          ],
+          "held": [
+            "AMD"
+          ],
+          "cost": 0.0,
+          "gross_return": 0.1643672214252483,
+          "equity_after": 1.1867613930231409
+        },
+        {
+          "fold": 12,
+          "weights": [
+            0.0,
+            0.0,
+            1.0,
+            0.0
+          ],
+          "held": [
+            "AMD"
+          ],
+          "cost": 0.0,
+          "gross_return": 0.3820646855084293,
+          "equity_after": 1.6401810114220727
+        },
+        {
+          "fold": 13,
+          "weights": [
+            0.0,
+            0.0,
+            1.0,
+            0.0
+          ],
+          "held": [
+            "AMD"
+          ],
+          "cost": 0.0,
+          "gross_return": 0.32757662993188386,
+          "equity_after": 2.177465979621984
+        },
+        {
+          "fold": 14,
+          "weights": [
+            0.0,
+            0.0,
+            1.0,
+            0.0
+          ],
+          "held": [
+            "AMD"
+          ],
+          "cost": 0.0,
+          "gross_return": -0.073360008093028,
+          "equity_after": 2.0177270577346222
+        },
+        {
+          "fold": 15,
+          "weights": [
+            0.0,
+            0.0,
+            1.0,
+            0.0
+          ],
+          "held": [
+            "AMD"
+          ],
+          "cost": 0.0,
+          "gross_return": 1.623213939395562,
+          "equity_after": 5.292929743745055
+        }
+      ]
+    },
+    "buy_hold_COIN": {
+      "final_equity": 2.346727757727915,
+      "total_return": 1.346727757727915,
+      "cagr": 0.2377008168916508,
+      "ann_return": 0.5865456325453062,
+      "ann_vol": 0.8727647011559376,
+      "sharpe": 0.6147655053357172,
+      "total_cost": 0.001,
+      "equity_curve": [
+        0.9542472483896868,
+        0.6331145991357723,
+        0.9269381606313432,
+        0.8746074963302582,
+        1.2110389813235445,
+        1.8340021358372862,
+        2.9104970597841167,
+        3.356594035969204,
+        2.692023921377602,
+        4.446386414240401,
+        3.0390359911513443,
+        3.7018904177887735,
+        4.3224227234742605,
+        3.7640867241661153,
+        2.9412378507056296,
+        2.346727757727915
+      ],
+      "per_fold": [
+        {
+          "fold": 0,
+          "weights": [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ],
+          "held": [
+            "COIN"
+          ],
+          "cost": 0.001,
+          "gross_return": -0.04479754915947265,
+          "equity_after": 0.9542472483896868
+        },
+        {
+          "fold": 1,
+          "weights": [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ],
+          "held": [
+            "COIN"
+          ],
+          "cost": 0.0,
+          "gross_return": -0.33652981425498785,
+          "equity_after": 0.6331145991357723
+        },
+        {
+          "fold": 2,
+          "weights": [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ],
+          "held": [
+            "COIN"
+          ],
+          "cost": 0.0,
+          "gross_return": 0.4640922226349735,
+          "equity_after": 0.9269381606313432
+        },
+        {
+          "fold": 3,
+          "weights": [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ],
+          "held": [
+            "COIN"
+          ],
+          "cost": 0.0,
+          "gross_return": -0.05645539964116075,
+          "equity_after": 0.8746074963302582
+        },
+        {
+          "fold": 4,
+          "weights": [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ],
+          "held": [
+            "COIN"
+          ],
+          "cost": 0.0,
+          "gross_return": 0.3846656773523094,
+          "equity_after": 1.2110389813235445
+        },
+        {
+          "fold": 5,
+          "weights": [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ],
+          "held": [
+            "COIN"
+          ],
+          "cost": 0.0,
+          "gross_return": 0.5144038830466922,
+          "equity_after": 1.8340021358372862
+        },
+        {
+          "fold": 6,
+          "weights": [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ],
+          "held": [
+            "COIN"
+          ],
+          "cost": 0.0,
+          "gross_return": 0.5869649238196621,
+          "equity_after": 2.9104970597841167
+        },
+        {
+          "fold": 7,
+          "weights": [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ],
+          "held": [
+            "COIN"
+          ],
+          "cost": 0.0,
+          "gross_return": 0.1532717494716096,
+          "equity_after": 3.356594035969204
+        },
+        {
+          "fold": 8,
+          "weights": [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ],
+          "held": [
+            "COIN"
+          ],
+          "cost": 0.0,
+          "gross_return": -0.19798942245326068,
+          "equity_after": 2.692023921377602
+        },
+        {
+          "fold": 9,
+          "weights": [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ],
+          "held": [
+            "COIN"
+          ],
+          "cost": 0.0,
+          "gross_return": 0.651689042928352,
+          "equity_after": 4.446386414240401
+        },
+        {
+          "fold": 10,
+          "weights": [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ],
+          "held": [
+            "COIN"
+          ],
+          "cost": 0.0,
+          "gross_return": -0.31651554587827724,
+          "equity_after": 3.0390359911513443
+        },
+        {
+          "fold": 11,
+          "weights": [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ],
+          "held": [
+            "COIN"
+          ],
+          "cost": 0.0,
+          "gross_return": 0.21811338482579323,
+          "equity_after": 3.7018904177887735
+        },
+        {
+          "fold": 12,
+          "weights": [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ],
+          "held": [
+            "COIN"
+          ],
+          "cost": 0.0,
+          "gross_return": 0.16762578997574584,
+          "equity_after": 4.3224227234742605
+        },
+        {
+          "fold": 13,
+          "weights": [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ],
+          "held": [
+            "COIN"
+          ],
+          "cost": 0.0,
+          "gross_return": -0.12917200260768757,
+          "equity_after": 3.7640867241661153
+        },
+        {
+          "fold": 14,
+          "weights": [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ],
+          "held": [
+            "COIN"
+          ],
+          "cost": 0.0,
+          "gross_return": -0.21860518467272494,
+          "equity_after": 2.9412378507056296
+        },
+        {
+          "fold": 15,
+          "weights": [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ],
+          "held": [
+            "COIN"
+          ],
+          "cost": 0.0,
+          "gross_return": -0.20212921332937628,
+          "equity_after": 2.346727757727915
+        }
+      ]
+    }
+  }
+}

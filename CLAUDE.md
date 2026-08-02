@@ -4,8 +4,14 @@ Hybrid quantum-classical portfolio optimiser: 4-asset selection encoded as an
 Ising Hamiltonian, minimised by a variational circuit in **Q#**, trained through
 **PyTorch** autograd with the exact parameter-shift rule.
 
-Phases 1–7 are complete and validated. **Currently in Phase 9**, a controlled
-objective-comparison study (CVaR vs plain VQE).
+**Phases 1–9 are complete, validated, and closed.** Phase 9 was a controlled
+objective-comparison study (CVaR vs plain VQE) — its result is a *trade*, not a
+rate; see [`docs/objective_comparison.md`](docs/objective_comparison.md).
+Phase 8 was the out-of-sample backtest, and it asks a different question from
+every other phase: not whether the optimiser finds the minimum, but whether that
+minimum is worth finding. **Answer: on 16 quarters, not measurably.** See
+[`docs/backtest.md`](docs/backtest.md) and the framing below, which must not be
+blurred.
 
 Read [`README.md`](README.md) for setup and results, and [`docs/`](docs/) for the
 technical reference. This file records only what a new session must know that is
@@ -118,7 +124,8 @@ untouched** — it accurately describes what it measured.
 
 CVaR minimises the mean of the lowest α-quantile instead of the plain mean.
 Implementation `training/cvar.py`; gate `tools/verify_cvar_gradient.py` (value
-identity 3.6e-15, gradient identity 2.7e-9, α=1 reduces to plain VQE to 5.6e-15).
+identity ~2e-15, gradient identity ~2e-9, α=1 reduces to plain VQE to ~5e-15 —
+see the note under Gates on why these are bounds, not constants).
 
 All arms: 200 epochs, constant lr = 0.05, 3 layers, init U(−0.1, 0.1), same 30
 seeds, exact backend. Paired against `lr_constant_200`.
@@ -195,6 +202,142 @@ runs are expensive.
 
 ---
 
+## Phase 8: COMPLETE — see [`docs/backtest.md`](docs/backtest.md)
+
+Every Sharpe ratio in Phases 1–9 is **in-sample**. Phase 9 measured whether the
+optimiser finds the minimum; it never asked whether that minimum is worth
+finding.
+
+### Results
+
+Separate frozen snapshot `data/backtest_prices.csv`, SHA-256 `17e87c2f…`,
+1276 rows 2021-06-01→2026-06-30. `data/prices.csv` verified byte-identical
+before and after. 16 folds: 250-day estimation, 63-day holding, step 63.
+
+| question | result | p |
+|---|---|---|
+| in-sample top-two winner also wins OOS | **10/16 = 62.5%** [35.4%, 84.8%] | 0.454 |
+| **does the size of the IS edge predict the OOS edge** | **ρ = −0.085** | **0.753** |
+| per-fold Spearman(IS Sharpe, OOS Sharpe), all 6 portfolios | +0.186 [−0.191, +0.563] | 0.310 |
+| IS top is also OOS top | 4/16 = 25.0% (chance 16.7%) | 0.325 |
+| `1010` vs `0110` head-to-head | **6W–10L** | 0.454 |
+| cost of one optimiser error | +7.4%/qtr [−6.0%, +20.9%] | 0.258 |
+
+**The two discrimination tests disagree in direction** (generalised 10/16 = 62.5%
+favours the objective; specific `1010` vs `0110` 6/16 = 37.5% opposes it), both
+p = 0.454, both CIs straddle 50%. **Report them side by side** — either alone
+misleads. The shared conclusion is that neither is separable from chance.
+
+**Lean on the sign test, not the mean.** sd/|mean| = 3.44× on realised ΔSharpe;
+dropping fold 15 alone moves the mean from +0.4168 to +0.1866.
+
+**Ordering is by the penalised mean–variance objective, NOT by Sharpe.** They
+agree in 15 of 16 folds but not fold 13 (ground `1100` has *lower* in-sample
+Sharpe than runner-up `0101`, Δ = −0.0724). So "in-sample winner" never means
+"Sharpe maximiser", and nothing here is "positive by construction".
+
+**The tempting narrowing was tested and is NOT supported.** "This only shows
+tight gaps are unpredictable" — median-gap split gives **5/8 in both halves**,
+Fisher p = 1.000, Spearman(gap, win) = +0.028. The mean Δ *is* larger in the
+loose half (+0.79 vs +0.05) but that is the fragile statistic. Do not narrow the
+claim on the strength of the mean alone.
+
+Decomposition (per-fold total return): **quantum − best_equal_weight =
+identical on all 16 folds**; best_equal_weight − EW4 = +4.90% (p = 0.219);
+best_equal_weight − buy_hold_NVDA = −1.07% (p = 0.867). The first is the
+**absence of a measurement**, not a measurement of zero — the backtest says
+nothing about the quantum arm's economic value in either direction. Its real
+contribution is a Phase 9 robustness check (§6), and it should be cited as one.
+
+**Quantum arm: 16/16 matched, 0 infeasible, mean P(ground) = 0.4988** — Phase 9's
+plurality mechanism reproducing on Hamiltonians it was never tuned against.
+
+**Ground state is not stable across windows:** `0101` ×5, `1100` ×5, `0110` ×4,
+**`1010` ×2**. The project's instance is one of two windows out of sixteen.
+Gap/width: median 1.24%, min 0.02%, max 4.74% vs main instance 0.24% — **the main
+instance is at the hard end (2 of 16 folds are tighter)**, so do NOT say
+near-degeneracy is "generic" without that qualifier.
+
+**Do not overstate.** The design is powered to detect effects ~4× larger than the
+one sought (80% MDE = 1.076 Sharpe vs the 0.242 edge); 279 folds ≈ 70 years would
+be needed. Point estimates are positive — "indistinguishable" is *not* "zero".
+Selection bias is unfixable and `buy_hold_NVDA` beats a perfect optimiser.
+
+### The framing that must not be blurred
+
+> **A backtest does not test the optimiser. It tests the objective.**
+
+VQE's job is to minimise a *given* Hamiltonian, and Phases 4–9 establish that it
+does. Whether the minimiser of that Hamiltonian is a good *investment* is a
+separate question about mean-variance selection on 250 days of history. **A weak
+backtest is evidence against in-sample mean-variance selection, not against the
+quantum method.** Keep these strictly apart — the same discipline applied to the
+feasible-set caveat in Phase 2. Any sentence that lets a poor realised Sharpe
+reflect on the optimiser is a bug in the write-up.
+
+### The question it is built around
+
+In-sample, `1010` beats `0110` by **1.4% Sharpe**, and plain VQE misses that
+discrimination **33%** of the time. Is that 1.4% meaningful out of sample at all?
+If the in-sample winner wins out of sample only ~half the time, **the optimiser's
+error rate costs nothing in reality — it was resolving noise.** Given what Phase 9
+established about how hard the 0.039 gap is to resolve, that is the sharpest
+available closing result.
+
+### Design
+
+- **Data:** new frozen snapshot, own SHA-256. COIN IPO'd April 2021 → usable
+  history from ~2021-06, ~5 years. **Do not touch or re-fetch `data/prices.csv`**
+  (invariant 1).
+- **Folds:** rolling 250-day estimation, 63-day holding, step 63 → **~16 folds.
+  Say this is small before reporting anything else.**
+- **Per fold:** estimate µ/Σ from the training window, enumerate all 6
+  equal-weight 2-asset portfolios in-sample, measure realised return over the
+  next 63 days. Run the quantum pipeline on that fold's Hamiltonian at
+  **CVaR α = 0.4, k = 1** — Phase 9 showed it reaches the ground state
+  single-shot, so the quantum arm costs **16 runs, not 80**.
+- **Decomposition (the part that matters):**
+  1. quantum vs `best_equal_weight` → **optimiser error** (same objective, same
+     feasible set)
+  2. `best_equal_weight` vs equal-weight-all-4 → **value of the objective itself**
+  3. both vs single-asset buy-and-hold → context
+- **Two cheap, high-information metrics:** per-fold **Spearman** rank correlation
+  between in-sample and out-of-sample Sharpe across the 6 portfolios (near zero ⇒
+  no predictive content, and everything downstream follows); and how often the
+  in-sample top is the out-of-sample top, plus the **`1010` vs `0110` head-to-head
+  win rate**.
+- **Report each fold's degeneracy gap.** Every fold has a different Hamiltonian,
+  so this shows for free whether the near-degeneracy is peculiar to the current
+  window or generic — which also speaks to `objective_comparison.md` §8.
+
+### Caveats to state, not let a reader discover
+
+- **Selection bias is the largest and is not fixable.** These four tickers were
+  chosen in 2026 knowing how they turned out; no 2021 investor picks this basket.
+- **Overlapping estimation windows** — the ~16 folds are not independent, so
+  intervals are wider than they look.
+- **Power is very low.** At ~16 quarterly observations, detecting a Sharpe
+  difference this size is essentially impossible. **State this in advance so
+  "indistinguishable" reads as a prediction, not an excuse.**
+- **Transaction costs** on quarterly rebalancing, ~10 bps per side.
+- **Point-in-time.** Today's adjusted prices embed splits/dividends unknown at the
+  time — acceptable for a total-return study, but flag it, especially given the
+  vendor adjustment drift behind invariant 1.
+
+**Do not fold any of this into `stability_report.md` or
+`objective_comparison.md`** — different question, different scope. Both were
+left untouched.
+
+### Invariant 6: `data/backtest_prices.csv` is a second frozen input
+
+It is independent of `data/prices.csv` and has its own manifest
+(`data/backtest_manifest.json`). `backtest/fetch_snapshot.py` verifies the
+SHA-256 on every load and refuses to proceed on a mismatch. `--refresh`
+invalidates every number in `docs/backtest.md`. Nothing in `backtest/` reads or
+writes `data/prices.csv`.
+
+---
+
 ## Open decisions
 
 1. **Does `lr_constant_200` become the recommended configuration?** If so the
@@ -231,8 +374,9 @@ All must pass before shipping. None gate on exit codes (see invariant 5).
 python quantum/q_bridge.py                  # Phase 1 bridge, 10/10
 python quantum/q_bridge.py --test-circuit   # Phase 3 circuit, 7/7
 python classical/phase2_gate.py             # Phase 2 formulation, 9/9
-python training/gradient_bridge.py          # Phase 4 gradients, 3.0e-10
-python tools/verify_cvar_gradient.py        # Phase 9 CVaR identity
+python training/gradient_bridge.py          # Phase 4 gradients, <1e-9 vs 1e-2 bound
+python tools/verify_cvar_gradient.py        # Phase 9 CVaR identity, <1e-8
+python backtest/fetch_snapshot.py           # Phase 8 snapshot SHA-256 verify
 python tools/verify_threading.py            # interpreter thread affinity
 python tools/check_reproducibility.py       # pipeline determinism
 python tools/scan_encoding.py               # mojibake / BOM scan
@@ -240,3 +384,18 @@ python tools/capture_ui.py                  # UI + figures (needs playwright)
 ```
 
 Use `.python/python.exe` if using the bundled interpreter.
+
+**Gradient-gate figures are bounds, not constants — do not "correct" them to
+whatever your run printed.** Both gradient gates seed their probe points
+(`default_rng(0)`, `default_rng(9)`), so the *inputs* are fixed, but the
+finite-difference *reference* is not reproducible: the exact backend carries
+~1.4e-15 of nondeterminism (the gate prints this as `<H> spread over 50
+evaluations`, the ~10-ULP global-phase floor from Phase 4), and central
+differences at ε = 1e-5 amplify it by 1/(2ε) = 5e4. **The order of magnitude is
+stable; the digits after the first are not** — CVaR gate: 1.82, 2.06, 2.11,
+2.70 e-09; Phase 4: 2.14, 2.14, 2.26, 2.36 e-10; Richardson: 1.81–2.05 e-11;
+chain rule: 5.7e-14–1.6e-13. **`max|PS − FD|` measures amplified simulator noise,
+not gradient disagreement**, and sits eight orders of magnitude under the 1e-2
+gate. Quote it as an order of magnitude; three significant figures asserts a
+precision the quantity does not have. All six documentation sites now say this
+(README, architecture, mathematical_foundations §8, here).

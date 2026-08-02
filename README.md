@@ -144,8 +144,10 @@ to overfit, and the 100%-AMD max-Sharpe corner solution above is a textbook
 symptom of exactly that.
 
 The optimisation target is a fixed, fully specified mathematical object. Whether
-it is the *right* object to optimise is a finance question this project does not
-address.
+it is the *right* object to optimise is a separate finance question — addressed
+in [`docs/backtest.md`](docs/backtest.md) and summarised below. Short answer: on
+16 out-of-sample quarters, **the edge this optimiser resolves does not
+measurably survive**.
 
 ### Reliability — the important caveat
 
@@ -220,6 +222,60 @@ mechanism and limitations:
 > move it again. Neither the baseline nor the CVaR figures should be read as
 > converged with respect to epoch count.
 
+### Out of sample, the edge being resolved does not survive
+
+**A backtest does not test the optimiser. It tests the objective.** VQE's job is
+to minimise a given Hamiltonian, and it does. Whether that minimum is a good
+*investment* is a separate question — and a weak result here is evidence about
+in-sample mean-variance selection, **not** against the quantum method.
+
+Rolling 250-day estimation, 63-day holding, stepping 63 days over 2021-06 →
+2026-06: **16 folds**, on a separate frozen snapshot with its own SHA-256.
+
+The discrimination test asked two ways, which **disagree in direction**:
+
+| test | result | 95% CI | p |
+|---|---|---|---|
+| each fold's ground state beats its own runner-up | **10 / 16 = 62.5%** | [35.4%, 84.8%] | 0.454 |
+| `1010` (TSLA+AMD) beats `0110` (NVDA+AMD) | **6 / 16 = 37.5%** | [15.2%, 64.6%] | 0.454 |
+
+One mildly favours the objective, one mildly opposes it, both straddle 50%.
+**The shared conclusion is that neither is separable from chance** — a reader
+shown only the 6–10 record would wrongly conclude the objective is
+anti-predictive.
+
+| | result | p |
+|---|---|---|
+| Does the *size* of the in-sample edge predict the realised edge? | **ρ = −0.085** (near zero, not meaningfully negative) | 0.753 |
+| What did one optimiser error cost? | **+7.4%** per quarter, CI [−6.0%, +20.9%] | 0.258 |
+
+The 1.45% in-sample Sharpe edge that Phase 7's 33% error rate was failing to
+resolve is **not measurably worth anything out of sample**. The optimiser works;
+the value question lives in the objective it was pointed at.
+
+**The quantum arm's contribution here is a robustness check on Phase 9, not a
+backtest result.** CVaR α = 0.4 at k = 1 matched the exact in-sample argmin on
+**16 of 16 Hamiltonians it was never tuned against**, with 0 infeasible readouts
+and mean P(ground) = **0.4988** — below the 0.5 guarantee threshold, independently
+reproducing Phase 9's plurality mechanism. Because it matched the perfect
+optimiser on every fold, the backtest contains **no information about the quantum
+arm's economic value in either direction**; that comparison has zero variance.
+
+**The main instance is doubly atypical.** Its ground state `1010` wins only 2 of
+16 windows, and its energy gap (0.2368% of spectral width) is 5× tighter than the
+median fold. Phases 5–9 were measured on a harder-than-typical case — which
+strengthens those accuracy figures — while the specific TSLA+AMD answer is a
+property of one year, not of this basket.
+
+> **Selection bias is the largest caveat and is not fixable.** These four tickers
+> were chosen in 2026 knowing how they turned out. `buy_hold_NVDA` (+1127%,
+> Sharpe 1.393) beats every optimised arm including a *perfect* optimiser
+> (+800%, 1.233). Only between-arm comparisons carry information, and the design
+> is powered to detect effects ~4× larger than the one it looks for — detecting
+> the 0.242 Sharpe edge would need **279 folds, about 70 years**.
+
+Full study: [`docs/backtest.md`](docs/backtest.md).
+
 ---
 
 ## Validation gates
@@ -230,7 +286,7 @@ Every phase has an executable gate. Run them in any order after the pipeline.
 python quantum/q_bridge.py                  # Phase 1 — bridge, 10/10
 python quantum/q_bridge.py --test-circuit   # Phase 3 — circuit, 7/7
 python classical/phase2_gate.py             # Phase 2 — formulation, 9/9
-python training/gradient_bridge.py          # Phase 4 — gradients, 3.0e-10
+python training/gradient_bridge.py          # Phase 4 — gradients, <1e-9 vs 1e-2
 python tools/verify_threading.py            # interpreter thread affinity
 python tools/check_reproducibility.py       # determinism across runs
 python tools/capture_ui.py                  # UI + figures (needs playwright)
@@ -243,11 +299,22 @@ Selected measured results:
 |---|---|---|
 | QUBO→Ising identity, all 16 states | 5.3e-15 | 1e-9 |
 | Live Q# circuit vs energy table at `1010` | exact match | 1e-9 |
-| Parameter-shift vs finite difference, 28 params | **3.0e-10** | 1e-2 |
+| Parameter-shift vs finite difference, 28 params † | **< 1e-9** | 1e-2 |
 | Pure-sinusoid fit (the rule's premise) | 2.6e-15 | 1e-9 |
 | Exact vs sampling backend, 20 000 shots | 0.0012 | 5σ = 0.0164 |
 | UI page load, headless Chromium (median of 5) | **~0.9–1.2 s** | 5 s |
 | UI page load, first request to a fresh server | 2.6–3.7 s | 5 s |
+
+† **Stated as a bound because it is not a stable constant.** The gate seeds its
+probe points, but its finite-difference *reference* inherits the exact backend's
+~1.4e-15 nondeterminism (a ~10-ULP global-phase floor, which the gate itself
+prints as `<H> spread over 50 evaluations`), amplified by 1/(2ε) = 5e4 at
+ε = 1e-5. The order of magnitude is stable but the digits are not: consecutive
+runs gave 2.14, 2.14, 2.26, 2.36 e-10. The quantity measures amplified simulator
+noise, not gradient disagreement — it sits eight orders of magnitude inside the
+bound either way. Quoting three significant figures would assert a precision it
+does not have. Full detail, including the other affected rows:
+[`docs/mathematical_foundations.md`](docs/mathematical_foundations.md) §8.
 
 The first request to a newly started server carries one-time warmup (module
 import, cache fill) and is where essentially all of the 5 s budget risk sits;

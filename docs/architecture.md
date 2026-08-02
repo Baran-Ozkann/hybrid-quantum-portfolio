@@ -116,7 +116,10 @@ exactly inert against a diagonal observable — see
 
 ### Phase 4 — gradient bridge
 `torch.autograd.Function` with an exact parameter-shift backward. Gate: max
-\|parameter-shift − finite-difference\| = **3.0e-10** against a 1e-2 bound, plus
+\|parameter-shift − finite-difference\| **< 1e-9** against a 1e-2 bound (a bound,
+not a constant — the finite-difference reference amplifies the backend's
+~1.4e-15 nondeterminism by 1/(2ε) = 5e4, so consecutive runs land anywhere in
+1e-10…1e-9; see `mathematical_foundations.md` §8), plus
 Richardson extrapolation, a sinusoid-fit test of the rule's premise, chain-rule
 verification, and `gradcheck`.
 
@@ -295,7 +298,7 @@ Each phase has an executable gate; none advanced until its gate passed.
 | Phase 1 | `python quantum/q_bridge.py` | 10/10 |
 | Phase 3 | `python quantum/q_bridge.py --test-circuit` | 7/7 |
 | Phase 2 | `python classical/phase2_gate.py` | 9/9 |
-| Phase 4 | `python training/gradient_bridge.py` | gradient agreement 3.0e-10 |
+| Phase 4 | `python training/gradient_bridge.py` | gradient agreement < 1e-9 |
 | Threading | `python tools/verify_threading.py` | 13/13 |
 | Reproducibility | `python tools/check_reproducibility.py` | deterministic |
 | UI | `python tools/capture_ui.py` | 10/10, cold start 2.6 s |
