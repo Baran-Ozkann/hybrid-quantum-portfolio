@@ -159,6 +159,9 @@ _qsharp = None          # the qdk.qsharp module, once imported
 _initialised = False    # interpreter started
 _sources_loaded: set[str] = set()
 _scratch_allocated = False
+#: Size of the currently allocated scratch register. Only one may be live at a
+#: time -- see _ensure_scratch_register for why.
+_scratch_size: int = 0
 
 # --- interpreter recycling -------------------------------------------------
 # Every qsharp.eval() of a NEW source string is compiled into the interpreter
@@ -332,11 +335,13 @@ def reset_runtime() -> None:
 def _reset_runtime_impl() -> None:
     """Body of :func:`reset_runtime`; runs only on the interpreter's thread."""
     global _initialised, _sources_loaded, _scratch_allocated, _evals_since_recycle
+    global _scratch_size
     mod = _import_qsharp()
     mod.init()
     _initialised = True
     _sources_loaded = set()
     _scratch_allocated = False
+    _scratch_size = 0
     _evals_since_recycle = 0
     logger.debug("Q# interpreter reset.")
 
@@ -371,7 +376,7 @@ def _release_interpreter() -> None:
     AFTER all work has completed, are not raised into Python, and affect no
     result. Suppressing them would require a change inside qdk itself.
     """
-    global _qsharp, _initialised, _sources_loaded, _scratch_allocated
+    global _qsharp, _initialised, _sources_loaded, _scratch_allocated, _scratch_size
     try:
         import qdk._interpreter as _qdk_interp
         _qdk_interp._default_context = None
@@ -381,6 +386,7 @@ def _release_interpreter() -> None:
     _initialised = False
     _sources_loaded = set()
     _scratch_allocated = False
+    _scratch_size = 0
     import gc
     gc.collect()
 
@@ -506,13 +512,14 @@ def _fmt_double_array(values: Iterable[float]) -> str:
     return "[" + ", ".join(out) + "]"
 
 
-def _check_params(params: Sequence[float], num_layers: int) -> list[float]:
-    """Validate ansatz parameter count against the layer depth."""
+def _check_params(params: Sequence[float], num_layers: int,
+                  num_qubits: int = NUM_QUBITS) -> list[float]:
+    """Validate ansatz parameter count against register size and layer depth."""
     p = [float(x) for x in np.asarray(params, dtype=float).ravel()]
-    expected = n_params(NUM_QUBITS, num_layers)
+    expected = n_params(num_qubits, num_layers)
     if len(p) != expected:
         raise ValueError(
-            f"Expected {expected} parameters for {NUM_QUBITS} qubits and "
+            f"Expected {expected} parameters for {num_qubits} qubits and "
             f"{num_layers} layers, got {len(p)}."
         )
     return p
@@ -584,7 +591,28 @@ def index_to_bitstring(index: int, num_qubits: int = NUM_QUBITS) -> list[int]:
 # Exact backend (state vector)
 # --------------------------------------------------------------------------
 
-def _ensure_scratch_register() -> None:
+#: Entangler variants. "linear" is the Phase 1-9 CNOT ladder; "ring" closes it
+#: with one extra CNOT(q[n-1], q[0]) per layer. Same parameter count, so the
+#: two are drop-in alternatives -- see circuit.qs for why the ring exists.
+ENTANGLERS = {"linear": "ApplyAnsatz", "ring": "ApplyAnsatzRing"}
+
+
+def _ansatz_operation(entangler: str) -> str:
+    """Q# operation name for an entangler variant."""
+    try:
+        return ENTANGLERS[entangler]
+    except KeyError:
+        raise ValueError(
+            f"unknown entangler {entangler!r}; expected one of {sorted(ENTANGLERS)}"
+        ) from None
+
+
+def _scratch_name(num_qubits: int) -> str:
+    """Q# identifier of the scratch register for a given size."""
+    return f"__scratch{int(num_qubits)}"
+
+
+def _ensure_scratch_register(num_qubits: int = NUM_QUBITS) -> None:
     """Allocate the session-level scratch register used by the exact backend.
 
     The register is declared at interpreter TOP LEVEL so it outlives the
@@ -592,19 +620,39 @@ def _ensure_scratch_register() -> None:
     ``dump_machine()``. Allocating inside an operation would not work: Q#
     releases qubits at end of scope and requires them to be in |0> first, so
     the prepared state would be destroyed before Python could read it.
+
+    EXACTLY ONE REGISTER MAY BE ALLOCATED AT A TIME. ``dump_machine`` reports
+    the state of the WHOLE session, not of one register, so a second live
+    register widens every returned vector. Measured: with a 4-qubit and a
+    12-qubit register both allocated, ``as_dense_state()`` returns 65536
+    amplitudes and a 4-qubit ansatz's support lands at indices up to 61440 --
+    the idle qubits become the low-order bits. Nothing raises; the numbers are
+    simply the wrong shape.
+
+    So changing register size RESETS the interpreter. Callers must reload the
+    circuit sources afterwards (``_statevector_impl`` does, in that order).
+    Switching sizes repeatedly inside one process is therefore expensive by
+    design; the 4-asset and variable-weight tracks are meant to run separately.
     """
-    global _scratch_allocated
-    if _scratch_allocated:
+    global _scratch_allocated, _scratch_size
+    if _scratch_allocated and _scratch_size == int(num_qubits):
         return
+    if _scratch_allocated and _scratch_size != int(num_qubits):
+        logger.debug("Scratch register resize %d -> %d; resetting interpreter.",
+                     _scratch_size, num_qubits)
+        _reset_runtime_impl()
     qs = get_qsharp()
-    qs.eval(f"use __scratch = Qubit[{NUM_QUBITS}];")
+    qs.eval(f"use {_scratch_name(num_qubits)} = Qubit[{int(num_qubits)}];")
     _scratch_allocated = True
-    logger.debug("Allocated top-level scratch register of %d qubits.", NUM_QUBITS)
+    _scratch_size = int(num_qubits)
+    logger.debug("Allocated top-level scratch register of %d qubits.", num_qubits)
 
 
 def statevector(
     params: Sequence[float],
     num_layers: int = DEFAULT_LAYERS,
+    num_qubits: int = NUM_QUBITS,
+    entangler: str = "linear",
 ) -> np.ndarray:
     """Prepare the ansatz and return its exact state vector.
 
@@ -614,42 +662,63 @@ def statevector(
     NOTE: the returned vector carries an arbitrary overall phase that varies
     between calls (see module docstring). Use magnitudes, not raw amplitudes.
 
+    Args:
+        num_qubits: Register size. Changing it between calls resets the
+            interpreter -- see :func:`_ensure_scratch_register`.
+
     Returns:
-        Complex array of shape ``(2**NUM_QUBITS,)``.
+        Complex array of shape ``(2**num_qubits,)``.
     """
-    return _on_qsharp_thread(_statevector_impl, params, num_layers)
+    return _on_qsharp_thread(_statevector_impl, params, num_layers, num_qubits,
+                             entangler)
 
 
-def _statevector_impl(params: Sequence[float], num_layers: int) -> np.ndarray:
+def _statevector_impl(params: Sequence[float], num_layers: int,
+                      num_qubits: int = NUM_QUBITS,
+                      entangler: str = "linear") -> np.ndarray:
     """Body of :func:`statevector`; runs only on the interpreter's thread."""
     global _evals_since_recycle
-    p = _check_params(params, num_layers)
+    p = _check_params(params, num_layers, num_qubits)
+    op = _ansatz_operation(entangler)
     _maybe_recycle()
+    # Scratch FIRST: a size change resets the interpreter, which would discard
+    # sources loaded before it.
+    _ensure_scratch_register(num_qubits)
     load_circuit_operations()
-    _ensure_scratch_register()
+    reg = _scratch_name(num_qubits)
     qs = get_qsharp()
 
     _evals_since_recycle += 1
-    qs.eval(f"ApplyAnsatz(__scratch, {_fmt_double_array(p)}, {int(num_layers)});")
+    qs.eval(f"{op}({reg}, {_fmt_double_array(p)}, {int(num_layers)});")
     try:
         state = np.asarray(qs.dump_machine().as_dense_state(), dtype=complex)
     finally:
         # Always restore |0...0>, even if the read failed, so the session
         # is not left holding a dirty register.
-        qs.eval("ResetAll(__scratch);")
+        qs.eval(f"ResetAll({reg});")
+
+    expected = 2 ** int(num_qubits)
+    if len(state) != expected:
+        raise RuntimeError(
+            f"dump_machine returned {len(state)} amplitudes, expected {expected} "
+            f"for {num_qubits} qubits. A second register is live in this "
+            "session; see _ensure_scratch_register."
+        )
     return state
 
 
 def probabilities(
     params: Sequence[float],
     num_layers: int = DEFAULT_LAYERS,
+    num_qubits: int = NUM_QUBITS,
+    entangler: str = "linear",
 ) -> np.ndarray:
     """Exact computational-basis probability distribution of the ansatz.
 
     Returns:
-        Real array of shape ``(2**NUM_QUBITS,)`` summing to 1.
+        Real array of shape ``(2**num_qubits,)`` summing to 1.
     """
-    probs = np.abs(statevector(params, num_layers)) ** 2
+    probs = np.abs(statevector(params, num_layers, num_qubits, entangler)) ** 2
     total = probs.sum()
     if not math.isclose(total, 1.0, rel_tol=1e-6):
         raise RuntimeError(f"State vector is not normalised: sum(p) = {total!r}")
@@ -661,14 +730,16 @@ def expectation_exact(
     h_coeffs: Sequence[float],
     j_coeffs: Sequence[float],
     num_layers: int = DEFAULT_LAYERS,
+    num_qubits: int = NUM_QUBITS,
+    entangler: str = "linear",
 ) -> float:
     """Exact <H> = sum_z p(z) E(z), with no shot noise.
 
     Legitimate because H is diagonal in the measurement basis: its expectation
     is a plain average of basis-state energies weighted by their probabilities.
     """
-    probs = probabilities(params, num_layers)
-    energies = ising_energy_table(h_coeffs, j_coeffs, NUM_QUBITS)
+    probs = probabilities(params, num_layers, num_qubits, entangler)
+    energies = ising_energy_table(h_coeffs, j_coeffs, num_qubits)
     return float(probs @ energies)
 
 

@@ -1,17 +1,37 @@
 # Hybrid Quantum Portfolio Optimization with Q# and PyTorch
 
-A working proof of concept that formulates 4-asset portfolio selection as an
-Ising Hamiltonian, minimises it with a variational quantum circuit written in
-**Q#**, trains that circuit through **PyTorch autograd** using the exact
-parameter-shift rule, and compares the result honestly against classical
-Markowitz baselines.
+![The running application](docs/figures/ui_section2_quantum.png)
 
-**Headline result:** the quantum optimiser matched the classical optimum
-*exactly* over the same feasible set (Sharpe 2.1599, portfolio 50% TSLA /
-50% AMD) — but a **single run finds the true ground state only 60% of the time**
-(18 of 30 seeds, Wilson 95% CI [42%, 75%]). The remaining runs land on a
-near-degenerate alternative 1.4% worse. Running 5–10 seeds and keeping the
-lowest energy recovers 96–100%. Both halves of that sentence are the result.
+> *The percentages in this screenshot come from a live sampling run: the app
+> draws 4096 fresh measurement shots on every click, the way hardware would, so
+> the readout share and feasible-shot fraction move by a fraction of a percent
+> between clicks. The stored exact state-vector value for this seed is
+> **0.6011**, and binomial shot noise at 4096 shots is σ = 0.77%, so a reading of
+> 59.5% or 60.8% is within one sigma of it. The tables below quote the exact
+> values, not sampled ones.*
+
+Portfolio selection over 4 assets, written as an Ising Hamiltonian and minimised
+by a variational quantum circuit in **Q#**, trained through **PyTorch autograd**
+with the exact parameter-shift rule. The problem is deliberately small enough
+that the correct answer can be found by brute force — so every claim the
+optimiser makes can be checked rather than trusted.
+
+## The result in four numbers
+
+| | |
+|---|---|
+| **The optimiser is correct** | It matches the exhaustive optimum over its own feasible set exactly — Sharpe **2.1599**, 50% TSLA / 50% AMD |
+| **A single run is right 60% of the time** | 18 of 30 random seeds, Wilson 95% [42%, 75%]. The rest land on a portfolio 1.4% worse whose energy differs by 0.24% of the spectrum |
+| **Changing the objective fixes it** | CVaR at α = 0.4 reaches **30 of 30** — by giving up 11% of the spectral width in energy. Convergence and correctness trade against each other |
+| **The edge it resolves is worth nothing** | Out of sample over 16 quarters, that 1.4% is **indistinguishable from a coin flip** (p = 0.454, rank correlation −0.085) |
+
+The last two are the point. A run can converge beautifully and be wrong, and the
+quantity it is fighting over may not survive contact with out-of-sample data.
+Both were measurable only because the true answer was independently knowable.
+
+**Start here:** [`docs/what_i_learned.md`](docs/what_i_learned.md) — what this
+project taught me, in four findings.
+**Then:** [`docs/`](docs/) for the technical reference, or read on for setup.
 
 ---
 

@@ -5,6 +5,7 @@ Setup, usage, results, and known issues live in the
 
 | Document | Read it for |
 |---|---|
+| [`what_i_learned.md`](what_i_learned.md) | **Start here.** Four findings in first person, with the numbers behind each: convergence is not correctness; small samples lie; scaling is not a parameter change; the honest result was the useful one. |
 | [`architecture.md`](architecture.md) | System diagram and module boundaries; phase-by-phase summary; the **single-owner-thread interpreter** design, why it was forced, and its serialization limit for concurrent sessions; interpreter recycling and the quadratic-cost bug it fixes; deviations from the original specification. |
 | [`mathematical_foundations.md`](mathematical_foundations.md) | Full QUBO derivation and penalty-weight selection; the QUBO→Ising conversion with its exhaustive verification; why the Hamiltonian is diagonal and what follows; the **exact-backend-for-training vs sampling-for-readout** distinction; the parameter-shift rule and its validation; the **rf = 5%** and simple-return conventions. |
 | [`encoding_schema.md`](encoding_schema.md) | Qubit↔asset map and bit ordering (verified, not assumed); bitstring→weights rule; all 6 reachable portfolios; worked examples including an infeasible one; the three decode/repair policies; what the encoding cannot express. |

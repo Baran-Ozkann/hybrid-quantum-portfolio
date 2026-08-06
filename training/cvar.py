@@ -177,12 +177,16 @@ class CVaRObjective:
     # -- core -------------------------------------------------------------
     def linearise(self, params: Sequence[float]) -> TailState:
         """Freeze the tail decomposition at ``params``."""
-        probs = qb.probabilities(params, self.evaluator.num_layers)
+        probs = qb.probabilities(params, self.evaluator.num_layers,
+                                 self.evaluator.num_qubits,
+                                 self.evaluator.entangler)
         return tail_state(probs, self.energies, self.alpha)
 
     def value(self, params: Sequence[float], tail: TailState | None = None) -> float:
         """CVaR value at ``params``."""
-        probs = qb.probabilities(params, self.evaluator.num_layers)
+        probs = qb.probabilities(params, self.evaluator.num_layers,
+                                 self.evaluator.num_qubits,
+                                 self.evaluator.entangler)
         if self.alpha >= 1.0:
             return float(probs @ self.energies)
         t = tail if tail is not None else tail_state(probs, self.energies, self.alpha)
@@ -202,9 +206,13 @@ class CVaRObjective:
         for i in range(len(p)):
             original = p[i]
             p[i] = original + np.pi / 2
-            plus = float(qb.probabilities(p, self.evaluator.num_layers) @ w)
+            plus = float(qb.probabilities(
+                p, self.evaluator.num_layers, self.evaluator.num_qubits,
+                self.evaluator.entangler) @ w)
             p[i] = original - np.pi / 2
-            minus = float(qb.probabilities(p, self.evaluator.num_layers) @ w)
+            minus = float(qb.probabilities(
+                p, self.evaluator.num_layers, self.evaluator.num_qubits,
+                self.evaluator.entangler) @ w)
             p[i] = original
             grad[i] = 0.5 * (plus - minus)
         return grad

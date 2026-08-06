@@ -101,6 +101,13 @@ class EnergyEvaluator:
     num_layers: int = qb.DEFAULT_LAYERS
     backend: str = "exact"
     num_shots: int = qb.DEFAULT_SHOTS
+    #: Register size. Appended after the existing fields so positional
+    #: construction elsewhere is unaffected. The variable-weight track passes
+    #: 12; everything in Phases 1-9 uses the 4-qubit default.
+    num_qubits: int = qb.NUM_QUBITS
+    #: "linear" (the Phase 1-9 CNOT ladder) or "ring" (ladder closed with one
+    #: extra CNOT per layer). Same parameter count either way.
+    entangler: str = "linear"
     n_evaluations: int = field(default=0, init=False)
 
     def __post_init__(self) -> None:
@@ -108,20 +115,44 @@ class EnergyEvaluator:
         self.J = np.asarray(self.J, dtype=float)
         if self.backend not in ("exact", "sampling"):
             raise ValueError(f"backend must be 'exact' or 'sampling', got {self.backend!r}")
+        n = int(self.num_qubits)
+        if self.h.shape != (n,):
+            raise ValueError(f"h must have shape ({n},), got {self.h.shape}")
+        expected_j = n * (n - 1) // 2
+        if self.J.shape != (expected_j,):
+            raise ValueError(
+                f"J must have shape ({expected_j},) for {n} qubits, got {self.J.shape}"
+            )
+        if self.backend == "sampling" and n != qb.NUM_QUBITS:
+            raise ValueError(
+                "the sampling backend is only wired for the 4-qubit register; "
+                "use backend='exact' at other sizes"
+            )
+        if self.backend == "sampling" and self.entangler != "linear":
+            raise ValueError(
+                "the sampling backend implements the linear ladder only; "
+                "use backend='exact' for the ring entangler"
+            )
+        if self.entangler not in qb.ENTANGLERS:
+            raise ValueError(
+                f"unknown entangler {self.entangler!r}; "
+                f"expected one of {sorted(qb.ENTANGLERS)}"
+            )
         # Precompute the diagonal energy table; it does not depend on the
         # parameters, so it is built once instead of per evaluation.
-        self._energies = qb.ising_energy_table(self.h, self.J, qb.NUM_QUBITS)
+        self._energies = qb.ising_energy_table(self.h, self.J, n)
 
     @property
     def n_params(self) -> int:
         """Number of ansatz angles this evaluator expects."""
-        return qb.n_params(qb.NUM_QUBITS, self.num_layers)
+        return qb.n_params(self.num_qubits, self.num_layers)
 
     def energy(self, params: Sequence[float]) -> float:
         """Evaluate ``<H>`` at ``params``."""
         self.n_evaluations += 1
         if self.backend == "exact":
-            probs = qb.probabilities(params, self.num_layers)
+            probs = qb.probabilities(params, self.num_layers, self.num_qubits,
+                                     self.entangler)
             return float(probs @ self._energies)
         return qb.expectation_sampled(
             params, self.h, self.J, self.num_layers, self.num_shots

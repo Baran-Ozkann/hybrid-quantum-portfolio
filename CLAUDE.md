@@ -401,6 +401,128 @@ writes `data/prices.csv`.
    uncertain; more parameters may worsen the landscape. Lowest expected value of
    the remaining work: it touches nothing else.
 
+---
+
+## Variable-weight track (`varweight/`): STOPPED, not abandoned
+
+A parallel track extending the encoding to **6 assets with variable weights** —
+2 qubits per asset, levels 0–3, 12 qubits, 4096 states, levels summing to
+exactly 4 so weights are multiples of 25%. Own frozen snapshot
+(`data/varweight_prices.csv`, SHA-256 `c69d3991…`); `data/prices.csv` and
+`data/backtest_prices.csv` were verified unchanged throughout.
+
+**This is committed as evidence and as a base, NOT as pending work.** It is
+stopped deliberately, with the open question stated below. Do not treat it as a
+to-do list for this project.
+
+### What it ESTABLISHED (all gated)
+
+- **The encoding works.** 8/8 checks: encode/decode are exact inverses over all
+  4096 states and all 4096 level tuples; feasible count 120 matches the closed
+  form; Ising energies reproduce the penalised objective to 2.8e-14 on every
+  state; the ground state is feasible.
+- **Gradients hold at 12 qubits.** 6/6 checks. `max|PS − FD| ≈ 5e-07` against
+  the 1e-2 bound. Larger than the 4-qubit ~2e-10 purely because |E| ~ 604 here
+  versus ~5 there — **relative** floor is 1.6e-13, the same handful of ULP.
+- **The ansatz can represent the optimum.** At random parameters P(ground)
+  ≈ 1e-4…1e-3 and no state is ever exactly zero, under either entangler.
+- **Expressiveness improved as intended.** Best encodable Sharpe 3.8851 vs
+  long-only Markowitz 4.1123 — a **5.53%** gap, against the 4-asset encoding's
+  **−10.94%**. Roughly halved, which was the motivation.
+
+### What it RULED OUT (each measured, each negative)
+
+1. **Entangler reach.** The linear CNOT ladder's backward reach equals the layer
+   count exactly (1/2/3/6 at depths 1/2/3/6) while forward reach spans the
+   register in one layer. At L=3, JNJ (qubits 10,11) cannot influence AMD
+   (qubits 4,5) — and the failure was a weight inversion between exactly those
+   two. Added `ApplyAnsatzRing` (one CNOT per layer, **zero** extra parameters):
+   full symmetric reach at L=2, all 36 asset pairs. **The failure survived.**
+   Reach was necessary, not sufficient.
+2. **Structural reachability.** Ruled out — see above.
+3. **Penalty scale.** The old bound was **27.7× larger than the exact minimum**
+   (3.697 vs 0.1335); `minimal_penalty()` now computes the exact requirement.
+   At λ=3.697 the optimiser drove the true optimum to **exactly zero
+   amplitude**; at λ=0.2465 the same run left it at 4.9e-04 (**5th of 4096**)
+   for a cost of **0.6 percentage points** of feasible mass. Real effect, real
+   fix — **and the readout did not change** (same portfolio, feasible-energy
+   rank 15 of 120, at both λ).
+
+### What remains OPEN
+
+**Attractor selection at 120 feasible states — for PLAIN VQE.** Every plain-VQE
+arm locks onto a single basis-state attractor early (epoch 21–45) and then
+purifies toward it, expelling everything else including the optimum. λ controls
+how fast and how completely that purification runs; it does not control **which**
+attractor is chosen. This is Phase 5's "converged but wrong" at 120 candidates
+instead of 6.
+
+**A single CVaR α = 0.4 run broke that pattern and reached the ground state** —
+see "If it ever resumes" below. n = 1, so it is a lead, not a result.
+
+Diagnostics worth keeping in mind: the constraint is the EASY part (feasible
+mass 1.0000 at λ=3.697, 0.9940 at 0.2465), and all the difficulty migrated to
+the allocation — which is precisely the degree of freedom variable weights
+introduced. The failure is "right assets, inverted split", not "wrong assets".
+
+### If it ever resumes
+
+**A 30-seed CVaR sweep is the natural first step, as a NEW study.**
+
+A single α = 0.4 probe was run here at the corrected λ (seed 42, linear, L=3,
+200 epochs; `logs/vw_cvar040.log`) and **it found the ground state**:
+
+| | plain VQE (λ=0.2465) | **CVaR α=0.4 (λ=0.2470)** |
+|---|---|---|
+| readout | AMD 25% / JNJ 75% | **AMD 75% / JNJ 25%** |
+| correct | no | **YES** |
+| feasible-energy rank | 15 of 120 | **1 of 120** |
+| final ⟨H⟩ vs ground | +0.213 | **−0.000000 (exact)** |
+| states strictly above ground | 4 | **0** |
+| P(ground) | 4.9e-04 | **0.4406** |
+| feasible mass | 0.9940 | 0.4752 |
+
+**And it did so via the documented Phase 9 mechanism, not by accident:**
+
+- **P(ground) = 0.4406 — a plurality, below the 0.5 that would guarantee an
+  argmax.** Exactly §5 of `objective_comparison.md`, now reproduced at 120
+  feasible states instead of 6.
+- **It saturated at the α target.** P(ground) went 0.2199 → 0.4388 → 0.4406 →
+  0.4406 and froze once past α = 0.4, which is what CVaR's vanishing gradient
+  predicts.
+- **Feasible mass fell to 0.4752** from plain VQE's 0.9940 — CVaR is indifferent
+  to how the upper 1−α is arranged, exactly the §7 trade.
+
+**THIS DOES NOT REOPEN THE TRACK.** It is *one seed*. Basins here are
+trajectory-determined, and this project has twice had a small-sample result
+overturned (1-of-3 → 18-of-30; a "clean null" that was two effects cancelling).
+One run cannot distinguish a real effect from a lucky trajectory. It is recorded
+because it makes the resuming study's first experiment obvious and well-motivated
+— seeds on CVaR, not more entangler or penalty variants.
+
+### Cross-track comparability
+
+**4-asset results stand as measured on the LINEAR ansatz.** The variable-weight
+track can use either entangler. Do not read a cross-track difference as an
+encoding effect without checking whether it is partly an entangler effect.
+
+### Normalisation warning (this bit already caused one wrong conclusion)
+
+`gap / full spectral width` is **not comparable across encodings** — the full
+width is penalty-dominated. It reported 0.0083% here against the 4-asset
+0.2368%, implying a 28× harder problem. Normalised against the **feasible
+subspace** instead: **3.29% here vs 1.70% at 4 assets** — the discrimination is
+relatively *easier*. Always use the feasible-subspace width.
+
+### The §8 answer this track produced
+
+`objective_comparison.md` §8 asks how usable α scales with n. Measured:
+**feasible fraction falls 37.50% → 2.93%** (6/16 → 120/4096) **while the
+feasible count rises 20×**. Not folded into that document — it belongs to
+whatever study resumes this.
+
+---
+
 > ## WHERE TO STOP (decided 2026-08-02)
 >
 > **Close the project after the shrinkage arm (1b). Do not start a fourth phase
@@ -418,6 +540,15 @@ writes `data/prices.csv`.
 > because the remaining questions are uninteresting, but because closing clean
 > beats accumulating results nobody has time to hear. If the 6/8-asset work
 > happens, it should open as its own study with its own framing.
+>
+> **UPDATE (2026-08-06): the variable-weight extension was built and stopped.**
+> It is committed under `varweight/` with its findings recorded above. It ends
+> with the attractor question open, deliberately. That is the "own study with
+> its own framing" this note anticipated — it now has a working base and three
+> ruled-out hypotheses to start from, rather than a blank page.
+>
+> **The project is CLOSED.** The deliverable is the video, sourced from
+> `docs/what_i_learned.md`.
 
 2b. **Should the α grid be refined around 0.3–0.45?** α = 0.4 is at ceiling
    (30/30), so a finer grid cannot resolve the peak with n = 30 — it would need

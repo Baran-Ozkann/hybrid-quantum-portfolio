@@ -122,6 +122,61 @@ function AnsatzParameterCount(numQubits : Int, numLayers : Int) : Int {
     return numQubits * (2 * numLayers + 1);
 }
 
+/// As `ApplyAnsatz`, but the CNOT ladder is CLOSED INTO A RING: one extra
+/// CNOT(q[n-1], q[0]) per layer.
+///
+/// # Why this exists
+/// The ladder is applied sequentially, so within a single layer influence
+/// travels forward (low index -> high index) across the whole register, but
+/// backward only one qubit per layer -- a CNOT writes to its target. Measured
+/// on 12 qubits (`varweight/probe_lightcone.py`): backward reach equals the
+/// layer count exactly, 1/2/3/6 at depths 1/2/3/6, against the 11 needed to
+/// span. At 4 qubits, 3 layers spans the register and the asymmetry never
+/// bites; at 12 it does, and it produced a weight inversion between the two
+/// assets at opposite ends of the register.
+///
+/// Closing the ring lets forward flow wrap around, so backward reach becomes
+/// full in one or two layers. It costs ONE GATE PER LAYER and ZERO extra
+/// parameters -- the parameter count is identical to `ApplyAnsatz`, so the two
+/// are drop-in alternatives at the same depth.
+///
+/// # Note
+/// `ApplyAnsatz` is deliberately left untouched: every Phase 1-9 result was
+/// measured on it, and those results stand as measured.
+operation ApplyAnsatzRing(qs : Qubit[], params : Double[], numLayers : Int) : Unit {
+    let n = Length(qs);
+    let expected = n * (2 * numLayers + 1);
+    Fact(
+        Length(params) == expected,
+        $"ApplyAnsatzRing: expected {expected} params for {n} qubits and "
+        + $"{numLayers} layers, got {Length(params)}."
+    );
+
+    for layer in 0..numLayers - 1 {
+        let offset = layer * 2 * n;
+
+        for i in 0..n - 1 {
+            Ry(params[offset + i], qs[i]);
+        }
+        for i in 0..n - 1 {
+            Rz(params[offset + n + i], qs[i]);
+        }
+        for i in 0..n - 2 {
+            CNOT(qs[i], qs[i + 1]);
+        }
+        // The closure. Guarded because at n = 2 it would duplicate the ladder's
+        // only CNOT, and at n < 2 there is nothing to entangle.
+        if n > 2 {
+            CNOT(qs[n - 1], qs[0]);
+        }
+    }
+
+    let finalOffset = numLayers * 2 * n;
+    for i in 0..n - 1 {
+        Ry(params[finalOffset + i], qs[i]);
+    }
+}
+
 /// Estimate <H> for the diagonal Ising portfolio Hamiltonian by SAMPLING.
 ///
 /// Because H is diagonal in the Z basis, every term commutes and a single
