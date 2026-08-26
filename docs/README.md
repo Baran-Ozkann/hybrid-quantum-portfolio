@@ -65,9 +65,19 @@ python tools/plot_alpha_sweep.py
 python tools/plot_seed_scatter.py
 ```
 
+```bash
+python tools/plot_backtest_discrimination.py
+```
+
 | shot | file | source |
 |---|---|---|
 | 1 | `01_app_fallback.png` | copy of `figures/ui_section2_quantum.png` (fallback; the app is recorded live) |
 | 2 | `02_seed_scatter.png` | `tools/plot_seed_scatter.py` — redrawn standalone, not cropped |
 | 3 | `03_alpha_sweep.png` | `tools/plot_alpha_sweep.py` |
-| 4 | `04_backtest_discrimination.png` | copy of `figures/backtest_discrimination.png` |
+| 4 | `04_backtest_discrimination.png` | `tools/plot_backtest_discrimination.py` |
+
+The video versions are deliberately not the same images as the ones in
+[`figures/`](figures/). `figures/backtest_discrimination.png` keeps its per-fold
+numbers and the fold-13 callout, which are worth having when a reader can study
+the plot; the video cut drops both, because sixteen labelled points collide at
+presentation type sizes and the numbers carry nothing usable in four seconds.
