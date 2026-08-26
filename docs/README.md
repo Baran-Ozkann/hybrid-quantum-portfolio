@@ -51,3 +51,23 @@ If you are new to the project and want the reasoning rather than the results:
 5. [`stability_report.md`](stability_report.md) — how well it actually works.
 6. [`architecture.md`](architecture.md) §4–5 — the two hard engineering
    constraints the Q# runtime imposed.
+
+## Video shots
+
+[`video_shots/`](video_shots/) holds the four figures for the walkthrough, numbered
+in presentation order. Regenerate the two plotted ones with:
+
+```bash
+python tools/plot_alpha_sweep.py
+```
+
+```bash
+python tools/plot_seed_scatter.py
+```
+
+| shot | file | source |
+|---|---|---|
+| 1 | `01_app_fallback.png` | copy of `figures/ui_section2_quantum.png` (fallback; the app is recorded live) |
+| 2 | `02_seed_scatter.png` | `tools/plot_seed_scatter.py` — redrawn standalone, not cropped |
+| 3 | `03_alpha_sweep.png` | `tools/plot_alpha_sweep.py` |
+| 4 | `04_backtest_discrimination.png` | copy of `figures/backtest_discrimination.png` |
