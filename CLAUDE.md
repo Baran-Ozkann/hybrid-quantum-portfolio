@@ -301,8 +301,9 @@ reflect on the optimiser is a bug in the write-up.
 
 ### The question it is built around
 
-In-sample, `1010` beats `0110` by **1.4% Sharpe**, and plain VQE misses that
-discrimination **33%** of the time. Is that 1.4% meaningful out of sample at all?
+In-sample, `1010` beats `0110` by **1.45% Sharpe** (2.159893 vs 2.128973), and
+plain VQE misses that discrimination **33%** of the time. Is that 1.45%
+meaningful out of sample at all?
 If the in-sample winner wins out of sample only ~half the time, **the optimiser's
 error rate costs nothing in reality — it was resolving noise.** Given what Phase 9
 established about how hard the 0.039 gap is to resolve, that is the sharpest
@@ -509,10 +510,17 @@ encoding effect without checking whether it is partly an entangler effect.
 ### Normalisation warning (this bit already caused one wrong conclusion)
 
 `gap / full spectral width` is **not comparable across encodings** — the full
-width is penalty-dominated. It reported 0.0083% here against the 4-asset
-0.2368%, implying a 28× harder problem. Normalised against the **feasible
-subspace** instead: **3.29% here vs 1.70% at 4 assets** — the discrimination is
-relatively *easier*. Always use the feasible-subspace width.
+width is penalty-dominated, so the denominator says more about λ than about the
+problem. At the original λ = 3.697 it reported **0.0083%** against the 4-asset
+0.2368%, implying a 28× harder problem; at the corrected λ = 0.2470 the same
+quantity is **0.1224%**, because the full width fell from 725.19 to 48.94. That
+the figure moves 15× on a penalty change it should be independent of is the
+whole objection.
+
+Normalised against the **feasible subspace** instead: **3.29% here vs 1.70% at
+4 assets** — the discrimination is relatively *easier*, and the figure is
+invariant in λ because the penalty cancels between two feasible states. Always
+use the feasible-subspace width.
 
 ### The §8 answer this track produced
 

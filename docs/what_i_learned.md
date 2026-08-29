@@ -139,7 +139,10 @@ every property that held incidentally at small scale has to be re-measured.
 ## 4. The honest result was the one worth having
 
 Everything above is about whether the optimiser finds the minimum. I spent most
-of the project on that, and got it from 60% to 100% by changing the objective.
+of the project on that, and got it from 66.7% to 100% by changing the objective —
+the same thirty seeds and the same 200-epoch budget, with only the objective
+different. (The 60% in section 1 is the shorter 100-epoch run; quoting 60% → 100%
+would credit the objective with the extra training.)
 
 Then I asked a different question: **is that minimum worth finding?**
 
@@ -180,6 +183,6 @@ contains no information about its economic value in either direction. That is th
 absence of a measurement, not a measurement of zero.
 
 I could have stopped before this test. The project had a clean improvement story:
-60% to 100% by changing the objective. Running the out-of-sample check is what
+66.7% to 100% by changing the objective. Running the out-of-sample check is what
 turned that into something I actually believe, and the result is more interesting
 than the story it replaced.

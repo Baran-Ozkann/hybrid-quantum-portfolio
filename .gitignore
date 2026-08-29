@@ -66,6 +66,12 @@ training/final_distribution.png
 !docs/figures/
 !docs/figures/*.png
 
+# stability_report.md embeds this one. An ignored file renders locally and
+# shows a broken image on GitHub, which is exactly what happened before the
+# pre-publication audit caught it. If a document embeds a figure, the figure
+# has to be tracked.
+!training/convergence.png
+
 # The sweep aggregate the UI reads for its Section 4 headline. Small, derived,
 # and regenerable via tools/stability_report.py, but committed so a fresh clone
 # shows the reliability result without a 12-minute retrain first.

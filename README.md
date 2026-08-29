@@ -22,16 +22,46 @@ optimiser makes can be checked rather than trusted.
 |---|---|
 | **The optimiser is correct** | It matches the exhaustive optimum over its own feasible set exactly — Sharpe **2.1599**, 50% TSLA / 50% AMD |
 | **A single run is right 60% of the time** | 18 of 30 random seeds, Wilson 95% [42%, 75%]. The rest land on a portfolio 1.4% worse whose energy differs by 0.24% of the spectrum |
-| **Changing the objective fixes it** | CVaR at α = 0.4 reaches **30 of 30** — by giving up 11% of the spectral width in energy. Convergence and correctness trade against each other |
-| **The edge it resolves is worth nothing** | Out of sample over 16 quarters, that 1.4% is **indistinguishable from a coin flip** (p = 0.454, rank correlation −0.085) |
+| **Changing the objective fixes it** | CVaR at α = 0.4 reaches **30 of 30** — by giving up 13.2% of the spectral width in energy. Convergence and correctness trade against each other |
+| **The edge it resolves is worth nothing** | Out of sample over 16 quarters, that 1.45% is **indistinguishable from a coin flip** (p = 0.454, rank correlation −0.085) |
 
 The last two are the point. A run can converge beautifully and be wrong, and the
 quantity it is fighting over may not survive contact with out-of-sample data.
 Both were measurable only because the true answer was independently knowable.
 
+## What this does not claim
+
+Stated here rather than left for a reader to discover, because each one bounds
+every number above.
+
+1. **No speed advantage is claimed, and none exists here.** Nothing in this
+   project is faster than the classical alternative. The problem has 16 states,
+   brute-force enumeration solves it exactly and instantly, and the quantum
+   circuit runs on a classical simulator. This is a **correctness and
+   methodology** study on a problem small enough to have a verifiable answer —
+   not a performance result.
+2. **The statistics are in-sample throughout Phases 1–9.** Expected returns and
+   the covariance matrix are estimated on the same window the portfolios are
+   scored against. [`docs/backtest.md`](docs/backtest.md) is the one
+   out-of-sample component, and it is the one that found the edge does not
+   survive.
+3. **One 4-asset instance.** Four tickers, sixteen basis states, a single
+   Hamiltonian. The tickers were chosen in 2026 knowing how they performed —
+   selection bias that is real, unfixable, and not quantified. The backtest
+   shows even the *ground state* is unstable across windows: this instance's
+   `1010` wins only **2 of 16** quarters.
+
 **Start here:** [`docs/what_i_learned.md`](docs/what_i_learned.md) — what this
 project taught me, in four findings.
 **Then:** [`docs/`](docs/) for the technical reference, or read on for setup.
+
+> **`varweight/` is an incomplete, stopped track — not a working feature.** It
+> extends the encoding to 6 assets with variable weights (12 qubits, 4096
+> states). The encoding and gradients are verified, but **it does not find the
+> optimum**, and it was deliberately halted with that question open. It is
+> committed as evidence and as a starting base, not as functionality. See the
+> variable-weight section of [`CLAUDE.md`](CLAUDE.md) for what it established,
+> what it ruled out, and what remains open.
 
 ---
 

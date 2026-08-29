@@ -1,0 +1,14 @@
+# Normalise line endings. Without this, Windows checkouts commit CRLF and every
+# commit warns "LF will be replaced by CRLF", and a Linux cloner sees spurious
+# whole-file diffs.
+* text=auto eol=lf
+
+# Frozen price snapshots are inputs whose SHA-256 is recorded in the manifests
+# and re-verified on every load. Line-ending translation would change the file
+# hash and break that check, so they are byte-exact.
+data/prices.csv           -text
+data/backtest_prices.csv  -text
+data/varweight_prices.csv -text
+
+# Binary
+*.png binary

@@ -41,6 +41,72 @@ MOJIBAKE = (
 )
 
 
+#: Emoji and pictograph ranges. This project uses no emoji anywhere -- not in
+#: documents, code comments, figure titles, or commit messages -- and this gate
+#: is what keeps it that way.
+#:
+#: The ranges are deliberately narrow. The project relies on a lot of non-ASCII
+#: that is NOT emoji (arrows, Greek letters, angle brackets for <H>, proper
+#: minus and multiplication signs, dagger footnotes), and a check that flagged
+#: those would be muted within a week.
+PICTOGRAPH_RANGES = (
+    (0x1F000, 0x1FAFF, "pictographs / emoticons"),
+    (0x2600, 0x26FF, "miscellaneous symbols"),
+    (0x2700, 0x27BF, "dingbats"),
+    (0x2B00, 0x2BFF, "misc symbols and arrows"),
+    (0x1F1E6, 0x1F1FF, "regional indicator"),
+    (0xFE0F, 0xFE0F, "variation selector-16"),
+    (0x200D, 0x200D, "zero-width joiner"),
+    (0x2049, 0x2049, "exclamation question"),
+    (0x203C, 0x203C, "double exclamation"),
+    (0x2122, 0x2122, "trade mark"),
+    (0x2139, 0x2139, "information"),
+)
+
+#: Codepoints inside those ranges that are legitimate here. Keep this list
+#: short and justified -- every entry is a hole in the gate.
+PICTOGRAPH_ALLOWED = frozenset({
+    0x2713,   # check mark, used in a couple of gate tables
+})
+
+
+def pictographs_in(text: str) -> list[tuple[int, int, str, str]]:
+    """Return ``(line, codepoint, name, category)`` for each emoji found."""
+    import unicodedata
+    found = []
+    for lineno, line in enumerate(text.splitlines(), 1):
+        for ch in line:
+            cp = ord(ch)
+            if cp in PICTOGRAPH_ALLOWED:
+                continue
+            for lo, hi, label in PICTOGRAPH_RANGES:
+                if lo <= cp <= hi:
+                    try:
+                        name = unicodedata.name(ch)
+                    except ValueError:
+                        name = "<unnamed>"
+                    found.append((lineno, cp, name, label))
+                    break
+    return found
+
+
+def commit_messages() -> str | None:
+    """Every commit message in the repository, or None if git is unavailable.
+
+    Commit messages are scanned too: an emoji there is exactly as permanent as
+    one in a file, and cannot be fixed without rewriting history.
+    """
+    import subprocess
+    try:
+        r = subprocess.run(
+            ["git", "log", "--format=%H%n%B"],
+            cwd=PROJECT_ROOT, capture_output=True, text=True, timeout=60,
+        )
+    except Exception:
+        return None
+    return r.stdout if r.returncode == 0 else None
+
+
 def main() -> int:
     problems: list[str] = []
     scanned = 0
@@ -75,8 +141,27 @@ def main() -> int:
             detail = ", ".join(f"{m!r}x{n}" for m, n in sorted(hits.items()))
             problems.append(f"mojibake    {rel}  ({detail})")
 
+        for lineno, cp, name, label in pictographs_in(text):
+            problems.append(
+                f"emoji       {rel}:{lineno}  U+{cp:04X} {name} ({label})"
+            )
+
+    msgs = commit_messages()
+    n_commits = 0
+    if msgs is None:
+        problems.append("emoji       could not read git log; commit messages unscanned")
+    else:
+        n_commits = msgs.count("\n") and len([
+            l for l in msgs.splitlines() if len(l) == 40 and all(
+                c in "0123456789abcdef" for c in l)
+        ])
+        for _, cp, name, label in pictographs_in(msgs):
+            problems.append(
+                f"emoji       <commit message>  U+{cp:04X} {name} ({label})"
+            )
+
     print("=" * 74)
-    print(f"ENCODING SCAN -- {scanned} text files")
+    print(f"ENCODING SCAN -- {scanned} text files, {n_commits} commit messages")
     print("=" * 74)
     if problems:
         for p in problems:
@@ -84,6 +169,7 @@ def main() -> int:
         print(f"\n{len(problems)} problem(s) found.")
         return 1
     print("  No mojibake, no stray BOMs, all files valid UTF-8.")
+    print("  No emoji in files or commit messages.")
     return 0
 
 
