@@ -1,0 +1,30 @@
+#!/bin/sh
+# tools/hooks/pre-commit -- run the encoding gate before every commit.
+#
+# tools/scan_encoding.py has existed since early in this project and has
+# caught mojibake twice before -- both times from a PowerShell
+# `Get-Content -Raw` / `Set-Content` edit that read a UTF-8 file as ANSI.
+# Both times, the fix was applied by hand after the fact because the gate
+# was never wired into anything: it is a script you have to remember to
+# run, and that discipline lapsed on the commit that introduced 87 lines
+# of mojibake into README.md.
+#
+# This hook closes that gap by making the gate run automatically, on every
+# commit, with no step to remember. It is not installed by git itself --
+# hooks live outside version control -- so it must be installed once per
+# clone via `python tools/install_hooks.py`. See that script for why.
+
+python tools/scan_encoding.py
+status=$?
+
+if [ $status -ne 0 ]; then
+    echo ""
+    echo "pre-commit: encoding gate failed (see above). Commit aborted."
+    echo "pre-commit: fix the reported files, or if this is a false"
+    echo "pre-commit: positive, adjust tools/scan_encoding.py -- do not"
+    echo "pre-commit: bypass with 'git commit --no-verify' unless you are"
+    echo "pre-commit: certain the finding is not real corruption."
+    exit 1
+fi
+
+exit 0
