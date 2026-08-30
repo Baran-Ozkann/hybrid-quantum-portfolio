@@ -175,8 +175,9 @@ that is not a diversified benchmark.
 This bounds every number above, so it is stated here rather than left for a
 reader to discover.
 
-Expected returns and the covariance matrix are estimated from the **same 250
-trading days** that the resulting portfolios are then scored on. There is no
+Expected returns and the covariance matrix are estimated from the **same 251
+trading days** (250 daily returns) that the resulting portfolios are then
+scored on. There is no
 train/test split and no walk-forward validation. A single one-year window also
 provides essentially **one observation** of each asset's annualised mean return,
 so `mu` carries large estimation error that none of these figures quantify.
@@ -216,20 +217,23 @@ difference the optimiser must detect, which is why a single run is unreliable.
 The two best portfolios differ by only **0.24%** of the spectral width and both
 hold AMD — they disagree only on whether the partner is TSLA or NVDA.
 
-**Multi-start fixes most of it**, measured by bootstrapping k-subsets of the 30:
+**Multi-start fixes most of it.** Figures below are **exact closed-form**
+probabilities for drawing k of the 30 runs already in hand, not bootstrap
+estimates — an earlier draft used 20 000 Monte Carlo draws, which rounded small
+failure probabilities away entirely (the k = 10 row below is not actually 100%):
 
 | Seeds run (k) | Keep lowest energy | Oracle (any of k) | Shortfall |
 |---|---|---|---|
-| 1 | 60.2% | 60.2% | +0.0% |
-| 2 | 77.6% | 84.8% | +7.2% |
-| 3 | 86.9% | 94.7% | +7.8% |
-| 5 | 96.3% | 99.5% | +3.1% |
-| 10 | 100.0% | 100.0% | +0.0% |
+| 1 | 60.0000% | 60.0000% | +0.0000% |
+| 2 | 77.7011% | 84.8276% | +7.1264% |
+| 3 | 87.2906% | 94.5813% | +7.2906% |
+| 5 | 96.4058% | 99.4442% | +3.0385% |
+| 10 | 99.9378% | 99.9998% | +0.0619% |
 
 At ~24 s per run, k = 10 costs about four minutes. Energy-based selection is
-near-optimal — its worst shortfall against a perfect selector is 7.8 points at
-k = 3, closing to zero by k = 10, and the 13 lowest-energy runs of the 30 are
-all correct.
+near-optimal — its worst shortfall against a perfect selector is 7.3 points at
+k = 3, closing to 0.06 points by k = 10, and the 13 lowest-energy runs of the 30
+are all correct.
 
 Full analysis, including the seed-123 case study (98.3% confident and wrong) in
 [`docs/stability_report.md`](docs/stability_report.md).
@@ -383,13 +387,17 @@ and gates on the **worst**, not the median.
 ├── quantum/          circuit.qs, test_bridge.qs, q_bridge.py
 ├── classical/        data_pipeline.py, hamiltonian.py, markowitz.py, phase2_gate.py
 ├── training/         gradient_bridge.py, optimization.py, trained_seed*.json
+├── backtest/         fetch_snapshot.py, run_backtest.py, folds.py, analyse.py
+├── varweight/        stopped 6-asset/12-qubit track — see note above
 ├── ui/               app.py
 ├── tools/            verify_threading.py, capture_ui.py,
 │                     check_reproducibility.py, stability_report.py
 ├── data/             prices.csv (frozen), statistics.json, hamiltonian.json,
 │                     markowitz_baseline.json
 ├── docs/             architecture.md, encoding_schema.md,
-│                     mathematical_foundations.md, stability_report.md, figures/
+│                     mathematical_foundations.md, stability_report.md,
+│                     objective_comparison.md, backtest.md, what_i_learned.md,
+│                     figures/
 ├── logs/             per-phase logs and JSON reports
 ├── requirements.txt
 └── requirements-lock.txt
@@ -404,7 +412,10 @@ and gates on the **worst**, not the median.
 | [`docs/architecture.md`](docs/architecture.md) | System diagram, module boundaries, the single-owner-thread interpreter design and its serialization limit, interpreter recycling, deviations from spec |
 | [`docs/mathematical_foundations.md`](docs/mathematical_foundations.md) | Hamiltonian derivation, penalty selection, parameter-shift rule, the exact-vs-sampling backend distinction, rf = 5% convention |
 | [`docs/encoding_schema.md`](docs/encoding_schema.md) | Bitstring → weights mapping, bit ordering, all 6 reachable portfolios, worked examples, decode/repair policies |
-| [`docs/stability_report.md`](docs/stability_report.md) | 3-seed variance analysis and reliability findings |
+| [`docs/stability_report.md`](docs/stability_report.md) | 30-seed reliability analysis: the converged/failed split, exact closed-form multi-start selection, seed case studies |
+| [`docs/objective_comparison.md`](docs/objective_comparison.md) | Controlled CVaR-vs-plain-VQE study across α ∈ {0.1, 0.4, 0.5, 0.6, 1.0}: the energy/readout trade, two pre-registered predictions and how the data refuted both |
+| [`docs/backtest.md`](docs/backtest.md) | Out-of-sample rolling backtest over 16 quarterly folds: whether the in-sample edge the optimiser resolves survives out of sample |
+| [`docs/what_i_learned.md`](docs/what_i_learned.md) | **Start here.** Four findings in first person, with the numbers behind each |
 
 ---
 
@@ -469,12 +480,20 @@ simultaneous users still stay inside the 5 s budget, but genuine multi-user
 deployment needs process-level parallelism — one interpreter per worker process.
 Threads cannot help; the constraint is a pyo3 `unsendable` object.
 
-### The budget penalty is not binding on this dataset
+### The budget penalty is not binding on this dataset — for plain VQE
 
 The unpenalised optimum already holds exactly 2 assets, so `lambda` does not
 change the answer here. It is still correctly enforced in the energy landscape
-(best infeasible +2.414 vs best feasible −1.246), but this particular year of
-data does not stress the constraint.
+(best infeasible +2.414 vs best feasible −1.246), and plain VQE and CVaR at
+α ∈ {0.4, 0.5, 0.6} all produce 100% feasible readouts on this dataset.
+
+This does **not** hold for every objective on this same dataset: at CVaR
+α = 0.1, the penalty stops binding on the 90% of the distribution the tail
+objective ignores, and 6 of 30 readouts hold 0, 1, or 4 assets instead of the
+required 2 (see [`docs/objective_comparison.md`](docs/objective_comparison.md)
+§7). The constraint is enforced in the energy landscape regardless of
+objective; whether it is *respected by the readout* depends on how much of the
+distribution that objective actually weights.
 
 ### Deprecation warning from `import qsharp`
 
@@ -492,14 +511,20 @@ other and must stay in lockstep.
   [`docs/encoding_schema.md`](docs/encoding_schema.md) §7 for scaling routes.
 - **Simulated, not hardware.** Exact state-vector simulation for training;
   sampling for readout. No noise model, no hardware queue, no error mitigation.
-- **In-sample only.** All statistics are estimated on the same year they are
-  evaluated on. No train/test split, no walk-forward validation. The reported
-  Sharpe ratios are not out-of-sample performance estimates.
+- **In-sample only, for the main-instance results (Phases 1–9).** All
+  statistics in the Results and Reliability sections above are estimated on the
+  same year they are evaluated on, with no train/test split. The one exception
+  is [`docs/backtest.md`](docs/backtest.md): a 16-fold rolling walk-forward
+  study on a separate frozen snapshot, and the one place an out-of-sample
+  number is reported. Outside that study, the reported Sharpe ratios are not
+  out-of-sample performance estimates.
 - **No claim of quantum advantage.** Brute force solves this problem in 16
   evaluations, instantly. The point of the PoC is a correct, verified hybrid
   pipeline, not speedup.
-- **Three seeds** is a coarse reliability estimate; 1-in-3 should not be read as
-  a 33% success probability.
+- **A single VQE run is unreliable.** 18 of 30 random seeds reach the true
+  ground state (60.0%, Wilson 95% [42.3%, 75.4%]); multi-start with k = 5–10
+  fixes most of it (see Reliability above). Do not read any single run's result
+  as representative.
 
 ## Not investment advice
 
