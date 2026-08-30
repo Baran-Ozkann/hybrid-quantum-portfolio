@@ -77,12 +77,15 @@ circuit.qs (4 qubits, 28 params) ──> q_bridge [single owner thread] ──> 
 | `classical/markowitz.py` | Continuous baselines (SLSQP, multi-start) and the exhaustive equal-weight baseline. |
 | `classical/phase2_gate.py` | Phase 2 validation gate. |
 | `training/gradient_bridge.py` | `EnergyEvaluator`, `QuantumCircuitFunction`, `QuantumPortfolioLayer`, Phase 4 gradient gate. |
-| `training/optimization.py` | Adam loop, per-epoch logging, persistence, convergence plots. |
+| `training/optimization.py` | Adam loop, per-epoch logging, persistence, convergence plots. CVaR objective (`--cvar-alpha`) is a Phase 9 addition, same entry point. |
+| `backtest/` | Phase 8 out-of-sample backtest. `fetch_snapshot.py` freezes the independent 5-year snapshot; `folds.py` builds the 16 rolling folds and their per-fold Hamiltonians; `run_backtest.py` orchestrates every arm; `analyse.py` produces the decomposition, rank metrics, and figures in `docs/backtest.md`. |
+| `varweight/` | Stopped, parallel track: 6-asset, 12-qubit variable-weight encoding. `encoding.py`/`hamiltonian.py`/`gate_encoding.py` mirror the Phase 2 formulation at 12 qubits; `gate_gradient.py` re-verifies the parameter-shift rule there; `probe_lightcone.py`, `probe_penalty.py`, `probe_support.py` are the diagnostic probes behind the three eliminated explanations. Not part of the Phases 1-9 sequence. |
 | `ui/app.py` | Streamlit interface. Native widgets + Matplotlib only. |
 | `tools/verify_threading.py` | Proves the owner-thread design (§4). |
 | `tools/capture_ui.py` | Headless Chromium driver: figures + real-Streamlit-path threading proof. |
 | `tools/check_reproducibility.py` | Determinism check across pipeline runs. |
 | `tools/stability_report.py` | Phase 7 variance analysis → `docs/stability_report.md`. |
+| `tools/verify_cvar_gradient.py` | Phase 9 gate: CVaR value/gradient identities against their closed forms and finite differences, before any α sweep runs. |
 
 **Single point of contact.** No module except `q_bridge` imports `qsharp` or
 `qdk`. Everything quantum crosses one boundary, which is what makes the
@@ -133,6 +136,40 @@ Streamlit + Matplotlib.
 
 ### Phase 7 — validation and docs
 Stability analysis, reproducibility check, and these documents.
+
+### Phase 8 — out-of-sample backtest
+Tests the *objective*, not the optimiser. A second, independent frozen price
+snapshot (`data/backtest_prices.csv`, ~5 years) is split into 16 rolling
+250-day-estimation / 63-day-holding folds, each its own self-contained Phase 2
+instance with its own Hamiltonian. Asks whether the in-sample edge between the
+two best portfolios (1.45% Sharpe) predicts anything realised — it does not,
+measurably (10/16 and 6/16 on two directions of the same test, both p = 0.454).
+Also runs Phase 9's CVaR α = 0.4 configuration at k = 1 against all 16
+Hamiltonians as an external robustness check, unrelated to the backtest's own
+question. See [`backtest.md`](backtest.md).
+
+### Phase 9 — objective comparison (CVaR vs plain VQE)
+A controlled study, same 30 seeds and epoch budget as Phase 7, that swaps the
+mean-energy objective for CVaR at five values of α. Raises readout accuracy
+from 66.7% to 100% at α = 0.4, at the cost of 13.2% of the spectral width in
+mean energy — energy convergence and a correct readout turn out to be
+*actively traded*, not merely imperfectly correlated, sharpening a thread
+running since Phase 5. Two pre-registered predictions, one from each party,
+were both refuted by the sweep. See
+[`objective_comparison.md`](objective_comparison.md).
+
+**Parallel, unnumbered track — variable-weight encoding (stopped).** Alongside
+Phase 9, the encoding was extended to 6 assets with variable weights (2 qubits
+per asset, 12 qubits, 4096 states), under `varweight/`. It is explicitly *not*
+part of the Phases 1-9 sequence — the module's own docstring calls it "a
+parallel track to Phases 1-9" — and it does not find the optimum: the readout
+is the 15th-best of 120 feasible portfolios, and three candidate explanations
+(entangler reach, structural reachability, penalty scale) were tested and
+eliminated without fixing it. The encoding, Hamiltonian, and gradient
+machinery are verified exhaustively at 12 qubits; only the optimum-finding
+question remains open. Committed as evidence and as a starting base, not as
+functionality — see the root README and
+[`what_i_learned.md`](what_i_learned.md) §3.
 
 ---
 
@@ -277,7 +314,10 @@ Recycling and thread ownership touch the same object, so they are tested
 | `data/markowitz_baseline.json` | `markowitz` | UI, stability report |
 | `training/trained_seed*.json` | `optimization` | UI, stability report |
 | `training/training_summary.json` | `optimization` | stability report |
-| `docs/figures/*.png` | `optimization`, `capture_ui`, `stability_report` | docs |
+| `training/arms/*/training_summary.json` | `optimization` (per CVaR-α arm) | `compare_arms.py`, `rank_analysis.py`, `objective_comparison.md` |
+| `data/backtest_prices.csv` | `backtest/fetch_snapshot.py` (frozen, independent of `data/prices.csv`) | `backtest/folds.py`, `run_backtest.py` |
+| `logs/backtest_results.json` | `backtest/run_backtest.py` | `backtest/analyse.py`, `backtest.md` |
+| `docs/figures/*.png` | `optimization`, `capture_ui`, `stability_report`, `backtest/analyse.py` | docs |
 | `logs/*.log`, `logs/*.json` | all phases | post-run review |
 
 `data/prices.csv` is treated as **input, not output**: a fixed historical date
@@ -302,6 +342,8 @@ Each phase has an executable gate; none advanced until its gate passed.
 | Threading | `python tools/verify_threading.py` | 13/13 |
 | Reproducibility | `python tools/check_reproducibility.py` | deterministic |
 | UI | `python tools/capture_ui.py` | 10/10, cold start 2.6 s |
+| Phase 9 (CVaR gradient) | `python tools/verify_cvar_gradient.py` | 5 checks: value/gradient identities, α=1 reduction, degenerate-tail zero-gradient 6/6 |
+| Phase 8 (backtest) | `python backtest/fetch_snapshot.py && python backtest/run_backtest.py` | snapshot SHA-256 verified, 16/16 folds run |
 
 Gates assert **properties**, not golden outputs: exhaustive identities over all
 16 basis states, independent reimplementations cross-checked against each other,

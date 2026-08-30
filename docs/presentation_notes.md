@@ -108,8 +108,8 @@ Source: `docs/backtest.md` §4, figure `backtest_discrimination.png`.
 **If asked "so the quantum part was pointless?"** No — and this is the sentence
 to have ready. **A backtest tests the objective, not the optimiser.** VQE
 minimises the Hamiltonian it is given, and does. Whether that Hamiltonian is
-worth minimising is a finance question about mean–variance estimation on 250 days
-of data. This result is evidence about the second, not the first.
+worth minimising is a finance question about mean–variance estimation on 251
+days of data (250 daily returns). This result is evidence about the second, not the first.
 
 ---
 

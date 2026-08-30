@@ -4,7 +4,8 @@
 to minimise a *given* Hamiltonian, and Phases 4–9 establish that it does: exact
 gradients, a validated CVaR identity, and a measured readout accuracy. Whether
 the minimiser of that Hamiltonian is a good *investment* is a separate question
-about mean–variance selection estimated on 250 days of history. Every result
+about mean–variance selection estimated on 251 days of history (250 daily
+returns). Every result
 below is evidence about **that** question. A weak result here is evidence against
 in-sample mean–variance selection on four volatile technology stocks; it is
 **not** evidence against the quantum method, and no sentence in this document

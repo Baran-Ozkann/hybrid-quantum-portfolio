@@ -18,7 +18,7 @@ The pipeline is bit-for-bit reproducible; the *optimiser* is not reliably correc
 
 Stated plainly because it bounds every number here.
 
-Expected returns and the covariance matrix are estimated from the **same 250 trading days** (2025-07-01 to 2026-06-30) that the resulting portfolios are then scored on. There is no train/test split and no walk-forward validation. A single one-year window also provides essentially **one observation** of each asset's annualised mean return, so `mu` carries enormous estimation error that no figure in this report attempts to quantify.
+Expected returns and the covariance matrix are estimated from the **same 251 trading days** (250 daily returns; 2025-07-01 to 2026-06-30) that the resulting portfolios are then scored on. There is no train/test split and no walk-forward validation. A single one-year window also provides essentially **one observation** of each asset's annualised mean return, so `mu` carries enormous estimation error that no figure in this report attempts to quantify.
 
 What this report therefore does and does not claim:
 

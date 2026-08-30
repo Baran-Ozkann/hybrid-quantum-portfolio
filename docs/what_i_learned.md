@@ -173,8 +173,8 @@ The optimiser was resolving noise.
 The separation that matters, and the one I would defend hardest: **a backtest
 does not test the optimiser, it tests the objective.** The variational method
 minimises the Hamiltonian it is given, and it does. Whether that Hamiltonian is
-worth minimising is a question about mean-variance estimation on 250 days of
-history, and the answer here is no. Those are different claims about different
+worth minimising is a question about mean-variance estimation on 251 days of
+history (250 daily returns), and the answer here is no. Those are different claims about different
 things, and collapsing them would be the easiest mistake in the whole project.
 
 The quantum arm made **zero selection errors across all 16 quarters** — it picked

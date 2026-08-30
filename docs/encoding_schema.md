@@ -223,22 +223,37 @@ pooling, so it is not a diversified benchmark.
 
 ## 7. Scaling to finer allocations
 
-Not implemented, recorded so the ceiling is explicit. Two standard routes:
+Two standard routes. One was attempted, built, and stopped; the other remains
+unimplemented.
 
-**Multiple qubits per asset (binary weight encoding).** Allocate `k` qubits per
-asset representing a weight in `{0, 1/(2^k - 1), ..., 1}`, then renormalise.
-Costs `n * k` qubits — 12 for 4 assets at `k = 3`, giving 8 levels per asset.
-Renormalisation makes the objective non-quadratic, so the budget constraint has
-to be re-derived.
+**Multiple qubits per asset (binary weight encoding) — attempted, in
+[`varweight/`](../varweight/).** Allocate `k` qubits per asset representing a
+weight level, then renormalise. The built version uses `k = 2` (4 levels per
+asset) on 6 assets — TSLA, NVDA, AMD, COIN retained for continuity, plus XOM
+and JNJ added by sector rather than by outcome — for 12 qubits and 4096
+states, gated exhaustively at that size: the encoding, the QUBO/Ising
+mapping, and the parameter-shift gradient rule were all re-verified rather
+than assumed to carry over. **It does not find the optimum.** The readout
+lands on the 15th-best of 120 feasible portfolios, and three candidate
+explanations — insufficient entangler reach, a structural reachability gap,
+and an oversized penalty scale — were each targeted and eliminated without
+fixing it, leaving attractor selection at 120 feasible states as the open
+question. This is a real distinction from "not implemented": the machinery
+works and is verified; the optimiser does not find the answer at this scale.
+Not a working feature — see the root README and
+[`what_i_learned.md`](what_i_learned.md) §3 for what the attempt established,
+ruled out, and left open.
 
-**Finer cardinality with a fixed lot size.** Keep one qubit per lot and allow
-several lots per asset, so `B` counts lots rather than assets. Stays quadratic,
-and the encoding here is the `k = 1`, one-lot-per-asset special case.
+**Finer cardinality with a fixed lot size — not implemented.** Keep one qubit
+per lot and allow several lots per asset, so `B` counts lots rather than
+assets. Stays quadratic, and the encoding here is the `k = 1`,
+one-lot-per-asset special case.
 
-Both increase circuit depth and parameter count, which — given that the present
-28-parameter circuit already struggles to resolve a 0.24% energy gap
-(see [`stability_report.md`](stability_report.md)) — would need the reliability
-question addressed first.
+Both increase circuit depth and parameter count, which — given that the
+present 28-parameter circuit already struggles to resolve a 0.24% energy gap
+(see [`stability_report.md`](stability_report.md)), and the 12-qubit attempt
+above struggled with a problem at all — is consistent with the reliability
+question needing to be addressed before scale, not after.
 
 ---
 

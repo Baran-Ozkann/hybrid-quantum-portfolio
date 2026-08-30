@@ -127,12 +127,18 @@ Very large penalties are avoided deliberately: they compress the energy
 differences *between feasible states* — which is the signal the optimiser needs
 — toward numerical noise.
 
-**Honest note on this dataset:** the penalty turns out **not to be binding
-here**. The unpenalised optimum already holds exactly 2 assets, so lambda is not
-changing the answer. It is still correctly enforced in the energy landscape
-(best infeasible +2.414 vs best feasible -1.246, a margin of 3.660), but on
-this particular year of data the constraint does no work. The formulation is
-general; the test case simply does not stress it.
+**Honest note on this dataset — for plain VQE:** the penalty turns out **not to
+be binding here**. The unpenalised optimum already holds exactly 2 assets, so
+lambda is not changing the answer, and plain VQE and CVaR at α ∈ {0.4, 0.5, 0.6}
+all produce 100% feasible readouts. It is still correctly enforced in the energy
+landscape (best infeasible +2.414 vs best feasible -1.246, a margin of 3.660).
+
+This does not hold for every objective on this same dataset: at CVaR α = 0.1,
+the penalty stops binding on the 90% of the distribution the tail objective
+ignores, and 6 of 30 readouts hold 0, 1, or 4 assets instead of the required 2
+(see `objective_comparison.md` §7). The constraint is enforced in the energy
+landscape regardless of objective; whether it is *respected by the readout*
+depends on how much of the distribution that objective actually weights.
 
 ---
 
@@ -462,8 +468,10 @@ width of 16.56 — **0.24%**:
 
 Both hold AMD; they disagree only on whether the partner is TSLA or NVDA. A VQE
 converging to within 0.5% of the ground energy cannot be expected to resolve a
-0.24% gap reliably, and it does not: **1 of 3 seeds** read out the true ground
-state. See `stability_report.md` for the full analysis.
+0.24% gap reliably, and it does not: the first three seeds run gave **1 of 3**
+correct, and the full 30-seed sweep puts the rate at **18 of 30 = 60.0%**
+(Wilson 95% [42.3%, 75.4%]) — the 3-seed figure was not wrong, just too small a
+sample to generalise from. See `stability_report.md` for the full analysis.
 
 ---
 
