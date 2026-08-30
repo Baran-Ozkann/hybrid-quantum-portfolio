@@ -1,4 +1,4 @@
-"""Variable-weight encoding: 2 qubits per asset, 6 assets, 12 qubits.
+﻿"""Variable-weight encoding: 2 qubits per asset, 6 assets, 12 qubits.
 
     ============================================================
     STOPPED, INCOMPLETE TRACK. NOT A WORKING FEATURE.
@@ -15,7 +15,7 @@
     parameter change" finding, and as a base if the question is
     ever resumed -- not as functionality anyone should build on.
     The open question is attractor selection at 120 feasible
-    states. See the variable-weight section of CLAUDE.md.
+    states. See the variable-weight section of the project notes.
 
 A parallel track to Phases 1-9. The Q# bridge, gradient plumbing, CVaR
 objective, training loop, and reliability tooling all carry over unchanged;
@@ -37,3 +37,4 @@ the entire measurement methodology -- known answer, enumerable spectrum, paired
 seeds, McNemar -- carries over. That is the constraint the design is built
 around.
 """
+
