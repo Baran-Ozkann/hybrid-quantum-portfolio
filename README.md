@@ -1,4 +1,4 @@
-﻿# Hybrid Quantum Portfolio Optimization with Q# and PyTorch
+# Hybrid Quantum Portfolio Optimization with Q# and PyTorch
 
 ![The running application](docs/figures/ui_section2_quantum.png)
 
@@ -6,24 +6,24 @@
 > draws 4096 fresh measurement shots on every click, the way hardware would, so
 > the readout share and feasible-shot fraction move by a fraction of a percent
 > between clicks. The stored exact state-vector value for this seed is
-> **0.6011**, and binomial shot noise at 4096 shots is Ïƒ = 0.77%, so a reading of
+> **0.6011**, and binomial shot noise at 4096 shots is σ = 0.77%, so a reading of
 > 59.5% or 60.8% is within one sigma of it. The tables below quote the exact
 > values, not sampled ones.*
 
 Portfolio selection over 4 assets, written as an Ising Hamiltonian and minimised
 by a variational quantum circuit in **Q#**, trained through **PyTorch autograd**
 with the exact parameter-shift rule. The problem is deliberately small enough
-that the correct answer can be found by brute force â€” so every claim the
+that the correct answer can be found by brute force — so every claim the
 optimiser makes can be checked rather than trusted.
 
 ## The result in four numbers
 
 | | |
 |---|---|
-| **The optimiser is correct** | It matches the exhaustive optimum over its own feasible set exactly â€” Sharpe **2.1599**, 50% TSLA / 50% AMD |
+| **The optimiser is correct** | It matches the exhaustive optimum over its own feasible set exactly — Sharpe **2.1599**, 50% TSLA / 50% AMD |
 | **A single run is right 60% of the time** | 18 of 30 random seeds, Wilson 95% [42%, 75%]. The rest land on a portfolio 1.4% worse whose energy differs by 0.24% of the spectrum |
-| **Changing the objective fixes it** | CVaR at Î± = 0.4 reaches **30 of 30** â€” by giving up 13.2% of the spectral width in energy. Convergence and correctness trade against each other |
-| **The edge it resolves is worth nothing** | Out of sample over 16 quarters, that 1.45% is **indistinguishable from a coin flip** (p = 0.454, rank correlation âˆ’0.085) |
+| **Changing the objective fixes it** | CVaR at α = 0.4 reaches **30 of 30** — by giving up 13.2% of the spectral width in energy. Convergence and correctness trade against each other |
+| **The edge it resolves is worth nothing** | Out of sample over 16 quarters, that 1.45% is **indistinguishable from a coin flip** (p = 0.454, rank correlation −0.085) |
 
 The last two are the point. A run can converge beautifully and be wrong, and the
 quantity it is fighting over may not survive contact with out-of-sample data.
@@ -38,24 +38,24 @@ every number above.
    project is faster than the classical alternative. The problem has 16 states,
    brute-force enumeration solves it exactly and instantly, and the quantum
    circuit runs on a classical simulator. This is a **correctness and
-   methodology** study on a problem small enough to have a verifiable answer â€”
+   methodology** study on a problem small enough to have a verifiable answer —
    not a performance result.
-2. **The statistics are in-sample throughout Phases 1â€“9.** Expected returns and
+2. **The statistics are in-sample throughout Phases 1–9.** Expected returns and
    the covariance matrix are estimated on the same window the portfolios are
    scored against. [`docs/backtest.md`](docs/backtest.md) is the one
    out-of-sample component, and it is the one that found the edge does not
    survive.
 3. **One 4-asset instance.** Four tickers, sixteen basis states, a single
-   Hamiltonian. The tickers were chosen in 2026 knowing how they performed â€”
+   Hamiltonian. The tickers were chosen in 2026 knowing how they performed —
    selection bias that is real, unfixable, and not quantified. The backtest
    shows even the *ground state* is unstable across windows: this instance's
    `1010` wins only **2 of 16** quarters.
 
-**Start here:** [`docs/what_i_learned.md`](docs/what_i_learned.md) â€” what this
+**Start here:** [`docs/what_i_learned.md`](docs/what_i_learned.md) — what this
 project taught me, in four findings.
 **Then:** [`docs/`](docs/) for the technical reference, or read on for setup.
 
-> **`varweight/` is an incomplete, stopped track â€” not a working feature.** It
+> **`varweight/` is an incomplete, stopped track — not a working feature.** It
 > extends the encoding to 6 assets with variable weights (12 qubits, 4096
 > states). The encoding and gradients are verified, but **it does not find the
 > optimum**, and it was deliberately halted with that question open. It is
@@ -94,7 +94,7 @@ the second trains three seeds (~25 s each); the third serves the UI at
 
 ## Requirements
 
-Python 3.11, and the versions in [`requirements.txt`](requirements.txt) â€”
+Python 3.11, and the versions in [`requirements.txt`](requirements.txt) —
 pinned exactly, not as minimums:
 
 | Package | Version | | Package | Version |
@@ -125,11 +125,11 @@ python -m playwright install chromium
 ## What it does
 
 1. Fetches one year of daily closes for **TSLA, NVDA, AMD, COIN** and
-   annualises expected returns and the 4Ã—4 covariance matrix.
+   annualises expected returns and the 4×4 covariance matrix.
 2. Encodes budget-constrained selection (**hold exactly 2 of 4**) as a QUBO,
    converts it to an Ising Hamiltonian, and verifies the conversion against all
    16 bitstrings.
-3. Minimises `âŸ¨HâŸ©` with a 4-qubit, 28-parameter hardware-efficient ansatz in Q#,
+3. Minimises `⟨H⟩` with a 4-qubit, 28-parameter hardware-efficient ansatz in Q#,
    differentiated through PyTorch via the parameter-shift rule.
 4. Decodes measured bitstrings into portfolio weights summing to 1.
 5. Compares against classical baselines, distinguishing like-for-like
@@ -139,17 +139,17 @@ python -m playwright install chromium
 
 ## Results
 
-Market data, 251 trading days, 2025-07-01 â†’ 2026-06-30:
+Market data, 251 trading days, 2025-07-01 → 2026-06-30:
 
 | Asset | Qubit | Annual return | Annual volatility |
 |---|---|---|---|
 | TSLA | q0 | +43.64% | 44.35% |
 | NVDA | q1 | +33.20% | 35.33% |
 | AMD | q2 | +168.93% | 67.59% |
-| COIN | q3 | âˆ’60.91% | 67.50% |
+| COIN | q3 | −60.91% | 67.50% |
 
 Exact ground state by brute force over all 16 bitstrings: **`1010`
-(TSLA + AMD)**, `E = âˆ’4.921119`.
+(TSLA + AMD)**, `E = −4.921119`.
 
 ### Quantum vs classical
 
@@ -165,7 +165,7 @@ All Sharpe ratios use **rf = 5.00%**.
 
 The quantum result **equals the exhaustive optimum over its own feasible set**.
 The gap to continuous Markowitz measures the *expressiveness of the 4-qubit
-encoding*, not the optimiser â€” the encoding can only express 6 portfolios, while
+encoding*, not the optimiser — the encoding can only express 6 portfolios, while
 Markowitz optimises over the whole simplex. Note also that max-Sharpe reaches
 +2.4251 by collapsing to a single asset (100% AMD), an in-sample corner solution
 that is not a diversified benchmark.
@@ -184,7 +184,7 @@ so `mu` carries large estimation error that none of these figures quantify.
 **What is being claimed:** that the optimiser can be measured against a *known
 ground truth* on a realistic problem instance. The Hamiltonian is diagonal with
 16 enumerable eigenvalues, so "did the optimiser find the minimum?" has an exact
-answer â€” and that question is independent of whether the minimum is a good
+answer — and that question is independent of whether the minimum is a good
 investment.
 
 **What is not being claimed:** that these are good portfolios, that the reported
@@ -194,12 +194,12 @@ to overfit, and the 100%-AMD max-Sharpe corner solution above is a textbook
 symptom of exactly that.
 
 The optimisation target is a fixed, fully specified mathematical object. Whether
-it is the *right* object to optimise is a separate finance question â€” addressed
+it is the *right* object to optimise is a separate finance question — addressed
 in [`docs/backtest.md`](docs/backtest.md) and summarised below. Short answer: on
 16 out-of-sample quarters, **the edge this optimiser resolves does not
 measurably survive**.
 
-### Reliability â€” the important caveat
+### Reliability — the important caveat
 
 30 runs, identical except for the random seed:
 
@@ -207,14 +207,14 @@ measurably survive**.
 |---|---|
 | Reached the true ground state | **18 / 30 = 60.0%** |
 | Wilson 95% interval | [42.3%, 75.4%] |
-| Distinct attractors | 2 (`1010` Ã—18, `0110` Ã—12) â€” both feasible |
-| Final âŸ¨HâŸ© mean / spread | âˆ’4.824163 / 0.576763 |
-| Energy spread Ã· degeneracy gap | **14.71Ã—** |
+| Distinct attractors | 2 (`1010` ×18, `0110` ×12) — both feasible |
+| Final ⟨H⟩ mean / spread | −4.824163 / 0.576763 |
+| Energy spread ÷ degeneracy gap | **14.71×** |
 
 Run-to-run variation is an order of magnitude wider than the 0.039 energy
 difference the optimiser must detect, which is why a single run is unreliable.
 The two best portfolios differ by only **0.24%** of the spectral width and both
-hold AMD â€” they disagree only on whether the partner is TSLA or NVDA.
+hold AMD — they disagree only on whether the partner is TSLA or NVDA.
 
 **Multi-start fixes most of it**, measured by bootstrapping k-subsets of the 30:
 
@@ -227,7 +227,7 @@ hold AMD â€” they disagree only on whether the partner is TSLA or NVDA.
 | 10 | 100.0% | 100.0% | +0.0% |
 
 At ~24 s per run, k = 10 costs about four minutes. Energy-based selection is
-near-optimal â€” its worst shortfall against a perfect selector is 7.8 points at
+near-optimal — its worst shortfall against a perfect selector is 7.8 points at
 k = 3, closing to zero by k = 10, and the 13 lowest-energy runs of the 30 are
 all correct.
 
@@ -237,15 +237,15 @@ Full analysis, including the seed-123 case study (98.3% confident and wrong) in
 ### A different objective trades energy for readout
 
 A follow-up controlled study replaced the mean-energy objective with **CVaR**
-(minimising the mean of the lowest Î±-quantile), holding everything else fixed
+(minimising the mean of the lowest α-quantile), holding everything else fixed
 across the same 30 seeds. The result worth carrying away is not a rate but a
-**trade**: CVaR gives up **1.88 in mean energy** â€” about 11% of the spectral
+**trade**: CVaR gives up **1.88 in mean energy** — about 11% of the spectral
 width, enough that *every* CVaR run fails the convergence criterion *every*
-plain-VQE run passes â€” and buys a large gain in readout accuracy.
+plain-VQE run passes — and buys a large gain in readout accuracy.
 
-| | plain VQE | CVaR (Î± = 0.5) |
+| | plain VQE | CVaR (α = 0.5) |
 |---|---|---|
-| mean plain âŸ¨HâŸ© | âˆ’4.905 | âˆ’3.042 |
+| mean plain ⟨H⟩ | −4.905 | −3.042 |
 | runs inside the "converged" band | 30/30 | **0/30** |
 | readout accuracy | 66.7% | **96.7%** |
 
@@ -253,25 +253,25 @@ This is the sharpest form of a thread running through the project since Phase 5:
 energy convergence and a correct readout are different objectives, and here they
 are actively traded rather than merely imperfectly correlated.
 
-Accuracy is **non-monotone in Î±**, peaking at the sampled point Î± = 0.4
-(30 of 30, Wilson 95% [88.6%, 100%] â€” a point estimate, not a demonstration of
-perfect reliability). At the other end Î± = 0.1 is *worse* than plain VQE (56.7%)
+Accuracy is **non-monotone in α**, peaking at the sampled point α = 0.4
+(30 of 30, Wilson 95% [88.6%, 100%] — a point estimate, not a demonstration of
+perfect reliability). At the other end α = 0.1 is *worse* than plain VQE (56.7%)
 and **abandons the budget constraint entirely**, producing 6 of 30 readouts that
-hold 0, 1, or 4 assets instead of the required 2 â€” because CVaR constrains only
-the lowest Î±-quantile, so the penalty term stops binding on the rest of the
+hold 0, 1, or 4 assets instead of the required 2 — because CVaR constrains only
+the lowest α-quantile, so the penalty term stops binding on the rest of the
 distribution. Two pre-registered predictions, one from each party, were both
 refuted.
 
-**This does not change the recommendation** â€” at k = 5 seeds plain VQE already
+**This does not change the recommendation** — at k = 5 seeds plain VQE already
 reaches 99.59%, and Phase 7 already recommends five seeds. Full study, with the
 mechanism and limitations:
 [`docs/objective_comparison.md`](docs/objective_comparison.md).
 
-> **No epoch budget tested is converged â€” measured, not assumed.** Seed 456
+> **No epoch budget tested is converged — measured, not assumed.** Seed 456
 > changed basin at epoch **176 of 200**, holding only 24 epochs, so a 250-epoch
-> arm was run to check. The rate barely moved (66.7% â†’ 70.0%: **one** discordant
+> arm was run to check. The rate barely moved (66.7% → 70.0%: **one** discordant
 > seed, McNemar exact **p = 1.0000**, Wilson intervals almost entirely
-> overlapping) â€” but a **new** late crosser appeared, seed 1022 at epoch **215 of
+> overlapping) — but a **new** late crosser appeared, seed 1022 at epoch **215 of
 > 250**. Extending the budget relocated the tail rather than removing it. Read
 > every accuracy figure here as **"at 200 epochs"**, never as converged.
 
@@ -279,10 +279,10 @@ mechanism and limitations:
 
 **A backtest does not test the optimiser. It tests the objective.** VQE's job is
 to minimise a given Hamiltonian, and it does. Whether that minimum is a good
-*investment* is a separate question â€” and a weak result here is evidence about
+*investment* is a separate question — and a weak result here is evidence about
 in-sample mean-variance selection, **not** against the quantum method.
 
-Rolling 250-day estimation, 63-day holding, stepping 63 days over 2021-06 â†’
+Rolling 250-day estimation, 63-day holding, stepping 63 days over 2021-06 →
 2026-06: **16 folds**, on a separate frozen snapshot with its own SHA-256.
 
 The discrimination test asked two ways, which **disagree in direction**:
@@ -293,38 +293,38 @@ The discrimination test asked two ways, which **disagree in direction**:
 | `1010` (TSLA+AMD) beats `0110` (NVDA+AMD) | **6 / 16 = 37.5%** | [15.2%, 64.6%] | 0.454 |
 
 One mildly favours the objective, one mildly opposes it, both straddle 50%.
-**The shared conclusion is that neither is separable from chance** â€” a reader
-shown only the 6â€“10 record would wrongly conclude the objective is
+**The shared conclusion is that neither is separable from chance** — a reader
+shown only the 6–10 record would wrongly conclude the objective is
 anti-predictive.
 
 | | result | p |
 |---|---|---|
-| Does the *size* of the in-sample edge predict the realised edge? | **Ï = âˆ’0.085** (near zero, not meaningfully negative) | 0.753 |
-| What did one optimiser error cost? | **+7.4%** per quarter, CI [âˆ’6.0%, +20.9%] | 0.258 |
+| Does the *size* of the in-sample edge predict the realised edge? | **ρ = −0.085** (near zero, not meaningfully negative) | 0.753 |
+| What did one optimiser error cost? | **+7.4%** per quarter, CI [−6.0%, +20.9%] | 0.258 |
 
 The 1.45% in-sample Sharpe edge that Phase 7's 33% error rate was failing to
 resolve is **not measurably worth anything out of sample**. The optimiser works;
 the value question lives in the objective it was pointed at.
 
 **The quantum arm's contribution here is a robustness check on Phase 9, not a
-backtest result.** CVaR Î± = 0.4 at k = 1 matched the exact in-sample argmin on
+backtest result.** CVaR α = 0.4 at k = 1 matched the exact in-sample argmin on
 **16 of 16 Hamiltonians it was never tuned against**, with 0 infeasible readouts
-and mean P(ground) = **0.4988** â€” below the 0.5 guarantee threshold, independently
+and mean P(ground) = **0.4988** — below the 0.5 guarantee threshold, independently
 reproducing Phase 9's plurality mechanism. Because it matched the perfect
 optimiser on every fold, the backtest contains **no information about the quantum
 arm's economic value in either direction**; that comparison has zero variance.
 
 **The main instance is doubly atypical.** Its ground state `1010` wins only 2 of
-16 windows, and its energy gap (0.2368% of spectral width) is 5Ã— tighter than the
-median fold. Phases 5â€“9 were measured on a harder-than-typical case â€” which
-strengthens those accuracy figures â€” while the specific TSLA+AMD answer is a
+16 windows, and its energy gap (0.2368% of spectral width) is 5× tighter than the
+median fold. Phases 5–9 were measured on a harder-than-typical case — which
+strengthens those accuracy figures — while the specific TSLA+AMD answer is a
 property of one year, not of this basket.
 
 > **Selection bias is the largest caveat and is not fixable.** These four tickers
 > were chosen in 2026 knowing how they turned out. `buy_hold_NVDA` (+1127%,
 > Sharpe 1.393) beats every optimised arm including a *perfect* optimiser
 > (+800%, 1.233). Only between-arm comparisons carry information, and the design
-> is powered to detect effects ~4Ã— larger than the one it looks for â€” detecting
+> is powered to detect effects ~4× larger than the one it looks for — detecting
 > the 0.242 Sharpe edge would need **279 folds, about 70 years**.
 
 Full study: [`docs/backtest.md`](docs/backtest.md).
@@ -336,10 +336,10 @@ Full study: [`docs/backtest.md`](docs/backtest.md).
 Every phase has an executable gate. Run them in any order after the pipeline.
 
 ```bash
-python quantum/q_bridge.py                  # Phase 1 â€” bridge, 10/10
-python quantum/q_bridge.py --test-circuit   # Phase 3 â€” circuit, 7/7
-python classical/phase2_gate.py             # Phase 2 â€” formulation, 9/9
-python training/gradient_bridge.py          # Phase 4 â€” gradients, <1e-9 vs 1e-2
+python quantum/q_bridge.py                  # Phase 1 — bridge, 10/10
+python quantum/q_bridge.py --test-circuit   # Phase 3 — circuit, 7/7
+python classical/phase2_gate.py             # Phase 2 — formulation, 9/9
+python training/gradient_bridge.py          # Phase 4 — gradients, <1e-9 vs 1e-2
 python tools/verify_threading.py            # interpreter thread affinity
 python tools/check_reproducibility.py       # determinism across runs
 python tools/capture_ui.py                  # UI + figures (needs playwright)
@@ -350,24 +350,24 @@ Selected measured results:
 
 | Check | Result | Bound |
 |---|---|---|
-| QUBOâ†’Ising identity, all 16 states | 5.3e-15 | 1e-9 |
+| QUBO→Ising identity, all 16 states | 5.3e-15 | 1e-9 |
 | Live Q# circuit vs energy table at `1010` | exact match | 1e-9 |
-| Parameter-shift vs finite difference, 28 params â€  | **< 1e-9** | 1e-2 |
+| Parameter-shift vs finite difference, 28 params † | **< 1e-9** | 1e-2 |
 | Pure-sinusoid fit (the rule's premise) | 2.6e-15 | 1e-9 |
-| Exact vs sampling backend, 20 000 shots | 0.0012 | 5Ïƒ = 0.0164 |
-| UI page load, headless Chromium (median of 5) | **~0.9â€“1.2 s** | 5 s |
-| UI page load, first request to a fresh server | 2.6â€“3.7 s | 5 s |
+| Exact vs sampling backend, 20 000 shots | 0.0012 | 5σ = 0.0164 |
+| UI page load, headless Chromium (median of 5) | **~0.9–1.2 s** | 5 s |
+| UI page load, first request to a fresh server | 2.6–3.7 s | 5 s |
 
-â€  **Stated as a bound because it is not a stable constant.** The gate seeds its
+† **Stated as a bound because it is not a stable constant.** The gate seeds its
 probe points, but its finite-difference *reference* inherits the exact backend's
 ~1.4e-15 nondeterminism (a ~10-ULP global-phase floor, which the gate itself
-prints as `<H> spread over 50 evaluations`), amplified by 1/(2Îµ) = 5e4 at
-Îµ = 1e-5. The order of magnitude is stable but the digits are not: consecutive
+prints as `<H> spread over 50 evaluations`), amplified by 1/(2ε) = 5e4 at
+ε = 1e-5. The order of magnitude is stable but the digits are not: consecutive
 runs gave 2.14, 2.14, 2.26, 2.36 e-10. The quantity measures amplified simulator
-noise, not gradient disagreement â€” it sits eight orders of magnitude inside the
+noise, not gradient disagreement — it sits eight orders of magnitude inside the
 bound either way. Quoting three significant figures would assert a precision it
 does not have. Full detail, including the other affected rows:
-[`docs/mathematical_foundations.md`](docs/mathematical_foundations.md) Â§8.
+[`docs/mathematical_foundations.md`](docs/mathematical_foundations.md) §8.
 
 The first request to a newly started server carries one-time warmup (module
 import, cache fill) and is where essentially all of the 5 s budget risk sits;
@@ -380,19 +380,19 @@ and gates on the **worst**, not the median.
 ## Project layout
 
 ```
-â”œâ”€â”€ quantum/          circuit.qs, test_bridge.qs, q_bridge.py
-â”œâ”€â”€ classical/        data_pipeline.py, hamiltonian.py, markowitz.py, phase2_gate.py
-â”œâ”€â”€ training/         gradient_bridge.py, optimization.py, trained_seed*.json
-â”œâ”€â”€ ui/               app.py
-â”œâ”€â”€ tools/            verify_threading.py, capture_ui.py,
-â”‚                     check_reproducibility.py, stability_report.py
-â”œâ”€â”€ data/             prices.csv (frozen), statistics.json, hamiltonian.json,
-â”‚                     markowitz_baseline.json
-â”œâ”€â”€ docs/             architecture.md, encoding_schema.md,
-â”‚                     mathematical_foundations.md, stability_report.md, figures/
-â”œâ”€â”€ logs/             per-phase logs and JSON reports
-â”œâ”€â”€ requirements.txt
-â””â”€â”€ requirements-lock.txt
+├── quantum/          circuit.qs, test_bridge.qs, q_bridge.py
+├── classical/        data_pipeline.py, hamiltonian.py, markowitz.py, phase2_gate.py
+├── training/         gradient_bridge.py, optimization.py, trained_seed*.json
+├── ui/               app.py
+├── tools/            verify_threading.py, capture_ui.py,
+│                     check_reproducibility.py, stability_report.py
+├── data/             prices.csv (frozen), statistics.json, hamiltonian.json,
+│                     markowitz_baseline.json
+├── docs/             architecture.md, encoding_schema.md,
+│                     mathematical_foundations.md, stability_report.md, figures/
+├── logs/             per-phase logs and JSON reports
+├── requirements.txt
+└── requirements-lock.txt
 ```
 
 ---
@@ -403,14 +403,14 @@ and gates on the **worst**, not the median.
 |---|---|
 | [`docs/architecture.md`](docs/architecture.md) | System diagram, module boundaries, the single-owner-thread interpreter design and its serialization limit, interpreter recycling, deviations from spec |
 | [`docs/mathematical_foundations.md`](docs/mathematical_foundations.md) | Hamiltonian derivation, penalty selection, parameter-shift rule, the exact-vs-sampling backend distinction, rf = 5% convention |
-| [`docs/encoding_schema.md`](docs/encoding_schema.md) | Bitstring â†’ weights mapping, bit ordering, all 6 reachable portfolios, worked examples, decode/repair policies |
+| [`docs/encoding_schema.md`](docs/encoding_schema.md) | Bitstring → weights mapping, bit ordering, all 6 reachable portfolios, worked examples, decode/repair policies |
 | [`docs/stability_report.md`](docs/stability_report.md) | 3-seed variance analysis and reliability findings |
 
 ---
 
 ## Reproducibility
 
-Fixing random seeds is **not sufficient** â€” the data has to be frozen too.
+Fixing random seeds is **not sufficient** — the data has to be frozen too.
 
 Yahoo does not return byte-identical data for a fixed, entirely historical
 window. Two consecutive fetches of the same range differed, with NVDA's
@@ -428,7 +428,7 @@ python classical/data_pipeline.py --refresh
 
 That refetches and replaces the snapshot; downstream results shift slightly and
 you should retrain. With the snapshot frozen, the pipeline is byte-identical
-across runs â€” verified by `tools/check_reproducibility.py`. Seeds are fixed for
+across runs — verified by `tools/check_reproducibility.py`. Seeds are fixed for
 `torch`, `numpy`, and the Q# simulator; the exact backend is deterministic
 regardless.
 
@@ -463,17 +463,17 @@ specifically for that string.
 ### Quantum work is serialized across sessions
 
 All circuit evaluation runs on one owner thread (see
-[`docs/architecture.md`](docs/architecture.md) Â§4), so concurrent Streamlit
+[`docs/architecture.md`](docs/architecture.md) §4), so concurrent Streamlit
 sessions queue rather than execute in parallel. A readout is ~0.6 s, so a few
 simultaneous users still stay inside the 5 s budget, but genuine multi-user
-deployment needs process-level parallelism â€” one interpreter per worker process.
+deployment needs process-level parallelism — one interpreter per worker process.
 Threads cannot help; the constraint is a pyo3 `unsendable` object.
 
 ### The budget penalty is not binding on this dataset
 
 The unpenalised optimum already holds exactly 2 assets, so `lambda` does not
 change the answer here. It is still correctly enforced in the energy landscape
-(best infeasible +2.414 vs best feasible âˆ’1.246), but this particular year of
+(best infeasible +2.414 vs best feasible −1.246), but this particular year of
 data does not stress the constraint.
 
 ### Deprecation warning from `import qsharp`
@@ -487,9 +487,9 @@ other and must stay in lockstep.
 
 ## Limitations
 
-- **4 assets, 2 held, equal weights** â€” 6 reachable portfolios. No fractional
+- **4 assets, 2 held, equal weights** — 6 reachable portfolios. No fractional
   allocations, no shorting. See
-  [`docs/encoding_schema.md`](docs/encoding_schema.md) Â§7 for scaling routes.
+  [`docs/encoding_schema.md`](docs/encoding_schema.md) §7 for scaling routes.
 - **Simulated, not hardware.** Exact state-vector simulation for training;
   sampling for readout. No noise model, no hardware queue, no error mitigation.
 - **In-sample only.** All statistics are estimated on the same year they are

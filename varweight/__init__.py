@@ -1,4 +1,4 @@
-﻿"""Variable-weight encoding: 2 qubits per asset, 6 assets, 12 qubits.
+"""Variable-weight encoding: 2 qubits per asset, 6 assets, 12 qubits.
 
     ============================================================
     STOPPED, INCOMPLETE TRACK. NOT A WORKING FEATURE.
